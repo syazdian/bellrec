@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\Bell.Reconciliation.App.Client.props" />
+</Project>

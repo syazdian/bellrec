@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\buildMultiTargeting\Bell.Reconciliation.App.Server.props" />
+</Project>

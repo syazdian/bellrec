@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v7.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v7.0": {
+      "Bell.Reconciliation.App.Shared/1.0.0": {
+        "runtime": {
+          "Bell.Reconciliation.App.Shared.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Bell.Reconciliation.App.Shared/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

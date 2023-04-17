@@ -1,0 +1,12 @@
+D:\_Staples\Bell.Reconciliation.App\Bell.Reconciliation.App\Shared\bin\Debug\net7.0\Bell.Reconciliation.App.Shared.deps.json
+D:\_Staples\Bell.Reconciliation.App\Bell.Reconciliation.App\Shared\bin\Debug\net7.0\Bell.Reconciliation.App.Shared.dll
+D:\_Staples\Bell.Reconciliation.App\Bell.Reconciliation.App\Shared\bin\Debug\net7.0\Bell.Reconciliation.App.Shared.pdb
+D:\_Staples\Bell.Reconciliation.App\Bell.Reconciliation.App\Shared\obj\Debug\net7.0\Bell.Reconciliation.App.Shared.csproj.AssemblyReference.cache
+D:\_Staples\Bell.Reconciliation.App\Bell.Reconciliation.App\Shared\obj\Debug\net7.0\Bell.Reconciliation.App.Shared.GeneratedMSBuildEditorConfig.editorconfig
+D:\_Staples\Bell.Reconciliation.App\Bell.Reconciliation.App\Shared\obj\Debug\net7.0\Bell.Reconciliation.App.Shared.AssemblyInfoInputs.cache
+D:\_Staples\Bell.Reconciliation.App\Bell.Reconciliation.App\Shared\obj\Debug\net7.0\Bell.Reconciliation.App.Shared.AssemblyInfo.cs
+D:\_Staples\Bell.Reconciliation.App\Bell.Reconciliation.App\Shared\obj\Debug\net7.0\Bell.Reconciliation.App.Shared.csproj.CoreCompileInputs.cache
+D:\_Staples\Bell.Reconciliation.App\Bell.Reconciliation.App\Shared\obj\Debug\net7.0\Bell.Reconciliation.App.Shared.dll
+D:\_Staples\Bell.Reconciliation.App\Bell.Reconciliation.App\Shared\obj\Debug\net7.0\refint\Bell.Reconciliation.App.Shared.dll
+D:\_Staples\Bell.Reconciliation.App\Bell.Reconciliation.App\Shared\obj\Debug\net7.0\Bell.Reconciliation.App.Shared.pdb
+D:\_Staples\Bell.Reconciliation.App\Bell.Reconciliation.App\Shared\obj\Debug\net7.0\ref\Bell.Reconciliation.App.Shared.dll

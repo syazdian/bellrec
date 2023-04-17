@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32825.248
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bell.Reconciliation.App.Server", "Bell.Reconciliation.App\Server\Bell.Reconciliation.App.Server.csproj", "{7B334C25-67DF-4FB7-83E4-9E0B905D3A82}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bell.Reconciliation.App.Server", "Bell.Reconciliation.App\Server\Bell.Reconciliation.App.Server.csproj", "{7B334C25-67DF-4FB7-83E4-9E0B905D3A82}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bell.Reconciliation.App.Client", "Bell.Reconciliation.App\Client\Bell.Reconciliation.App.Client.csproj", "{637D08A8-F241-455C-999C-FF5D086EB355}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bell.Reconciliation.App.Client", "Bell.Reconciliation.App\Client\Bell.Reconciliation.App.Client.csproj", "{637D08A8-F241-455C-999C-FF5D086EB355}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bell.Reconciliation.App.Shared", "Bell.Reconciliation.App\Shared\Bell.Reconciliation.App.Shared.csproj", "{FC89B347-D261-41A7-9C29-529A50FF89DA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bell.Reconciliation.App.Shared", "Bell.Reconciliation.App\Shared\Bell.Reconciliation.App.Shared.csproj", "{FC89B347-D261-41A7-9C29-529A50FF89DA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
