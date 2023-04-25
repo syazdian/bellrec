@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Shared\Bell.Reconciliation.App.Shared.csproj" />
+    <ProjectReference Include="..\..\Common\Shared\Bell.Reconciliation.App.Shared.csproj" />
   </ItemGroup>
 
 </Project>

@@ -11,8 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Client\Bell.Reconciliation.App.Client.csproj" />
-    <ProjectReference Include="..\Shared\Bell.Reconciliation.App.Shared.csproj" />
+    <ProjectReference Include="..\..\Common\Shared\Bell.Reconciliation.App.Shared.csproj" />
+    <ProjectReference Include="..\..\Frontend\Client\Bell.Reconciliation.App.Client.csproj" />
   </ItemGroup>
 
 

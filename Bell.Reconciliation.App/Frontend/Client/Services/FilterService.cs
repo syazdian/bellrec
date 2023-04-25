@@ -13,7 +13,7 @@ public class FilterService : IFilterService
         try
         {
             HttpClient httpClient = new HttpClient();
-            var response = await httpClient.GetStringAsync("http://localhost:5131/api/FilterValue/GetFilterItems");
+            var response = await httpClient.GetStringAsync("https://localhost:7131/api/FilterValue/GetFilterItems");
             //var response = await httpClient.GetStringAsync("/api/FilterValue/GetFilterItems");
 
             FilterItems filterItems = new FilterItems();
