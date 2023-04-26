@@ -1,0 +1,129 @@
+﻿
+<RadzenTabs Change=@OnChange  RenderMode="Radzen.TabRenderMode.Client" @bind-SelectedIndex=@selectedIndex>
+    <Tabs>
+        <RadzenTabsItem Text="All Rows">
+            <RadzenDataGrid ColumnWidth="150px" AllowFiltering="true" AllowPaging="true" PageSize="8" AllowSorting="true" Data="@customers" TItem="Customer">
+                <Columns>
+                    <RadzenDataGridColumn TItem="Customer" Property="CustomerID" Title="Customer ID" />
+                    <RadzenDataGridColumn TItem="Customer" Property="CompanyName" Title="Company Name" />
+                    <RadzenDataGridColumn TItem="Customer" Property="ContactName" Title="Contact Name" />
+                    <RadzenDataGridColumn TItem="Customer" Property="ContactTitle" Title="Contact Title" />
+                    <RadzenDataGridColumn TItem="Customer" Property="Address" Title="Address" />
+                    <RadzenDataGridColumn TItem="Customer" Property="City" Title="City" />
+                    <RadzenDataGridColumn TItem="Customer" Property="Region" Title="Region" />
+                    <RadzenDataGridColumn TItem="Customer" Property="PostalCode" Title="Postal Code" />
+                    <RadzenDataGridColumn TItem="Customer" Property="Country" Title="Country" />
+                    <RadzenDataGridColumn TItem="Customer" Property="Phone" Title="Phone" />
+                    <RadzenDataGridColumn TItem="Customer" Property="Fax" Title="Fax" />
+                </Columns>
+            </RadzenDataGrid>
+        </RadzenTabsItem>
+        <RadzenTabsItem Text="Only in Staples">
+            <RadzenDataGrid ColumnWidth="150px" AllowFiltering="true" AllowPaging="true" PageSize="8" AllowSorting="true" Data="@customers" TItem="Customer">
+                <Columns>
+                    <RadzenDataGridColumn TItem="Customer" Property="CustomerID" Title="Customer ID" />
+                    <RadzenDataGridColumn TItem="Customer" Property="CompanyName" Title="Company Name" />
+                    <RadzenDataGridColumn TItem="Customer" Property="ContactName" Title="Contact Name" />
+                    <RadzenDataGridColumn TItem="Customer" Property="ContactTitle" Title="Contact Title" />
+                    <RadzenDataGridColumn TItem="Customer" Property="Address" Title="Address" />
+                    <RadzenDataGridColumn TItem="Customer" Property="City" Title="City" />
+                    <RadzenDataGridColumn TItem="Customer" Property="Region" Title="Region" />
+                    <RadzenDataGridColumn TItem="Customer" Property="PostalCode" Title="Postal Code" />
+                    <RadzenDataGridColumn TItem="Customer" Property="Country" Title="Country" />
+                    <RadzenDataGridColumn TItem="Customer" Property="Phone" Title="Phone" />
+                    <RadzenDataGridColumn TItem="Customer" Property="Fax" Title="Fax" />
+                </Columns>
+            </RadzenDataGrid>
+        </RadzenTabsItem>
+        <RadzenTabsItem Text="In both but Differnet">
+            <RadzenDataGrid ColumnWidth="150px" AllowFiltering="true" AllowPaging="true" PageSize="8" AllowSorting="true" Data="@customers" TItem="Customer">
+                <Columns>
+                    <RadzenDataGridColumn TItem="Customer" Property="CustomerID" Title="Customer ID" />
+                    <RadzenDataGridColumn TItem="Customer" Property="CompanyName" Title="Company Name" />
+                    <RadzenDataGridColumn TItem="Customer" Property="ContactName" Title="Contact Name" />
+                    <RadzenDataGridColumn TItem="Customer" Property="ContactTitle" Title="Contact Title" />
+                    <RadzenDataGridColumn TItem="Customer" Property="Address" Title="Address" />
+                    <RadzenDataGridColumn TItem="Customer" Property="City" Title="City" />
+                    <RadzenDataGridColumn TItem="Customer" Property="Region" Title="Region" />
+                    <RadzenDataGridColumn TItem="Customer" Property="PostalCode" Title="Postal Code" />
+                    <RadzenDataGridColumn TItem="Customer" Property="Country" Title="Country" />
+                    <RadzenDataGridColumn TItem="Customer" Property="Phone" Title="Phone" />
+                    <RadzenDataGridColumn TItem="Customer" Property="Fax" Title="Fax" />
+                </Columns>
+            </RadzenDataGrid>
+        </RadzenTabsItem>
+        <RadzenTabsItem Text="Only in Bell">
+            <RadzenDataGrid ColumnWidth="150px" AllowFiltering="true" AllowPaging="true" PageSize="8" AllowSorting="true" Data="@customers" TItem="Customer">
+                <Columns>
+                    <RadzenDataGridColumn TItem="Customer" Property="CustomerID" Title="Customer ID" />
+                    <RadzenDataGridColumn TItem="Customer" Property="CompanyName" Title="Company Name" />
+                    <RadzenDataGridColumn TItem="Customer" Property="ContactName" Title="Contact Name" />
+                    <RadzenDataGridColumn TItem="Customer" Property="ContactTitle" Title="Contact Title" />
+                    <RadzenDataGridColumn TItem="Customer" Property="Address" Title="Address" />
+                    <RadzenDataGridColumn TItem="Customer" Property="City" Title="City" />
+                    <RadzenDataGridColumn TItem="Customer" Property="Region" Title="Region" />
+                    <RadzenDataGridColumn TItem="Customer" Property="PostalCode" Title="Postal Code" />
+                    <RadzenDataGridColumn TItem="Customer" Property="Country" Title="Country" />
+                    <RadzenDataGridColumn TItem="Customer" Property="Phone" Title="Phone" />
+                    <RadzenDataGridColumn TItem="Customer" Property="Fax" Title="Fax" />
+                </Columns>
+            </RadzenDataGrid>
+        </RadzenTabsItem>
+    </Tabs>
+
+</RadzenTabs>
+<hr class="featurette-divider">
+
+@code {
+    int selectedIndex = 0;
+    List<Customer> customers = new();
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+ customers = new List<Customer>()
+        {
+            new Customer(){CustomerID = "1", Address = "asdfsad", City = "Vaughan", CompanyName ="asdf", ContactName="asdf", ContactTitle = "adsf", Country = "adsf", Fax = "asdf", Phone="asdf", PostalCode="asdf", Region="adsf"},
+            new Customer(){CustomerID = "2", Address = "asdfsad", City = "Vaughan", CompanyName ="asdf", ContactName="asdf", ContactTitle = "adsf", Country = "adsf", Fax = "asdf", Phone="asdf", PostalCode="asdf", Region="adsf"},
+            new Customer(){CustomerID = "3", Address = "asdfsad", City = "Vaughan", CompanyName ="asdf", ContactName="asdf", ContactTitle = "adsf", Country = "adsf", Fax = "asdf", Phone="asdf", PostalCode="asdf", Region="adsf"},
+            new Customer(){CustomerID = "4", Address = "asdfsad", City = "Vaughan", CompanyName ="asdf", ContactName="asdf", ContactTitle = "adsf", Country = "adsf", Fax = "asdf", Phone="asdf", PostalCode="asdf", Region="adsf"},
+            new Customer(){CustomerID = "5", Address = "asdfsad", City = "Vaughan", CompanyName ="asdf", ContactName="asdf", ContactTitle = "adsf", Country = "adsf", Fax = "asdf", Phone="asdf", PostalCode="asdf", Region="adsf"},
+            new Customer(){CustomerID = "6", Address = "asdfsad", City = "Vaughan", CompanyName ="asdf", ContactName="asdf", ContactTitle = "adsf", Country = "adsf", Fax = "asdf", Phone="asdf", PostalCode="asdf", Region="adsf"},
+            new Customer(){CustomerID = "6", Address = "asdfsad", City = "Vaughan", CompanyName ="asdf", ContactName="asdf", ContactTitle = "adsf", Country = "adsf", Fax = "asdf", Phone="asdf", PostalCode="asdf", Region="adsf"},
+            new Customer(){CustomerID = "6", Address = "asdfsad", City = "Vaughan", CompanyName ="asdf", ContactName="asdf", ContactTitle = "adsf", Country = "adsf", Fax = "asdf", Phone="asdf", PostalCode="asdf", Region="adsf"},
+            new Customer(){CustomerID = "6", Address = "asdfsad", City = "Vaughan", CompanyName ="asdf", ContactName="asdf", ContactTitle = "adsf", Country = "adsf", Fax = "asdf", Phone="asdf", PostalCode="asdf", Region="adsf"},
+            new Customer(){CustomerID = "6", Address = "asdfsad", City = "Vaughan", CompanyName ="asdf", ContactName="asdf", ContactTitle = "adsf", Country = "adsf", Fax = "asdf", Phone="asdf", PostalCode="asdf", Region="adsf"},
+            new Customer(){CustomerID = "6", Address = "asdfsad", City = "Vaughan", CompanyName ="asdf", ContactName="asdf", ContactTitle = "adsf", Country = "adsf", Fax = "asdf", Phone="asdf", PostalCode="asdf", Region="adsf"},
+            new Customer(){CustomerID = "6", Address = "asdfsad", City = "Vaughan", CompanyName ="asdf", ContactName="asdf", ContactTitle = "adsf", Country = "adsf", Fax = "asdf", Phone="asdf", PostalCode="asdf", Region="adsf"},
+            new Customer(){CustomerID = "6", Address = "asdfsad", City = "Vaughan", CompanyName ="asdf", ContactName="asdf", ContactTitle = "adsf", Country = "adsf", Fax = "asdf", Phone="asdf", PostalCode="asdf", Region="adsf"},
+            new Customer(){CustomerID = "6", Address = "asdfsad", City = "Vaughan", CompanyName ="asdf", ContactName="asdf", ContactTitle = "adsf", Country = "adsf", Fax = "asdf", Phone="asdf", PostalCode="asdf", Region="adsf"},
+            new Customer(){CustomerID = "6", Address = "asdfsad", City = "Vaughan", CompanyName ="asdf", ContactName="asdf", ContactTitle = "adsf", Country = "adsf", Fax = "asdf", Phone="asdf", PostalCode="asdf", Region="adsf"},
+            new Customer(){CustomerID = "6", Address = "asdfsad", City = "Vaughan", CompanyName ="asdf", ContactName="asdf", ContactTitle = "adsf", Country = "adsf", Fax = "asdf", Phone="asdf", PostalCode="asdf", Region="adsf"},
+
+        };
+       
+    }
+
+  
+
+    void OnChange(int index)
+    {
+       
+    }
+
+    public class Customer
+    {
+        public string CustomerID { get; set; }
+        public string CompanyName { get; set; }
+        public string ContactName { get; set; }
+        public string ContactTitle { get; set; }
+        public string Address { get; set; }
+        public string City { get; set; }
+        public string Region { get; set; }
+        public string PostalCode { get; set; }
+        public string Country { get; set; }
+        public string Phone { get; set; }
+        public string Fax { get; set; }
+
+    }
+
+}
