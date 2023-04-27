@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.ResponseCompression;
 using System.ComponentModel;
 
-namespace Bell.Reconciliation.Backend.Web.Server;
+namespace Bell.Reconciliation.Frontend.Web.Server;
 
 public class Program
 {

@@ -1,4 +1,4 @@
-﻿namespace Bell.Reconciliation.Backend.Web.Server.Controllers;
+﻿namespace Bell.Reconciliation.Frontend.Web.Server.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]

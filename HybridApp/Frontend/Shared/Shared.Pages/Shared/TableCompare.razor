@@ -1,71 +1,71 @@
-﻿
-<RadzenTabs Change=@OnChange  RenderMode="Radzen.TabRenderMode.Client" @bind-SelectedIndex=@selectedIndex>
+﻿@using Bell.Reconciliation.Common.Models
+<RadzenTabs Change=@OnChange RenderMode="Radzen.TabRenderMode.Client" @bind-SelectedIndex=@selectedIndex>
     <Tabs>
         <RadzenTabsItem Text="All Rows">
-            <RadzenDataGrid ColumnWidth="150px" AllowFiltering="true" AllowPaging="true" PageSize="8" AllowSorting="true" Data="@customers" TItem="Customer">
+            <RadzenDataGrid ColumnWidth="150px" AllowFiltering="true" AllowPaging="true" PageSize="8" AllowSorting="true" Data="@bellSources" TItem="BellSource">
                 <Columns>
-                    <RadzenDataGridColumn TItem="Customer" Property="CustomerID" Title="Customer ID" />
-                    <RadzenDataGridColumn TItem="Customer" Property="CompanyName" Title="Company Name" />
-                    <RadzenDataGridColumn TItem="Customer" Property="ContactName" Title="Contact Name" />
-                    <RadzenDataGridColumn TItem="Customer" Property="ContactTitle" Title="Contact Title" />
-                    <RadzenDataGridColumn TItem="Customer" Property="Address" Title="Address" />
-                    <RadzenDataGridColumn TItem="Customer" Property="City" Title="City" />
-                    <RadzenDataGridColumn TItem="Customer" Property="Region" Title="Region" />
-                    <RadzenDataGridColumn TItem="Customer" Property="PostalCode" Title="Postal Code" />
-                    <RadzenDataGridColumn TItem="Customer" Property="Country" Title="Country" />
-                    <RadzenDataGridColumn TItem="Customer" Property="Phone" Title="Phone" />
-                    <RadzenDataGridColumn TItem="Customer" Property="Fax" Title="Fax" />
+                    <RadzenDataGridColumn TItem="BellSource" Property="Id" Title="ID" />
+                    <RadzenDataGridColumn TItem="BellSource" Property="Phone" Title="Phone" />
+                    <RadzenDataGridColumn TItem="BellSource" Property="Amount" Title="Amount" />
+                    <RadzenDataGridColumn TItem="BellSource" Property="Comment" Title="Comment" />
+                    <RadzenDataGridColumn TItem="BellSource" Property="IMEI" Title="IMEI" />
+                    <RadzenDataGridColumn TItem="BellSource" Property="TransactionDate" Title="TransactionDate" />
+                    <RadzenDataGridColumn TItem="BellSource" Property="CustomerName" Title="CustomerName" />
+                    <RadzenDataGridColumn TItem="BellSource" Property="CommissionDetailes" Title="CommissionDetailes" />
+                    <RadzenDataGridColumn TItem="BellSource" Property="LOB" Title="LOB" />
                 </Columns>
             </RadzenDataGrid>
         </RadzenTabsItem>
         <RadzenTabsItem Text="Only in Staples">
-            <RadzenDataGrid ColumnWidth="150px" AllowFiltering="true" AllowPaging="true" PageSize="8" AllowSorting="true" Data="@customers" TItem="Customer">
+            <RadzenDataGrid ColumnWidth="150px" AllowFiltering="true" AllowPaging="true" PageSize="8" AllowSorting="true" Data="@staplesSources" TItem="StaplesSource">
                 <Columns>
-                    <RadzenDataGridColumn TItem="Customer" Property="CustomerID" Title="Customer ID" />
-                    <RadzenDataGridColumn TItem="Customer" Property="CompanyName" Title="Company Name" />
-                    <RadzenDataGridColumn TItem="Customer" Property="ContactName" Title="Contact Name" />
-                    <RadzenDataGridColumn TItem="Customer" Property="ContactTitle" Title="Contact Title" />
-                    <RadzenDataGridColumn TItem="Customer" Property="Address" Title="Address" />
-                    <RadzenDataGridColumn TItem="Customer" Property="City" Title="City" />
-                    <RadzenDataGridColumn TItem="Customer" Property="Region" Title="Region" />
-                    <RadzenDataGridColumn TItem="Customer" Property="PostalCode" Title="Postal Code" />
-                    <RadzenDataGridColumn TItem="Customer" Property="Country" Title="Country" />
-                    <RadzenDataGridColumn TItem="Customer" Property="Phone" Title="Phone" />
-                    <RadzenDataGridColumn TItem="Customer" Property="Fax" Title="Fax" />
+                    <RadzenDataGridColumn TItem="StaplesSource" Property="Id" Title="ID" />
+                    <RadzenDataGridColumn TItem="StaplesSource" Property="Phone" Title="Phone" />
+                    <RadzenDataGridColumn TItem="StaplesSource" Property="Amount" Title="Amount" />
+                    <RadzenDataGridColumn TItem="StaplesSource" Property="Comment" Title="Comment" />
+                    <RadzenDataGridColumn TItem="StaplesSource" Property="IMEI" Title="IMEI" />
+                    <RadzenDataGridColumn TItem="StaplesSource" Property="TransactionDate" Title="TransactionDate" />
+                    <RadzenDataGridColumn TItem="StaplesSource" Property="CustomerName" Title="CustomerName" />
+                    <RadzenDataGridColumn TItem="StaplesSource" Property="CommissionDetailes" Title="CommissionDetailes" />
+                    <RadzenDataGridColumn TItem="StaplesSource" Property="LOB" Title="LOB" />
                 </Columns>
             </RadzenDataGrid>
         </RadzenTabsItem>
         <RadzenTabsItem Text="In both but Differnet">
-            <RadzenDataGrid ColumnWidth="150px" AllowFiltering="true" AllowPaging="true" PageSize="8" AllowSorting="true" Data="@customers" TItem="Customer">
+            <RadzenDataGrid ColumnWidth="150px" AllowFiltering="true" AllowPaging="true" PageSize="8" AllowSorting="true" Data="@compareBellStaple" TItem="CompareBellStaple">
                 <Columns>
-                    <RadzenDataGridColumn TItem="Customer" Property="CustomerID" Title="Customer ID" />
-                    <RadzenDataGridColumn TItem="Customer" Property="CompanyName" Title="Company Name" />
-                    <RadzenDataGridColumn TItem="Customer" Property="ContactName" Title="Contact Name" />
-                    <RadzenDataGridColumn TItem="Customer" Property="ContactTitle" Title="Contact Title" />
-                    <RadzenDataGridColumn TItem="Customer" Property="Address" Title="Address" />
-                    <RadzenDataGridColumn TItem="Customer" Property="City" Title="City" />
-                    <RadzenDataGridColumn TItem="Customer" Property="Region" Title="Region" />
-                    <RadzenDataGridColumn TItem="Customer" Property="PostalCode" Title="Postal Code" />
-                    <RadzenDataGridColumn TItem="Customer" Property="Country" Title="Country" />
-                    <RadzenDataGridColumn TItem="Customer" Property="Phone" Title="Phone" />
-                    <RadzenDataGridColumn TItem="Customer" Property="Fax" Title="Fax" />
+                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="Id" Title="ID" />
+                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="SPhone" Title="Phone Staples" />
+                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="BPhone" Title="Phone Bell" />
+                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="SAmount" Title="Amount Staples" />
+                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="BAmount" Title="Amount Bell" />
+                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="SComment" Title="Comment Staples" />
+                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="BComment" Title="Comment Bell" />
+                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="SIMEI" Title="IMEI Staples" />
+                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="BIMEI" Title="IMEI Bell" />
+                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="STransactionDate" Title="TransactionDate Staples" />
+                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="BTransactionDate" Title="TransactionDate Bell" />
+                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="SCustomerName" Title="CustomerName Staples" />
+                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="BCustomerName" Title="CustomerName Bell" />
+                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="SCommissionDetailes" Title="CommissionDetailes Staples" />
+                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="BCommissionDetailes" Title="CommissionDetailes Bell" />
+                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="SLOB" Title="LOB Staples" />
+                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="BLOB" Title="LOB Bell" />
                 </Columns>
             </RadzenDataGrid>
         </RadzenTabsItem>
         <RadzenTabsItem Text="Only in Bell">
-            <RadzenDataGrid ColumnWidth="150px" AllowFiltering="true" AllowPaging="true" PageSize="8" AllowSorting="true" Data="@customers" TItem="Customer">
+            <RadzenDataGrid ColumnWidth="150px" AllowFiltering="true" AllowPaging="true" PageSize="8" AllowSorting="true" Data="@bellSources" TItem="BellSource">
                 <Columns>
-                    <RadzenDataGridColumn TItem="Customer" Property="CustomerID" Title="Customer ID" />
-                    <RadzenDataGridColumn TItem="Customer" Property="CompanyName" Title="Company Name" />
-                    <RadzenDataGridColumn TItem="Customer" Property="ContactName" Title="Contact Name" />
-                    <RadzenDataGridColumn TItem="Customer" Property="ContactTitle" Title="Contact Title" />
-                    <RadzenDataGridColumn TItem="Customer" Property="Address" Title="Address" />
-                    <RadzenDataGridColumn TItem="Customer" Property="City" Title="City" />
-                    <RadzenDataGridColumn TItem="Customer" Property="Region" Title="Region" />
-                    <RadzenDataGridColumn TItem="Customer" Property="PostalCode" Title="Postal Code" />
-                    <RadzenDataGridColumn TItem="Customer" Property="Country" Title="Country" />
-                    <RadzenDataGridColumn TItem="Customer" Property="Phone" Title="Phone" />
-                    <RadzenDataGridColumn TItem="Customer" Property="Fax" Title="Fax" />
+                    <RadzenDataGridColumn TItem="BellSource" Property="Id" Title="ID" />
+                    <RadzenDataGridColumn TItem="BellSource" Property="Phone" Title="Phone" />
+                    <RadzenDataGridColumn TItem="BellSource" Property="Amount" Title="Amount" />
+                    <RadzenDataGridColumn TItem="BellSource" Property="Comment" Title="Comment" />
+                    <RadzenDataGridColumn TItem="BellSource" Property="IMEI" Title="IMEI" />
+                    <RadzenDataGridColumn TItem="BellSource" Property="TransactionDate" Title="TransactionDate" />
+                    <RadzenDataGridColumn TItem="BellSource" Property="CustomerName" Title="CustomerName" />
+                    <RadzenDataGridColumn TItem="BellSource" Property="CommissionDetailes" Title="CommissionDetailes" />
+                    <RadzenDataGridColumn TItem="BellSource" Property="LOB" Title="LOB" />
                 </Columns>
             </RadzenDataGrid>
         </RadzenTabsItem>
@@ -76,53 +76,39 @@
 
 @code {
     int selectedIndex = 0;
-    List<Customer> customers = new();
+
+    List<BellSource> bellSources = new();
+    List<StaplesSource> staplesSources = new();
+    List<CompareBellStaple> compareBellStaple = new();
+
+
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
- customers = new List<Customer>()
-        {
-            new Customer(){CustomerID = "1", Address = "asdfsad", City = "Vaughan", CompanyName ="asdf", ContactName="asdf", ContactTitle = "adsf", Country = "adsf", Fax = "asdf", Phone="asdf", PostalCode="asdf", Region="adsf"},
-            new Customer(){CustomerID = "2", Address = "asdfsad", City = "Vaughan", CompanyName ="asdf", ContactName="asdf", ContactTitle = "adsf", Country = "adsf", Fax = "asdf", Phone="asdf", PostalCode="asdf", Region="adsf"},
-            new Customer(){CustomerID = "3", Address = "asdfsad", City = "Vaughan", CompanyName ="asdf", ContactName="asdf", ContactTitle = "adsf", Country = "adsf", Fax = "asdf", Phone="asdf", PostalCode="asdf", Region="adsf"},
-            new Customer(){CustomerID = "4", Address = "asdfsad", City = "Vaughan", CompanyName ="asdf", ContactName="asdf", ContactTitle = "adsf", Country = "adsf", Fax = "asdf", Phone="asdf", PostalCode="asdf", Region="adsf"},
-            new Customer(){CustomerID = "5", Address = "asdfsad", City = "Vaughan", CompanyName ="asdf", ContactName="asdf", ContactTitle = "adsf", Country = "adsf", Fax = "asdf", Phone="asdf", PostalCode="asdf", Region="adsf"},
-            new Customer(){CustomerID = "6", Address = "asdfsad", City = "Vaughan", CompanyName ="asdf", ContactName="asdf", ContactTitle = "adsf", Country = "adsf", Fax = "asdf", Phone="asdf", PostalCode="asdf", Region="adsf"},
-            new Customer(){CustomerID = "6", Address = "asdfsad", City = "Vaughan", CompanyName ="asdf", ContactName="asdf", ContactTitle = "adsf", Country = "adsf", Fax = "asdf", Phone="asdf", PostalCode="asdf", Region="adsf"},
-            new Customer(){CustomerID = "6", Address = "asdfsad", City = "Vaughan", CompanyName ="asdf", ContactName="asdf", ContactTitle = "adsf", Country = "adsf", Fax = "asdf", Phone="asdf", PostalCode="asdf", Region="adsf"},
-            new Customer(){CustomerID = "6", Address = "asdfsad", City = "Vaughan", CompanyName ="asdf", ContactName="asdf", ContactTitle = "adsf", Country = "adsf", Fax = "asdf", Phone="asdf", PostalCode="asdf", Region="adsf"},
-            new Customer(){CustomerID = "6", Address = "asdfsad", City = "Vaughan", CompanyName ="asdf", ContactName="asdf", ContactTitle = "adsf", Country = "adsf", Fax = "asdf", Phone="asdf", PostalCode="asdf", Region="adsf"},
-            new Customer(){CustomerID = "6", Address = "asdfsad", City = "Vaughan", CompanyName ="asdf", ContactName="asdf", ContactTitle = "adsf", Country = "adsf", Fax = "asdf", Phone="asdf", PostalCode="asdf", Region="adsf"},
-            new Customer(){CustomerID = "6", Address = "asdfsad", City = "Vaughan", CompanyName ="asdf", ContactName="asdf", ContactTitle = "adsf", Country = "adsf", Fax = "asdf", Phone="asdf", PostalCode="asdf", Region="adsf"},
-            new Customer(){CustomerID = "6", Address = "asdfsad", City = "Vaughan", CompanyName ="asdf", ContactName="asdf", ContactTitle = "adsf", Country = "adsf", Fax = "asdf", Phone="asdf", PostalCode="asdf", Region="adsf"},
-            new Customer(){CustomerID = "6", Address = "asdfsad", City = "Vaughan", CompanyName ="asdf", ContactName="asdf", ContactTitle = "adsf", Country = "adsf", Fax = "asdf", Phone="asdf", PostalCode="asdf", Region="adsf"},
-            new Customer(){CustomerID = "6", Address = "asdfsad", City = "Vaughan", CompanyName ="asdf", ContactName="asdf", ContactTitle = "adsf", Country = "adsf", Fax = "asdf", Phone="asdf", PostalCode="asdf", Region="adsf"},
-            new Customer(){CustomerID = "6", Address = "asdfsad", City = "Vaughan", CompanyName ="asdf", ContactName="asdf", ContactTitle = "adsf", Country = "adsf", Fax = "asdf", Phone="asdf", PostalCode="asdf", Region="adsf"},
 
-        };
-       
+        bellSources.Add(new BellSource() { Id = 1, Phone = "123", Amount = "1", Comment = "11", CommissionDetails = "32", CustomerName = "dasd", IMEI = "2131324", LOB = "234", OrderNumber = "231", TransactionDate = "2023-04-04" });
+        bellSources.Add(new BellSource() { Id = 2, Phone = "123", Amount = "1", Comment = "11", CommissionDetails = "32", CustomerName = "dasd", IMEI = "2131324", LOB = "234", OrderNumber = "231", TransactionDate = "2023-04-04" });
+        bellSources.Add(new BellSource() { Id = 3, Phone = "123", Amount = "1", Comment = "11", CommissionDetails = "32", CustomerName = "dasd", IMEI = "2131324", LOB = "234", OrderNumber = "231", TransactionDate = "2023-04-04" });
+        bellSources.Add(new BellSource() { Id = 4, Phone = "123", Amount = "1", Comment = "11", CommissionDetails = "32", CustomerName = "dasd", IMEI = "2131324", LOB = "234", OrderNumber = "231", TransactionDate = "2023-04-04" });
+        staplesSources.AddRange(new List< StaplesSource >{
+            new StaplesSource() { Id = 1, Phone = "123", Amount = "1", Comment = "11", CommissionDetails = "32", CustomerName = "dasd", IMEI = "2131324", LOB = "234", OrderNumber = "231", TransactionDate = "2023-04-04" },
+        new StaplesSource() { Id = 2, Phone = "123", Amount = "1", Comment = "11", CommissionDetails = "32", CustomerName = "dasd", IMEI = "2131324", LOB = "234", OrderNumber = "231", TransactionDate = "2023-04-04" },
+        new StaplesSource() { Id = 3, Phone = "123", Amount = "1", Comment = "11", CommissionDetails = "32", CustomerName = "dasd", IMEI = "2131324", LOB = "234", OrderNumber = "231", TransactionDate = "2023-04-04" },
+        new StaplesSource() { Id = 4, Phone = "123", Amount = "1", Comment = "11", CommissionDetails = "32", CustomerName = "dasd", IMEI = "2131324", LOB = "234", OrderNumber = "231", TransactionDate = "2023-04-04" }
+       } );
+
+        compareBellStaple.AddRange(new List<CompareBellStaple>{
+            new CompareBellStaple() { Id = 1, BPhone = "123", SPhone = "123", BAmount = "1", SAmount = "1", BComment = "11", SComment = "11", BCommissionDetails = "32", SCommissionDetails = "32", BCustomerName = "dasd", SCustomerName = "dasd", BIMEI = "2131324", SIMEI = "2131324", SLOB = "234", BLOB = "234", SOrderNumber = "231", BOrderNumber = "231", STransactionDate = "2023-04-04", BTransactionDate = "2023-04-04" },
+            new CompareBellStaple() { Id = 2, BPhone = "123", SPhone = "123", BAmount = "1", SAmount = "1", BComment = "11", SComment = "11", BCommissionDetails = "32", SCommissionDetails = "32", BCustomerName = "dasd", SCustomerName = "dasd", BIMEI = "2131324", SIMEI = "2131324", SLOB = "234", BLOB = "234", SOrderNumber = "231", BOrderNumber = "231", STransactionDate = "2023-04-04", BTransactionDate = "2023-04-04" },
+            new CompareBellStaple() { Id = 3, BPhone = "123", SPhone = "123", BAmount = "1", SAmount = "1", BComment = "11", SComment = "11", BCommissionDetails = "32", SCommissionDetails = "32", BCustomerName = "dasd", SCustomerName = "dasd", BIMEI = "2131324", SIMEI = "2131324", SLOB = "234", BLOB = "234", SOrderNumber = "231", BOrderNumber = "231", STransactionDate = "2023-04-04", BTransactionDate = "2023-04-04" }
+        });
+
     }
 
-  
+
 
     void OnChange(int index)
     {
-       
-    }
-
-    public class Customer
-    {
-        public string CustomerID { get; set; }
-        public string CompanyName { get; set; }
-        public string ContactName { get; set; }
-        public string ContactTitle { get; set; }
-        public string Address { get; set; }
-        public string City { get; set; }
-        public string Region { get; set; }
-        public string PostalCode { get; set; }
-        public string Country { get; set; }
-        public string Phone { get; set; }
-        public string Fax { get; set; }
 
     }
 
