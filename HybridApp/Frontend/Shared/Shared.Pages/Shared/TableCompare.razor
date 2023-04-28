@@ -1,8 +1,15 @@
 ﻿@using Bell.Reconciliation.Common.Models
-<RadzenTabs Change=@OnChange RenderMode="Radzen.TabRenderMode.Client" @bind-SelectedIndex=@selectedIndex>
+@using Bell.Reconciliation.Frontend.Shared.ServiceInterfaces;
+@inject IInjectBellSource BellSource
+
+<RadzenButton Text="Add New Row" Click="RefreshAsync"></RadzenButton>
+<br />
+
+<RadzenTabs  RenderMode="Radzen.TabRenderMode.Client" @bind-SelectedIndex=@selectedIndex>
     <Tabs>
         <RadzenTabsItem Text="All Rows">
-            <RadzenDataGrid ColumnWidth="150px" AllowFiltering="true" AllowPaging="true" PageSize="8" AllowSorting="true" Data="@bellSources" TItem="BellSource">
+            <RadzenDataGrid ColumnWidth="150px" AllowFiltering="true" AllowPaging="true" PageSize="8" AllowSorting="true"
+                            Data="@bellSources" @ref="grid" TItem="BellSource">
                 <Columns>
                     <RadzenDataGridColumn TItem="BellSource" Property="Id" Title="ID" />
                     <RadzenDataGridColumn TItem="BellSource" Property="Phone" Title="Phone" />
@@ -55,7 +62,8 @@
             </RadzenDataGrid>
         </RadzenTabsItem>
         <RadzenTabsItem Text="Only in Bell">
-            <RadzenDataGrid ColumnWidth="150px" AllowFiltering="true" AllowPaging="true" PageSize="8" AllowSorting="true" Data="@bellSources" TItem="BellSource">
+            <RadzenDataGrid ColumnWidth="150px" AllowFiltering="true" AllowPaging="true" PageSize="8" AllowSorting="true"
+                            Data="@bellSources" @ref="grid" TItem="BellSource">
                 <Columns>
                     <RadzenDataGridColumn TItem="BellSource" Property="Id" Title="ID" />
                     <RadzenDataGridColumn TItem="BellSource" Property="Phone" Title="Phone" />
@@ -72,24 +80,29 @@
     </Tabs>
 
 </RadzenTabs>
+
 <hr class="featurette-divider">
 
 @code {
     int selectedIndex = 0;
 
-    List<BellSource> bellSources = new();
     List<StaplesSource> staplesSources = new();
     List<CompareBellStaple> compareBellStaple = new();
+    RadzenDataGrid<BellSource> grid = new RadzenDataGrid<BellSource>();
+
+    private bool busy;
+    List<BellSource> bellSources = new();
+
 
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-
-        bellSources.Add(new BellSource() { Id = 1, Phone = "123", Amount = "1", Comment = "11", CommissionDetails = "32", CustomerName = "dasd", IMEI = "2131324", LOB = "234", OrderNumber = "231", TransactionDate = "2023-04-04" });
-        bellSources.Add(new BellSource() { Id = 2, Phone = "123", Amount = "1", Comment = "11", CommissionDetails = "32", CustomerName = "dasd", IMEI = "2131324", LOB = "234", OrderNumber = "231", TransactionDate = "2023-04-04" });
-        bellSources.Add(new BellSource() { Id = 3, Phone = "123", Amount = "1", Comment = "11", CommissionDetails = "32", CustomerName = "dasd", IMEI = "2131324", LOB = "234", OrderNumber = "231", TransactionDate = "2023-04-04" });
-        bellSources.Add(new BellSource() { Id = 4, Phone = "123", Amount = "1", Comment = "11", CommissionDetails = "32", CustomerName = "dasd", IMEI = "2131324", LOB = "234", OrderNumber = "231", TransactionDate = "2023-04-04" });
+        bellSources = (await BellSource.GetBellSourcesAsync());
+        //bellSources.Add(new BellSource() { Id = 1, Phone = "123", Amount = "1", Comment = "11", CommissionDetails = "32", CustomerName = "dasd", IMEI = "2131324", LOB = "234", OrderNumber = "231", TransactionDate = "2023-04-04" });
+        //bellSources.Add(new BellSource() { Id = 2, Phone = "123", Amount = "1", Comment = "11", CommissionDetails = "32", CustomerName = "dasd", IMEI = "2131324", LOB = "234", OrderNumber = "231", TransactionDate = "2023-04-04" });
+        //bellSources.Add(new BellSource() { Id = 3, Phone = "123", Amount = "1", Comment = "11", CommissionDetails = "32", CustomerName = "dasd", IMEI = "2131324", LOB = "234", OrderNumber = "231", TransactionDate = "2023-04-04" });
+        //bellSources.Add(new BellSource() { Id = 4, Phone = "123", Amount = "1", Comment = "11", CommissionDetails = "32", CustomerName = "dasd", IMEI = "2131324", LOB = "234", OrderNumber = "231", TransactionDate = "2023-04-04" });
         staplesSources.AddRange(new List< StaplesSource >{
             new StaplesSource() { Id = 1, Phone = "123", Amount = "1", Comment = "11", CommissionDetails = "32", CustomerName = "dasd", IMEI = "2131324", LOB = "234", OrderNumber = "231", TransactionDate = "2023-04-04" },
         new StaplesSource() { Id = 2, Phone = "123", Amount = "1", Comment = "11", CommissionDetails = "32", CustomerName = "dasd", IMEI = "2131324", LOB = "234", OrderNumber = "231", TransactionDate = "2023-04-04" },
@@ -107,9 +120,12 @@
 
 
 
-    void OnChange(int index)
+    private async Task RefreshAsync()
     {
-
+        bellSources = (await BellSource.GetBellSourcesAsync());
+        await grid.Reload();
+       // await InvokeAsync(StateHasChanged);
+        StateHasChanged();
     }
 
 }

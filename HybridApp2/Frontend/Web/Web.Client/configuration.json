@@ -1,0 +1,17 @@
+{
+  "LOB": {
+    "Wireless": [
+      "Wireless",
+      "IoT",
+      "Mobile Data"
+    ],
+    "Wireline": [
+      "Home Internet",
+      "Home Television",
+      "Home Phone",
+      "SMB Internet"
+    ]
+  },
+  "Rebate Type": [ "Commission", "DownPayment", "Tax" ],
+  "Brand": [ "Bell", "Virgin", "Lucky Mobile" ]
+}
