@@ -1,5 +1,4 @@
 ﻿(async function () {
-
     const db = {
         init: false,
         cache: await caches.open('MvpSummitCache')
@@ -8,13 +7,11 @@
     window.db = db;
 
     db.synchronizeDbWithCache = async function (filename) {
-
         const backupPath = `/${filename}`;
         const cachePath = `/data/cache/${backupPath.split('.')[0]}.db`;
         console.log(`Processing ${backupPath}...`);
 
         if (!db.init) {
-
             db.init = true;
 
             console.log("Checking cache...");
@@ -22,7 +19,6 @@
             const resp = await db.cache.match(cachePath);
 
             if (resp && resp.ok) {
-
                 const res = await resp.arrayBuffer();
 
                 if (res) {
@@ -37,7 +33,6 @@
         }
 
         if (FS.analyzePath(backupPath).exists) {
-
             // give files time to flush
             const waitFlush = new Promise((done, _) => {
                 setTimeout(done, 10);
