@@ -15,16 +15,21 @@ public class FilterService : IFilterService
     {
         try
         {
-            //HttpClient httpClient = new HttpClient();
-            // var response = await httpClient.GetStringAsync("https://localhost:7131/api/FilterValue/GetFilterItems");
+            //var dir = Path.GetDirectoryName(typeof(FilterService).Assembly.Location)!;
+            //var response = File.ReadAllText(Path.Combine(dir, "Data", "filteritems.txt"));
+
+            // var response = await new HttpClient().GetStringAsync("https://localhost:7131/api/FilterValue/GetFilterItems");
+
             //var response = await httpClient.GetStringAsync("/api/FilterValue/GetFilterItems");
+
             string response = "{\"loBs\":[{\"name\":\"Wireless\",\"subLoBs\":[\"Wireless\",\"IoT\",\"Mobile Data\"]},{\"name\":\"Wireline\",\"subLoBs\":[\"Home Internet\",\"Home Television\",\"Home Phone\",\"SMB Internet\"]}],\"locations\":[\"Canada\"],\"brands\":[\"Bell\",\"Virgin\",\"Lucky Mobile\"],\"rebateTypes\":[\"Commission\",\"DownPayment\",\"Tax\"]}";
+
             //var path = Directory.GetFiles("C:\\Users\\Public");
             //using (StreamReader sr = File.OpenText("C:\\Users\\Public\\filteritems.txt"))
             //{
             //    response = sr.ReadToEnd();
             //}
-           // var response = File.ReadAllText("filteritems.txt");
+            // var response = File.ReadAllText("filteritems.txt");
             FilterItems filterItems = new FilterItems();
 
             if (!string.IsNullOrEmpty(response))
