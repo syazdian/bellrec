@@ -7,8 +7,10 @@ namespace Bell.Reconciliation.Frontend.Web.Services;
 
 public class FilterService : IFilterService
 {
-    public FilterService()
+    string baseurl;
+    public FilterService(string baseurl)
     {
+        this.baseurl = baseurl;
     }
 
     public async Task<FilterItems> GetFilterItems()
@@ -18,7 +20,8 @@ public class FilterService : IFilterService
             //var dir = Path.GetDirectoryName(typeof(FilterService).Assembly.Location)!;
             //var response = File.ReadAllText(Path.Combine(dir, "Data", "filteritems.txt"));
 
-            // var response = await new HttpClient().GetStringAsync("https://localhost:7131/api/FilterValue/GetFilterItems");
+             //var response = await new HttpClient().GetStringAsync("https://localhost:7131/api/FilterValue/GetFilterItems");
+            // var response = await new HttpClient().GetStringAsync($"/api/FilterValue/GetFilterItems");
 
             //var response = await httpClient.GetStringAsync("/api/FilterValue/GetFilterItems");
 
