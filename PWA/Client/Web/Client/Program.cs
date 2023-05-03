@@ -20,11 +20,12 @@ namespace Bell.Reconciliation.Client
             builder.RootComponents.Add<HeadOutlet>("head::after");
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+            builder.Services.AddSqliteWasmDbContextFactory<StapleSourceContext>(opts => opts.UseSqlite("Data Source=StapleSource.sqlite3"));
 
             builder.Services.AddTransient<IFilterService, FilterService>();
             builder.Services.AddTransient<IInjectBellSource, FetchBellFromDb>();
+            builder.Services.AddTransient<ISyncData, SyncData>();
             // builder.Services.AddTransient<IInjectBellSource, InjectBellSource>();
-            builder.Services.AddSqliteWasmDbContextFactory<StapleSourceContext>(opts => opts.UseSqlite("Data Source=StapleSource.sqlite3"));
 
             await builder.Build().RunAsync();
         }

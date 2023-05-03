@@ -13,10 +13,10 @@ public class SyncDataController : Controller
         _databaseGenerator = databaseGenerator;
     }
 
-    [HttpGet("GetBellSourceitems")]
-    public async Task<IActionResult> GetBellSourceitems()
+    [HttpGet("GetBellSourceitems/{Id}")]
+    public async Task<IActionResult> GetBellSourceitems([FromRoute] int Id = 0)
     {
-        var items = _databaseGenerator.DatabaseBellSourceGenerator();
+        var items = await _databaseGenerator.DatabaseBellSourceGenerator(Id);
         return Ok(items);
     }
 }

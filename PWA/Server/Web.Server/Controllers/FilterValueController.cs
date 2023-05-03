@@ -14,7 +14,6 @@ public class FilterValueController : Controller
     [HttpGet("GetFilterItems")]
     public async Task<IActionResult> GetFilterItems()
     {
-        _filterItems.Locations.Add("Canada");
         return Ok(_filterItems);
     }
 }
