@@ -55,8 +55,10 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Content Remove="wwwroot\Assets\filteritems.txt" />
       <Content Remove="wwwroot\Assets\logo.jpg.webp" />
       <Content Remove="wwwroot\Assets\logo_wlc_en.svg" />
+      <Content Remove="wwwroot\Data\filteritems.txt" />
       <Content Remove="wwwroot\js\connectivity.js" />
     </ItemGroup>
 
@@ -74,8 +76,10 @@
     </ItemGroup>
 
     <ItemGroup>
+      <None Include="wwwroot\Assets\filteritems.txt" />
       <None Include="wwwroot\Assets\logo.jpg.webp" />
       <None Include="wwwroot\Assets\logo_wlc_en.svg" />
+      <None Include="wwwroot\Data\filteritems.txt" />
       <None Include="wwwroot\js\connectivity.js">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>

@@ -15,6 +15,10 @@ public class FilterService : IFilterService
     {
         try
         {
+            // var dir = Path.GetDirectoryName(typeof(FilterService).Assembly.Location)!;
+            //var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!;
+            //var response = File.ReadAllText(Path.Combine(dir, "wwwroot/Assets", "filteritems.txt"));
+
             //string path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             //path = Path.Combine(path, @"..\..\..\Data", @"filteritems.txt");
             var response = File.ReadAllText(@"c:\Staples\filteritems.txt");

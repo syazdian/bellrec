@@ -1,4 +1,6 @@
+using Bell.Reconciliation.Web.Server.Services;
 using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.Extensions.DependencyInjection;
 using System.ComponentModel;
 
 namespace Bell.Reconciliation.Web.Server;
@@ -16,6 +18,8 @@ public class Program
 
         var filterItems = GetFilterItems(builder);
         builder.Services.AddSingleton(filterItems);
+
+        builder.Services.AddTransient<DatabaseGenerator>();
 
         var app = builder.Build();
 

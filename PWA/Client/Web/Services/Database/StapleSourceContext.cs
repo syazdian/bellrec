@@ -1,5 +1,5 @@
-﻿using Bell.Reconciliation.Common.Models;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using Bell.Reconciliation.Common.Models;
 
 namespace Bell.Reconciliation.Frontend.Web.Database
 {
