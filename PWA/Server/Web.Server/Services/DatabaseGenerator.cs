@@ -1,4 +1,5 @@
 ﻿using Bell.Reconciliation.Web.Server.Data;
+using Mapster;
 
 namespace Bell.Reconciliation.Web.Server.Services
 {
@@ -17,17 +18,18 @@ namespace Bell.Reconciliation.Web.Server.Services
             List<Common.Models.BellSource_new> bellSources = new();
             foreach (var source in bellSourcesDb)
             {
-                bell = new Common.Models.BellSource_new();
-                bell.Amount = source.Amount;
-                bell.Comment = source.Comment;
-                bell.CommissionDetails = source.CommissionDetails;
-                bell.CustomerName = source.CustomerName;
-                bell.Id = int.Parse(source.Id.ToString());
-                bell.Imei = source.Imei;
-                bell.Lob = source.Lob;
-                bell.OrderNumber = source.OrderNumber;
-                bell.Phone = source.Phone;
-                bell.TransactionDate = source.TransactionDate;
+                bell = source.Adapt<Common.Models.BellSource_new>();
+                //bell = new Common.Models.BellSource_new();
+                //bell.Amount = source.Amount;
+                //bell.Comment = source.Comment;
+                //bell.CommissionDetails = source.CommissionDetails;
+                //bell.CustomerName = source.CustomerName;
+                //bell.Id = int.Parse(source.Id.ToString());
+                //bell.Imei = source.Imei;
+                //bell.Lob = source.Lob;
+                //bell.OrderNumber = source.OrderNumber;
+                //bell.Phone = source.Phone;
+                //bell.TransactionDate = source.TransactionDate;
 
                 bellSources.Add(bell);
             }
@@ -37,24 +39,26 @@ namespace Bell.Reconciliation.Web.Server.Services
             List<Common.Models.StaplesSource_new> stapleSources = new();
             foreach (var source in stapleSourcesDb)
             {
-                staple = new Common.Models.StaplesSource_new();
-                staple.Amount = source.Amount;
-                staple.Brand = source.Brand;
-                staple.Comment = source.Comment;
-                staple.CustomerName = source.CustomerName;
-                staple.DeviceCo = source.DeviceCo;
-                staple.Id = int.Parse(source.Id.ToString());
-                staple.Imei = source.Imei;
-                staple.Location = source.Location;
-                staple.Msf = source.Msf;
-                staple.OrderNumber = source.OrderNumber;
-                staple.Phone = source.Phone;
-                staple.Product = source.Product;
-                staple.RebateType = source.RebateType;
-                staple.Rec = source.Rec;
-                staple.SalesPerson = source.SalesPerson;
-                staple.TaxCode = source.TaxCode;
-                staple.TransactionDate = source.TransactionDate;
+                staple = source.Adapt<Common.Models.StaplesSource_new>();
+
+                //staple = new Common.Models.StaplesSource_new();
+                //staple.Amount = source.Amount;
+                //staple.Brand = source.Brand;
+                //staple.Comment = source.Comment;
+                //staple.CustomerName = source.CustomerName;
+                //staple.DeviceCo = source.DeviceCo;
+                //staple.Id = int.Parse(source.Id.ToString());
+                //staple.Imei = source.Imei;
+                //staple.Location = source.Location;
+                //staple.Msf = source.Msf;
+                //staple.OrderNumber = source.OrderNumber;
+                //staple.Phone = source.Phone;
+                //staple.Product = source.Product;
+                //staple.RebateType = source.RebateType;
+                //staple.Rec = source.Rec;
+                //staple.SalesPerson = source.SalesPerson;
+                //staple.TaxCode = source.TaxCode;
+                //staple.TransactionDate = source.TransactionDate;
 
                 stapleSources.Add(staple);
             }
