@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Bell.Reconciliation.Common.Models
 {
-    public class StaplesSource_new
+    //TODO: replace with StaplesSource
+    public class StaplesSource
     {
         public long Id { get; set; }
 

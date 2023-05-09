@@ -8,7 +8,7 @@ namespace Bell.Reconciliation.Common.Models
 {
     public class BellStaplesSource
     {
-        public BellSource_new[] BellSources { get; set; }
-        public StaplesSource_new[] StaplesSources { get; set; }
+        public BellSource[] BellSources { get; set; }
+        public StaplesSource[] StaplesSources { get; set; }
     }
 }

@@ -14,21 +14,22 @@ namespace Bell.Reconciliation.Web.Server.Services
             BellRecContext sqlitedb = new BellRecContext();
 
             var bellSourcesDb = sqlitedb.BellSources.ToList();
-            Common.Models.BellSource_new bell;
-            List<Common.Models.BellSource_new> bellSources = new();
+            Common.Models.BellSource bell;
+            List<Common.Models.BellSource> bellSources = new();
             foreach (var source in bellSourcesDb)
             {
-                bell = source.Adapt<Common.Models.BellSource_new>();
+                bell = source.Adapt<Common.Models.BellSource>();
 
                 bellSources.Add(bell);
             }
 
             var stapleSourcesDb = sqlitedb.StaplesSources.ToList();
-            Common.Models.StaplesSource_new staple;
-            List<Common.Models.StaplesSource_new> stapleSources = new();
+            Common.Models.StaplesSource staple;
+            List<Common.Models.StaplesSource> stapleSources = new();
             foreach (var source in stapleSourcesDb)
             {
-                staple = source.Adapt<Common.Models.StaplesSource_new>();
+                //TODO: mappings be done in repository layer
+                staple = source.Adapt<Common.Models.StaplesSource>();
 
                 stapleSources.Add(staple);
             }

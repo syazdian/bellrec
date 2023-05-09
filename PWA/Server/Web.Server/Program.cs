@@ -19,7 +19,7 @@ public class Program
         var filterItems = GetFilterItems(builder);
         builder.Services.AddSingleton(filterItems);
 
-        builder.Services.AddTransient<DatabaseGenerator>();
+        // builder.Services.AddTransient<DatabaseGenerator>();
 
         var app = builder.Build();
 

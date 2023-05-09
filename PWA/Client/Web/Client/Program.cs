@@ -23,7 +23,7 @@ namespace Bell.Reconciliation.Client
             builder.Services.AddSqliteWasmDbContextFactory<StapleSourceContext>(opts => opts.UseSqlite("Data Source=StapleSource.sqlite3"));
 
             builder.Services.AddTransient<IFilterService, FilterService>();
-            builder.Services.AddTransient<IInjectBellSource, FetchBellFromDb>();
+            // builder.Services.AddTransient<IInjectBellSource, FetchBellFromDb>();
             builder.Services.AddTransient<ISyncData, SyncData>();
             // builder.Services.AddTransient<IInjectBellSource, InjectBellSource>();
 
