@@ -1,5 +1,4 @@
-﻿using Bell.Reconciliation.Common.Models;
-using Bell.Reconciliation.Web.Server.Data;
+﻿using Bell.Reconciliation.Web.Server.Data;
 
 namespace Bell.Reconciliation.Web.Server.Services
 {
@@ -9,7 +8,7 @@ namespace Bell.Reconciliation.Web.Server.Services
         {
         }
 
-        public async Task<List<Common.Models.BellSource>> DatabaseBellSourceGenerator(int startId = 0)
+        public async Task<BellStaplesSource> DatabaseBellSourceGenerator(int startId = 0)
         {
             BellRecContext sqlitedb = new BellRecContext();
             var bellSourcesDb = sqlitedb.BellSources.ToList();
@@ -32,7 +31,31 @@ namespace Bell.Reconciliation.Web.Server.Services
 
                 bellSources.Add(bell);
             }
-            return bellSources;
+
+            Common.Models.StaplesSource staple;
+            List<Common.Models.StaplesSource> stapleSources = new();
+            foreach (var source in bellSourcesDb)
+            {
+                staple = new Common.Models.StaplesSource();
+                staple.Amount = source.Amound;
+                staple.Comment = source.Comment;
+                staple.CommissionDetails = source.CommissionDetails;
+                staple.CustomerName = source.CustomerName;
+                staple.Id = int.Parse(source.Id.ToString());
+                staple.IMEI = source.Imei;
+                staple.LOB = source.Lob;
+                staple.OrderNumber = source.OrderNumber;
+                staple.Phone = source.Phone.ToString();
+                staple.TransactionDate = source.TransactionDate;
+
+                stapleSources.Add(staple);
+            }
+
+            BellStaplesSource bellstaple = new();
+            bellstaple.BellSources = bellSources.ToArray();
+            bellstaple.StaplesSources = stapleSources.ToArray();
+
+            return bellstaple;
         }
 
         public async Task<Common.Models.BellSource> GeneratoreBellSourceObject(int i)

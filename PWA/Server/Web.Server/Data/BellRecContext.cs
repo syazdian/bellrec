@@ -15,9 +15,9 @@ public partial class BellRecContext : DbContext
     {
     }
 
-    public virtual DbSet<BellSource> BellSources { get; set; }
+    public virtual DbSet<Data.BellSource> BellSources { get; set; }
 
-    public virtual DbSet<StaplesSource> StaplesSources { get; set; }
+    public virtual DbSet<Data.StaplesSource> StaplesSources { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
@@ -25,7 +25,7 @@ public partial class BellRecContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<BellSource>(entity =>
+        modelBuilder.Entity<Data.BellSource>(entity =>
         {
             entity.ToTable("BellSource");
 
@@ -34,7 +34,7 @@ public partial class BellRecContext : DbContext
             entity.Property(e => e.Lob).HasColumnName("LOB");
         });
 
-        modelBuilder.Entity<StaplesSource>(entity =>
+        modelBuilder.Entity<Data.StaplesSource>(entity =>
         {
             entity.ToTable("StaplesSource");
 
