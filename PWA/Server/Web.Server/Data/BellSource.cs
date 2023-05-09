@@ -9,13 +9,13 @@ public partial class BellSource
 
     public long? Phone { get; set; }
 
-    public string? Amound { get; set; }
+    public long? Amount { get; set; }
 
     public string? Comment { get; set; }
 
-    public string? OrderNumber { get; set; }
+    public long? OrderNumber { get; set; }
 
-    public string? Imei { get; set; }
+    public long? Imei { get; set; }
 
     public string? TransactionDate { get; set; }
 

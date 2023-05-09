@@ -11,41 +11,49 @@ namespace Bell.Reconciliation.Web.Server.Services
         public async Task<BellStaplesSource> DatabaseBellSourceGenerator(int startId = 0)
         {
             BellRecContext sqlitedb = new BellRecContext();
-            var bellSourcesDb = sqlitedb.BellSources.ToList();
 
-            Common.Models.BellSource bell;
-            List<Common.Models.BellSource> bellSources = new();
+            var bellSourcesDb = sqlitedb.BellSources.ToList();
+            Common.Models.BellSource_new bell;
+            List<Common.Models.BellSource_new> bellSources = new();
             foreach (var source in bellSourcesDb)
             {
-                bell = new Common.Models.BellSource();
-                bell.Amount = source.Amound;
+                bell = new Common.Models.BellSource_new();
+                bell.Amount = source.Amount;
                 bell.Comment = source.Comment;
                 bell.CommissionDetails = source.CommissionDetails;
                 bell.CustomerName = source.CustomerName;
                 bell.Id = int.Parse(source.Id.ToString());
-                bell.IMEI = source.Imei;
-                bell.LOB = source.Lob;
+                bell.Imei = source.Imei;
+                bell.Lob = source.Lob;
                 bell.OrderNumber = source.OrderNumber;
-                bell.Phone = source.Phone.ToString();
+                bell.Phone = source.Phone;
                 bell.TransactionDate = source.TransactionDate;
 
                 bellSources.Add(bell);
             }
 
-            Common.Models.StaplesSource staple;
-            List<Common.Models.StaplesSource> stapleSources = new();
-            foreach (var source in bellSourcesDb)
+            var stapleSourcesDb = sqlitedb.StaplesSources.ToList();
+            Common.Models.StaplesSource_new staple;
+            List<Common.Models.StaplesSource_new> stapleSources = new();
+            foreach (var source in stapleSourcesDb)
             {
-                staple = new Common.Models.StaplesSource();
-                staple.Amount = source.Amound;
+                staple = new Common.Models.StaplesSource_new();
+                staple.Amount = source.Amount;
+                staple.Brand = source.Brand;
                 staple.Comment = source.Comment;
-                staple.CommissionDetails = source.CommissionDetails;
                 staple.CustomerName = source.CustomerName;
+                staple.DeviceCo = source.DeviceCo;
                 staple.Id = int.Parse(source.Id.ToString());
-                staple.IMEI = source.Imei;
-                staple.LOB = source.Lob;
+                staple.Imei = source.Imei;
+                staple.Location = source.Location;
+                staple.Msf = source.Msf;
                 staple.OrderNumber = source.OrderNumber;
-                staple.Phone = source.Phone.ToString();
+                staple.Phone = source.Phone;
+                staple.Product = source.Product;
+                staple.RebateType = source.RebateType;
+                staple.Rec = source.Rec;
+                staple.SalesPerson = source.SalesPerson;
+                staple.TaxCode = source.TaxCode;
                 staple.TransactionDate = source.TransactionDate;
 
                 stapleSources.Add(staple);
