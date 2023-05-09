@@ -1,4 +1,5 @@
 ﻿using Bell.Reconciliation.Common.Models;
+using Bell.Reconciliation.Web.Server.Data;
 
 namespace Bell.Reconciliation.Web.Server.Services
 {
@@ -8,9 +9,9 @@ namespace Bell.Reconciliation.Web.Server.Services
         {
         }
 
-        public async Task<List<BellSource>> DatabaseBellSourceGenerator(int startId = 0)
+        public async Task<List<Common.Models.BellSource>> DatabaseBellSourceGenerator(int startId = 0)
         {
-            List<BellSource> bellSources = new();
+            List<Common.Models.BellSource> bellSources = new();
 
             for (int i = startId + 1; i < startId + 1000; i++)
             {
@@ -19,11 +20,11 @@ namespace Bell.Reconciliation.Web.Server.Services
             return bellSources;
         }
 
-        public async Task<BellSource> GeneratoreBellSourceObject(int i)
+        public async Task<Common.Models.BellSource> GeneratoreBellSourceObject(int i)
         {
             return await Task.Run(() =>
             {
-                var newBell = new BellSource()
+                var newBell = new Common.Models.BellSource()
                 {
                     Id = i,
                     Phone = ((long)new Random().Next(0, 100000) * (long)new Random().Next(0, 100000)).ToString().PadLeft(10, '0'),
