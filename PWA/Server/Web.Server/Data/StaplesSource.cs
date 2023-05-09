@@ -31,7 +31,7 @@ public partial class StaplesSource
 
     public long? TaxCode { get; set; }
 
-    public string? Msf { get; set; }
+    public long? Msf { get; set; }
 
     public string? DeviceCo { get; set; }
 
