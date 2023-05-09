@@ -11,11 +11,26 @@ namespace Bell.Reconciliation.Web.Server.Services
 
         public async Task<List<Common.Models.BellSource>> DatabaseBellSourceGenerator(int startId = 0)
         {
-            List<Common.Models.BellSource> bellSources = new();
+            BellRecContext sqlitedb = new BellRecContext();
+            var bellSourcesDb = sqlitedb.BellSources.ToList();
 
-            for (int i = startId + 1; i < startId + 1000; i++)
+            Common.Models.BellSource bell;
+            List<Common.Models.BellSource> bellSources = new();
+            foreach (var source in bellSourcesDb)
             {
-                bellSources.Add(await GeneratoreBellSourceObject(i));
+                bell = new Common.Models.BellSource();
+                bell.Amount = source.Amound;
+                bell.Comment = source.Comment;
+                bell.CommissionDetails = source.CommissionDetails;
+                bell.CustomerName = source.CustomerName;
+                bell.Id = int.Parse(source.Id.ToString());
+                bell.IMEI = source.Imei;
+                bell.LOB = source.Lob;
+                bell.OrderNumber = source.OrderNumber;
+                bell.Phone = source.Phone.ToString();
+                bell.TransactionDate = source.TransactionDate;
+
+                bellSources.Add(bell);
             }
             return bellSources;
         }
