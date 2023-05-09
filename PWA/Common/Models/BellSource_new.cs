@@ -8,20 +8,15 @@ namespace Bell.Reconciliation.Common.Models
 {
     public class BellSource_new
     {
-        public int Id { get; set; }
-        public long? Phone { get; set; }
         public long? Amount { get; set; }
         public string? Comment { get; set; }
-        public long? OrderNumber { get; set; }
-
-        public long? Imei { get; set; }
-
-        public string? TransactionDate { get; set; }
-
-        public string? CustomerName { get; set; }
-
         public string? CommissionDetails { get; set; }
-
+        public string? CustomerName { get; set; }
+        public int Id { get; set; }
+        public long? Imei { get; set; }
+        public long? OrderNumber { get; set; }
+        public long? Phone { get; set; }
+        public string? TransactionDate { get; set; }
         public string? Lob { get; set; }
     }
 }
