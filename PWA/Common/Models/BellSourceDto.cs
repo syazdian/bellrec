@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Bell.Reconciliation.Common.Models
 {
-    public class BellSource
+    public class BellSourceDto
     {
         public int Id { get; set; }
         public long? Amount { get; set; }

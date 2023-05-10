@@ -9,8 +9,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="BellSource.cs" />
-    <Compile Remove="StaplesSource.cs" />
+    <Compile Remove="Dtos\**" />
+    <EmbeddedResource Remove="Dtos\**" />
+    <None Remove="Dtos\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -19,9 +20,5 @@
 
   <ItemGroup>
     <SupportedPlatform Include="browser" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Dtos\" />
   </ItemGroup>
 </Project>

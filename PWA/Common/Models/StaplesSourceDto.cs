@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Bell.Reconciliation.Common.Models
 {
     //TODO: replace with StaplesSource
-    public class StaplesSource
+    public class StaplesSourceDto
     {
         public long Id { get; set; }
 

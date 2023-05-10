@@ -1,9 +1,8 @@
 ﻿@using Bell.Reconciliation.Common.Models
 @using Bell.Reconciliation.Frontend.Shared.ServiceInterfaces;
-@*@inject IInjectBellSource BellSource*@
 @inject ISyncData SyncData
+@inject ILocalDbRepository Localdb
 
-@*<RadzenButton Text="Generate Data in Server DB" Click="GenerateServerDb"></RadzenButton>*@
 <RadzenButton ButtonStyle="ButtonStyle.Dark" Text="Fetch Data from Server" Click="FetchData"></RadzenButton>
 <RadzenButton ButtonStyle="ButtonStyle.Warning" Text="Load data from localDB" Click="LoadFromLocalDB"></RadzenButton>
 <br />
@@ -12,32 +11,32 @@
     <Tabs>
         <RadzenTabsItem Text="All Rows">
             <RadzenDataGrid AllowVirtualization="true" VirtualizationOverscanCount="30" ColumnWidth="150px" AllowFiltering="true" AllowPaging="true" PageSize="8" AllowSorting="true"
-                            Data="@bellSources" @ref="grid" TItem="BellSource">
+                            Data="@bellSources" @ref="grid" TItem="BellSourceDto">
                 <Columns>
-                    <RadzenDataGridColumn TItem="BellSource" Property="Id" Title="ID" />
-                    <RadzenDataGridColumn TItem="BellSource" Property="Phone" Title="Phone" />
-                    <RadzenDataGridColumn TItem="BellSource" Property="Amount" Title="Amount" />
-                    <RadzenDataGridColumn TItem="BellSource" Property="Comment" Title="Comment" />
-                    <RadzenDataGridColumn TItem="BellSource" Property="IMEI" Title="IMEI" />
-                    <RadzenDataGridColumn TItem="BellSource" Property="TransactionDate" Title="TransactionDate" />
-                    <RadzenDataGridColumn TItem="BellSource" Property="CustomerName" Title="CustomerName" />
-                    <RadzenDataGridColumn TItem="BellSource" Property="CommissionDetailes" Title="CommissionDetailes" />
-                    <RadzenDataGridColumn TItem="BellSource" Property="LOB" Title="LOB" />
+                    <RadzenDataGridColumn TItem="BellSourceDto" Property="Id" Title="ID" />
+                    <RadzenDataGridColumn TItem="BellSourceDto" Property="Phone" Title="Phone" />
+                    <RadzenDataGridColumn TItem="BellSourceDto" Property="Amount" Title="Amount" />
+                    <RadzenDataGridColumn TItem="BellSourceDto" Property="Comment" Title="Comment" />
+                    <RadzenDataGridColumn TItem="BellSourceDto" Property="IMEI" Title="IMEI" />
+                    <RadzenDataGridColumn TItem="BellSourceDto" Property="TransactionDate" Title="TransactionDate" />
+                    <RadzenDataGridColumn TItem="BellSourceDto" Property="CustomerName" Title="CustomerName" />
+                    <RadzenDataGridColumn TItem="BellSourceDto" Property="CommissionDetailes" Title="CommissionDetailes" />
+                    <RadzenDataGridColumn TItem="BellSourceDto" Property="LOB" Title="LOB" />
                 </Columns>
             </RadzenDataGrid>
         </RadzenTabsItem>
         <RadzenTabsItem Text="Only in Staples">
-            <RadzenDataGrid ColumnWidth="150px" AllowFiltering="true" AllowPaging="true" PageSize="8" AllowSorting="true" Data="@staplesSources" TItem="StaplesSource">
+            <RadzenDataGrid ColumnWidth="150px" AllowFiltering="true" AllowPaging="true" PageSize="8" AllowSorting="true" Data="@staplesSources" TItem="StaplesSourceDto">
                 <Columns>
-                    <RadzenDataGridColumn TItem="StaplesSource" Property="Id" Title="ID" />
-                    <RadzenDataGridColumn TItem="StaplesSource" Property="Phone" Title="Phone" />
-                    <RadzenDataGridColumn TItem="StaplesSource" Property="Amount" Title="Amount" />
-                    <RadzenDataGridColumn TItem="StaplesSource" Property="Comment" Title="Comment" />
-                    <RadzenDataGridColumn TItem="StaplesSource" Property="IMEI" Title="IMEI" />
-                    <RadzenDataGridColumn TItem="StaplesSource" Property="TransactionDate" Title="TransactionDate" />
-                    <RadzenDataGridColumn TItem="StaplesSource" Property="CustomerName" Title="CustomerName" />
-                    <RadzenDataGridColumn TItem="StaplesSource" Property="CommissionDetailes" Title="CommissionDetailes" />
-                    <RadzenDataGridColumn TItem="StaplesSource" Property="LOB" Title="LOB" />
+                    <RadzenDataGridColumn TItem="StaplesSourceDto" Property="Id" Title="ID" />
+                    <RadzenDataGridColumn TItem="StaplesSourceDto" Property="Phone" Title="Phone" />
+                    <RadzenDataGridColumn TItem="StaplesSourceDto" Property="Amount" Title="Amount" />
+                    <RadzenDataGridColumn TItem="StaplesSourceDto" Property="Comment" Title="Comment" />
+                    <RadzenDataGridColumn TItem="StaplesSourceDto" Property="IMEI" Title="IMEI" />
+                    <RadzenDataGridColumn TItem="StaplesSourceDto" Property="TransactionDate" Title="TransactionDate" />
+                    <RadzenDataGridColumn TItem="StaplesSourceDto" Property="CustomerName" Title="CustomerName" />
+                    <RadzenDataGridColumn TItem="StaplesSourceDto" Property="CommissionDetailes" Title="CommissionDetailes" />
+                    <RadzenDataGridColumn TItem="StaplesSourceDto" Property="LOB" Title="LOB" />
                 </Columns>
             </RadzenDataGrid>
         </RadzenTabsItem>
@@ -66,17 +65,17 @@
         </RadzenTabsItem>
         <RadzenTabsItem Text="Only in Bell">
             <RadzenDataGrid AllowVirtualization="true"  ColumnWidth="150px" AllowFiltering="true" AllowPaging="true" PageSize="8" AllowSorting="true"
-                            Data="@bellSources" @ref="grid" TItem="BellSource">
+                            Data="@bellSources" @ref="grid" TItem="BellSourceDto">
                 <Columns>
-                    <RadzenDataGridColumn TItem="BellSource" Property="Id" Title="ID" />
-                    <RadzenDataGridColumn TItem="BellSource" Property="Phone" Title="Phone" />
-                    <RadzenDataGridColumn TItem="BellSource" Property="Amount" Title="Amount" />
-                    <RadzenDataGridColumn TItem="BellSource" Property="Comment" Title="Comment" />
-                    <RadzenDataGridColumn TItem="BellSource" Property="IMEI" Title="IMEI" />
-                    <RadzenDataGridColumn TItem="BellSource" Property="TransactionDate" Title="TransactionDate" />
-                    <RadzenDataGridColumn TItem="BellSource" Property="CustomerName" Title="CustomerName" />
-                    <RadzenDataGridColumn TItem="BellSource" Property="CommissionDetailes" Title="CommissionDetailes" />
-                    <RadzenDataGridColumn TItem="BellSource" Property="LOB" Title="LOB" />
+                    <RadzenDataGridColumn TItem="BellSourceDto" Property="Id" Title="ID" />
+                    <RadzenDataGridColumn TItem="BellSourceDto" Property="Phone" Title="Phone" />
+                    <RadzenDataGridColumn TItem="BellSourceDto" Property="Amount" Title="Amount" />
+                    <RadzenDataGridColumn TItem="BellSourceDto" Property="Comment" Title="Comment" />
+                    <RadzenDataGridColumn TItem="BellSourceDto" Property="IMEI" Title="IMEI" />
+                    <RadzenDataGridColumn TItem="BellSourceDto" Property="TransactionDate" Title="TransactionDate" />
+                    <RadzenDataGridColumn TItem="BellSourceDto" Property="CustomerName" Title="CustomerName" />
+                    <RadzenDataGridColumn TItem="BellSourceDto" Property="CommissionDetailes" Title="CommissionDetailes" />
+                    <RadzenDataGridColumn TItem="BellSourceDto" Property="LOB" Title="LOB" />
                 </Columns>
             </RadzenDataGrid>
         </RadzenTabsItem>
@@ -89,28 +88,24 @@
 @code {
     int selectedIndex = 0;
 
-    List<StaplesSource> staplesSources = new();
+    List<StaplesSourceDto> staplesSources = new();
     List<CompareBellStaple> compareBellStaple = new();
-    RadzenDataGrid<BellSource> grid = new RadzenDataGrid<BellSource>();
+    RadzenDataGrid<BellSourceDto> grid = new RadzenDataGrid<BellSourceDto>();
 
     private bool busy;
-    List<BellSource> bellSources = new();
+    List<BellSourceDto> bellSources = new();
 
 
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        //bellSources = (await BellSource.GetBellSourcesAsync());
-        //bellSources.Add(new BellSource() { Id = 1, Phone = "123", Amount = "1", Comment = "11", CommissionDetails = "32", CustomerName = "dasd", IMEI = "2131324", LOB = "234", OrderNumber = "231", TransactionDate = "2023-04-04" });
-        //bellSources.Add(new BellSource() { Id = 2, Phone = "123", Amount = "1", Comment = "11", CommissionDetails = "32", CustomerName = "dasd", IMEI = "2131324", LOB = "234", OrderNumber = "231", TransactionDate = "2023-04-04" });
-        //bellSources.Add(new BellSource() { Id = 3, Phone = "123", Amount = "1", Comment = "11", CommissionDetails = "32", CustomerName = "dasd", IMEI = "2131324", LOB = "234", OrderNumber = "231", TransactionDate = "2023-04-04" });
-        //bellSources.Add(new BellSource() { Id = 4, Phone = "123", Amount = "1", Comment = "11", CommissionDetails = "32", CustomerName = "dasd", IMEI = "2131324", LOB = "234", OrderNumber = "231", TransactionDate = "2023-04-04" });
-        staplesSources.AddRange(new List< StaplesSource >{
-            new StaplesSource() { Id = 1, Phone = 123, Amount = 5, Comment = "11", CustomerName = "dasd", Imei = 2131324, OrderNumber = 2134, TransactionDate = "2023-04-04" },
-        new StaplesSource() { Id = 2, Phone =133, Amount = 5, Comment = "11",  CustomerName = "dasd", Imei = 2131324, OrderNumber =234234, TransactionDate = "2023-04-04" },
-        new StaplesSource() { Id = 3, Phone = 123213, Amount = 5, Comment = "11",  CustomerName = "dasd", Imei = 2131324,  OrderNumber = 234, TransactionDate = "2023-04-04" },
-        new StaplesSource() { Id = 4, Phone = 12312, Amount = 7, Comment = "11",  CustomerName = "dasd", Imei = 2131324,  OrderNumber = 234, TransactionDate = "2023-04-04" }
+
+         staplesSources.AddRange(new List< StaplesSourceDto >{
+            new StaplesSourceDto() { Id = 1, Phone = 123, Amount = 5, Comment = "11", CustomerName = "dasd", Imei = 2131324, OrderNumber = 2134, TransactionDate = "2023-04-04" },
+        new StaplesSourceDto() { Id = 2, Phone =133, Amount = 5, Comment = "11",  CustomerName = "dasd", Imei = 2131324, OrderNumber =234234, TransactionDate = "2023-04-04" },
+        new StaplesSourceDto() { Id = 3, Phone = 123213, Amount = 5, Comment = "11",  CustomerName = "dasd", Imei = 2131324,  OrderNumber = 234, TransactionDate = "2023-04-04" },
+        new StaplesSourceDto() { Id = 4, Phone = 12312, Amount = 7, Comment = "11",  CustomerName = "dasd", Imei = 2131324,  OrderNumber = 234, TransactionDate = "2023-04-04" }
        } );
 
         compareBellStaple.AddRange(new List<CompareBellStaple>{
@@ -124,23 +119,16 @@
 
     private async Task FetchData()
     {
-        await SyncData.FetchData();
-        bellSources = await SyncData.GetDataFromLocalDb();
+        await SyncData.FetchDataFromServerDb();
+        bellSources = await Localdb.GetBellSourceFromLocalDb();
 
     }
 
     private async Task LoadFromLocalDB()
     {
-        bellSources = await SyncData.GetDataFromLocalDb();
+        bellSources = await Localdb.GetBellSourceFromLocalDb();
     }
 
-    //private async Task GenerateServerDb()
-    //{
-    //    var newBell = await SyncData.GenerateDataInServerDb();
-    //    bellSources.Add(newBell);
-    //    await grid.Reload();
-    //   // await InvokeAsync(StateHasChanged);
-    //    StateHasChanged();
-    //}
+    
 
 }

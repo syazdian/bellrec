@@ -12,17 +12,24 @@ public class SyncDataController : Controller
     private readonly DatabaseGenerator _databaseGenerator;
     private readonly BellRecRepository _bellRepo;
 
-    public SyncDataController(BellRecRepository bellRepo, DatabaseGenerator databaseGenerator)
+    public SyncDataController(DatabaseGenerator databaseGenerator, BellRecRepository bellRepo)
     {
         _databaseGenerator = databaseGenerator;
         _bellRepo = bellRepo;
     }
 
+    [HttpGet("FetchFromDatabase")]
+    public async Task<IActionResult> FetchFromDatabase()
+    {
+        var items = await _databaseGenerator.FetchFromDatabaseBellStaplesSource();
+        return Ok(items);
+    }
+
     [HttpGet("GetBellSourceitems/{Id}")]
     public async Task<IActionResult> GetBellSourceitems([FromRoute] int Id = 0)
     {
-        var items = await _databaseGenerator.DatabaseBellSourceGenerator(Id);
-        return Ok();
+        var items = await _databaseGenerator.BellSourceGeneratorFromMemory(Id);
+        return Ok(items);
     }
 
     [HttpGet("FillSqlite/{RecordNom}/{DeleteOldRecords}/{DifferenceRate}")]
