@@ -1,28 +1,17 @@
-﻿using Bell.Reconciliation.Common.Models;
-using Bell.Reconciliation.Common.Models.Domain;
-using Bell.Reconciliation.Common.Utilities;
-using Bell.Reconciliation.Frontend.Shared.ServiceInterfaces;
-using Bell.Reconciliation.Frontend.Web.Database;
-using Microsoft.EntityFrameworkCore;
-using SqliteWasmHelper;
-using System.Collections.Generic;
-using System.Net.Http.Json;
-using static System.Net.WebRequestMethods;
-
-namespace Bell.Reconciliation.Frontend.Web.Services;
+﻿namespace Bell.Reconciliation.Frontend.Web.Services;
 
 public class SyncData : ISyncData
 {
-    private readonly ISqliteWasmDbContextFactory<StapleSourceContext> _dbContextFactory;
     private readonly HttpClient _httpClient;
+    private readonly ILocalDbRepository _localDb;
 
-    public SyncData(ISqliteWasmDbContextFactory<StapleSourceContext> dbContextFactory, HttpClient httpClient)
+    public SyncData(HttpClient httpClient, ILocalDbRepository localDb)
     {
-        _dbContextFactory = dbContextFactory;
         _httpClient = httpClient;
+        _localDb = localDb;
     }
 
-    public async Task FetchData()
+    public async Task BellSourceGenerateFromMemory()
     {
         try
         {
@@ -30,9 +19,9 @@ public class SyncData : ISyncData
             do
             {
                 //var bellList = await _httpClient.GetFromJsonAsync<List<BellSource>>($"/api/SyncData/GetBellSourceitems/{lastId}");
-                var bellList = await new HttpClient().GetFromJsonAsync<BellSource[]>($"https://localhost:7131/api/syncdata/getbellsourceitems/{lastId}");
+                var bellList = await new HttpClient().GetFromJsonAsync<BellSourceDto[]>($"https://localhost:7131/api/syncdata/GetBellSourceitems/{lastId}");
                 if (bellList is not null)
-                    lastId = await InsertDataToDbAsync(bellList.ToList());
+                    lastId = 1;// await InsertDataToDbAsync(bellList.ToList());
                 else
                     return;
             } while (lastId < 100000);
@@ -43,15 +32,13 @@ public class SyncData : ISyncData
         }
     }
 
-    public async Task<int> InsertDataToDbAsync(List<BellSource> bellSources)
+    public async Task FetchDataFromServerDb()
     {
         try
         {
-            using var ctx = await _dbContextFactory.CreateDbContextAsync();
-
-            await ctx.BellSources.AddRangeAsync(bellSources);
-            await ctx.SaveChangesAsync();
-            return bellSources.Max(x => x.Id);
+            var bellStaplesSource = await _httpClient.GetFromJsonAsync<BellStaplesSourceDto>($"/api/SyncData/FetchFromDatabase");
+            ArgumentNullException.ThrowIfNull(bellStaplesSource);
+            await _localDb.InsertDataToLocalDbAsync(bellStaplesSource);
         }
         catch (Exception ex)
         {
@@ -59,15 +46,22 @@ public class SyncData : ISyncData
         }
     }
 
-    public Task UpsertData()
+    public async Task GenerateDataInServerDb()
     {
-        throw new NotImplementedException();
+        try
+        {
+            var res = await _httpClient.GetStringAsync($"/api/syncData/FillSqlite/1000/y/10");
+
+            if (res is "Done") { }
+        }
+        catch (Exception ex)
+        {
+            throw;
+        }
     }
 
-    public async Task<List<BellSource>> GetDataFromLocalDb()
+    public Task UpsertDataInServerDb()
     {
-        using var ctx = await _dbContextFactory.CreateDbContextAsync();
-        List<BellSource> bellSources = await ctx.BellSources.ToListAsync();
-        return bellSources;
+        throw new NotImplementedException();
     }
 }

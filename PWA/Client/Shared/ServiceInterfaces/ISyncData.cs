@@ -1,12 +1,12 @@
-﻿using Bell.Reconciliation.Common.Models;
-
-namespace Bell.Reconciliation.Frontend.Shared.ServiceInterfaces;
+﻿namespace Bell.Reconciliation.Frontend.Shared.ServiceInterfaces;
 
 public interface ISyncData
 {
-    public Task FetchData();
+    public Task UpsertDataInServerDb();
 
-    public Task UpsertData();
+    public Task BellSourceGenerateFromMemory();
 
-    public Task<List<BellSource>> GetDataFromLocalDb();
+    public Task FetchDataFromServerDb();
+
+    public Task GenerateDataInServerDb();
 }

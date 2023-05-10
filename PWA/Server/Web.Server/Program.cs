@@ -1,8 +1,3 @@
-using Bell.Reconciliation.Web.Server.Services;
-using Microsoft.AspNetCore.ResponseCompression;
-using Microsoft.Extensions.DependencyInjection;
-using System.ComponentModel;
-
 namespace Bell.Reconciliation.Web.Server;
 
 public class Program
@@ -20,7 +15,7 @@ public class Program
         builder.Services.AddSingleton(filterItems);
 
         builder.Services.AddTransient<DatabaseGenerator>();
-
+        builder.Services.AddTransient<BellRecRepository>();
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.

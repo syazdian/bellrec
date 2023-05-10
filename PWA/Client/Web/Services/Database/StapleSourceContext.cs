@@ -9,7 +9,7 @@ namespace Bell.Reconciliation.Frontend.Web.Database
         {
         }
 
-        public DbSet<BellSource> BellSources { get; set; } = null!;
-        public DbSet<StaplesSource> StaplesSources { get; set; } = null!;
+        public DbSet<BellSourceDto> BellSources { get; set; } = null!;
+        public DbSet<StaplesSourceDto> StaplesSources { get; set; } = null!;
     }
 }

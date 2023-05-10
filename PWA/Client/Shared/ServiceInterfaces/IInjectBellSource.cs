@@ -1,9 +1,8 @@
-﻿using Bell.Reconciliation.Common.Models;
-
-namespace Bell.Reconciliation.Frontend.Shared.ServiceInterfaces;
+﻿namespace Bell.Reconciliation.Frontend.Shared.ServiceInterfaces;
 
 public interface IInjectBellSource
 {
-    public Task<List<BellSource>> GetBellSourcesAsync();
-    public Task<BellSource> InsertBellSourcesAsync();
+    public Task<List<BellSourceDto>> GetBellSourcesAsync();
+
+    public Task<BellSourceDto> InsertBellSourcesAsync();
 }
