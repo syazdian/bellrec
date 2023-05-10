@@ -32,4 +32,11 @@ public class LocalDbRepository : ILocalDbRepository
         List<BellSourceDto> bellSources = await ctx.BellSources.ToListAsync();
         return bellSources;
     }
+
+    public async Task<List<StaplesSourceDto>> GetStapleSourceFromLocalDb()
+    {
+        using var ctx = await _dbContextFactory.CreateDbContextAsync();
+        List<StaplesSourceDto> staplesSources = await ctx.StaplesSources.ToListAsync();
+        return staplesSources;
+    }
 }

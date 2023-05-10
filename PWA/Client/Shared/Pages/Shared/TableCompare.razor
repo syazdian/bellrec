@@ -101,12 +101,7 @@
     {
         await base.OnInitializedAsync();
 
-         staplesSources.AddRange(new List< StaplesSourceDto >{
-            new StaplesSourceDto() { Id = 1, Phone = 123, Amount = 5, Comment = "11", CustomerName = "dasd", Imei = 2131324, OrderNumber = 2134, TransactionDate = "2023-04-04" },
-        new StaplesSourceDto() { Id = 2, Phone =133, Amount = 5, Comment = "11",  CustomerName = "dasd", Imei = 2131324, OrderNumber =234234, TransactionDate = "2023-04-04" },
-        new StaplesSourceDto() { Id = 3, Phone = 123213, Amount = 5, Comment = "11",  CustomerName = "dasd", Imei = 2131324,  OrderNumber = 234, TransactionDate = "2023-04-04" },
-        new StaplesSourceDto() { Id = 4, Phone = 12312, Amount = 7, Comment = "11",  CustomerName = "dasd", Imei = 2131324,  OrderNumber = 234, TransactionDate = "2023-04-04" }
-       } );
+
 
         compareBellStaple.AddRange(new List<CompareBellStaple>{
             new CompareBellStaple() { Id = 1, BPhone = "123", SPhone = "123", BAmount = "1", SAmount = "1", BComment = "11", SComment = "11", BCommissionDetails = "32", SCommissionDetails = "32", BCustomerName = "dasd", SCustomerName = "dasd", BIMEI = "2131324", SIMEI = "2131324", SLOB = "234", BLOB = "234", SOrderNumber = "231", BOrderNumber = "231", STransactionDate = "2023-04-04", BTransactionDate = "2023-04-04" },
@@ -127,6 +122,7 @@
     private async Task LoadFromLocalDB()
     {
         bellSources = await Localdb.GetBellSourceFromLocalDb();
+        staplesSources = await Localdb.GetStapleSourceFromLocalDb(); 
     }
 
     
