@@ -10,7 +10,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Services\DatabaseGenerator.cs" />
+    <Compile Remove="BellRecRepository.cs" />
+    <Compile Remove="DatabaseGenerator.cs" />
   </ItemGroup>
 
   <ItemGroup>

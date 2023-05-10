@@ -1,9 +1,9 @@
 ﻿@using Bell.Reconciliation.Common.Models
 @using Bell.Reconciliation.Frontend.Shared.ServiceInterfaces;
-@inject IInjectBellSource BellSource
+@*@inject IInjectBellSource BellSource*@
 @inject ISyncData SyncData
 
-<RadzenButton Text="Add New Row" Click="AddNewBell"></RadzenButton>
+@*<RadzenButton Text="Generate Data in Server DB" Click="GenerateServerDb"></RadzenButton>*@
 <RadzenButton ButtonStyle="ButtonStyle.Dark" Text="Fetch Data from Server" Click="FetchData"></RadzenButton>
 <RadzenButton ButtonStyle="ButtonStyle.Warning" Text="Load data from localDB" Click="LoadFromLocalDB"></RadzenButton>
 <br />
@@ -134,13 +134,13 @@
         bellSources = await SyncData.GetDataFromLocalDb();
     }
 
-    private async Task AddNewBell()
-    {
-        var newBell = await BellSource.InsertBellSourcesAsync();
-        bellSources.Add(newBell);
-        await grid.Reload();
-       // await InvokeAsync(StateHasChanged);
-        StateHasChanged();
-    }
+    //private async Task GenerateServerDb()
+    //{
+    //    var newBell = await SyncData.GenerateDataInServerDb();
+    //    bellSources.Add(newBell);
+    //    await grid.Reload();
+    //   // await InvokeAsync(StateHasChanged);
+    //    StateHasChanged();
+    //}
 
 }

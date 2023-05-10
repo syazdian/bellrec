@@ -29,13 +29,13 @@ public class SyncData : ISyncData
             int lastId = 1;
             do
             {
-                //var bellList = await _httpClient.GetFromJsonAsync<List<BellSource>>($"/api/SyncData/GetBellSourceitems/{lastId}");
-                var bellList = await new HttpClient().GetFromJsonAsync<BellSource[]>($"https://localhost:7131/api/syncdata/getbellsourceitems/{lastId}");
-                if (bellList is not null)
-                    lastId = await InsertDataToDbAsync(bellList.ToList());
+                //var bellStaplesSource = await _httpClient.GetFromJsonAsync<BellStaplesSource>($"/api/SyncData/GetBellSourceitems/{lastId}");
+                var bellStaplesSource = await new HttpClient().GetFromJsonAsync<BellStaplesSource>($"https://localhost:7131/api/syncdata/getbellsourceitems/{lastId}");
+                if (bellStaplesSource is not null)
+                    lastId = await InsertDataToDbAsync(bellStaplesSource);
                 else
                     return;
-            } while (lastId < 100000);
+            } while (lastId < 300);
         }
         catch (Exception ex)
         {
@@ -43,15 +43,30 @@ public class SyncData : ISyncData
         }
     }
 
-    public async Task<int> InsertDataToDbAsync(List<BellSource> bellSources)
+    public async Task GenerateDataInServerDb()
+    {
+        try
+        {
+            var res = await _httpClient.GetStringAsync($"/api/syncData/FillSqlite/1000/y/10");
+
+            if (res is "Done") { }
+        }
+        catch (Exception ex)
+        {
+            throw;
+        }
+    }
+
+    public async Task<int> InsertDataToDbAsync(BellStaplesSource bellStaplesSources)
     {
         try
         {
             using var ctx = await _dbContextFactory.CreateDbContextAsync();
 
-            await ctx.BellSources.AddRangeAsync(bellSources);
+            await ctx.BellSources.AddRangeAsync(bellStaplesSources.BellSources.ToList());
+            await ctx.StaplesSources.AddRangeAsync(bellStaplesSources.StaplesSources.ToList());
             await ctx.SaveChangesAsync();
-            return bellSources.Max(x => x.Id);
+            return bellStaplesSources.BellSources.Max(x => x.Id);
         }
         catch (Exception ex)
         {
