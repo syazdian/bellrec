@@ -9,7 +9,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Services\InjectBellSource.cs" />
+    <Compile Remove="ViewModels\**" />
+    <EmbeddedResource Remove="ViewModels\**" />
+    <None Remove="ViewModels\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -21,10 +23,6 @@
     <ProjectReference Include="..\..\..\Common\Utilities\Common.Utilities.csproj" />
     <ProjectReference Include="..\..\Shared\ServiceInterfaces\Shared.ServiceInterfaces.csproj" />
     <ProjectReference Include="..\SqliteWasmHelper\SqliteWasmHelper.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="ViewModels\" />
   </ItemGroup>
 
 </Project>
