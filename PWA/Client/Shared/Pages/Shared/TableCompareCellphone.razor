@@ -1,0 +1,115 @@
+﻿@using Bell.Reconciliation.Common.Models
+@using Bell.Reconciliation.Frontend.Shared.ServiceInterfaces;
+@inject ISyncData SyncData
+@inject ILocalDbRepository Localdb
+
+<RadzenButton ButtonStyle="ButtonStyle.Dark" Text="Fetch Data from Server" Click="FetchData"></RadzenButton>
+<RadzenButton ButtonStyle="ButtonStyle.Warning" Text="Load data from localDB" Click="LoadFromLocalDB"></RadzenButton>
+<br />
+CELLPHONE
+<RadzenTabs  RenderMode="Radzen.TabRenderMode.Client" @bind-SelectedIndex=@selectedIndex>
+    <Tabs>
+        <RadzenTabsItem Text="Only in Staples">
+            <RadzenDataGrid ColumnWidth="150px" AllowFiltering="true" AllowPaging="true" PageSize="8" AllowSorting="true" Data="@staplesSources" TItem="StaplesSourceDto">
+                <Columns>
+                    <RadzenDataGridColumn TItem="StaplesSourceDto" Property="OrderNumber" Title="OrderNumber" />
+                    <RadzenDataGridColumn TItem="StaplesSourceDto" Property="Phone" Title="Phone" />
+                    <RadzenDataGridColumn TItem="StaplesSourceDto" Property="IMEI" Title="IMEI" />
+                    <RadzenDataGridColumn TItem="StaplesSourceDto" Property="Amount" Title="Amount" />
+                    <RadzenDataGridColumn TItem="StaplesSourceDto" Property="Comment" Title="Comment" />
+                    <RadzenDataGridColumn TItem="StaplesSourceDto" Property="TransactionDate" Title="TransactionDate" />
+                    <RadzenDataGridColumn TItem="StaplesSourceDto" Property="CustomerName" Title="CustomerName" />
+                    <RadzenDataGridColumn TItem="StaplesSourceDto" Property="CommissionDetailes" Title="CommissionDetailes" />
+                </Columns>
+            </RadzenDataGrid>
+        </RadzenTabsItem>
+        <RadzenTabsItem Text="In both">
+            <RadzenDataGrid ColumnWidth="150px" AllowFiltering="true" AllowPaging="true" PageSize="8" AllowSorting="true" Data="@compareBellStaple" TItem="CompareBellStaple">
+                <Columns>
+                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="MatchStatus" Title="Consolidate" />
+
+                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="SPhone" Title="STP Phone#" />
+                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="SIMEI" Title="STP IMEI" />
+                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="SOrderNumber" Title="STP Order#" />
+                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="SAmount" Title="STP Amount " />
+                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="SComment" Title="STP Comment " />
+                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="STransactionDate" Title="STP TransactionDate " />
+                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="SCustomerName" Title="STP CustomerName " />
+                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="SCommissionDetailes" Title="STP CommissionDetailes " />
+
+                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="BPhone" Title="BellPhone#" />
+                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="BIMEI" Title="BellIMEI" />
+                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="BOrderNumber" Title="BellOrder# " />
+                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="BAmount" Title="BellAmount " />
+                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="BComment" Title="BellComment " />
+                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="BTransactionDate" Title="BellTransactionDate " />
+                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="BCustomerName" Title="BellCustomerName " />
+                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="BCommissionDetailes" Title="BellCommissionDetailes " />
+                </Columns>
+            </RadzenDataGrid>
+        </RadzenTabsItem>
+        <RadzenTabsItem Text="Only in Bell">
+            <RadzenDataGrid AllowVirtualization="true"  ColumnWidth="150px" AllowFiltering="true" AllowPaging="true" PageSize="8" AllowSorting="true"
+                            Data="@bellSources" @ref="grid" TItem="BellSourceDto">
+                <Columns>
+                    <RadzenDataGridColumn TItem="BellSourceDto" Property="OrderNumber" Title="OrderNumber#" />
+                    <RadzenDataGridColumn TItem="BellSourceDto" Property="Phone" Title="Phone" />
+                    <RadzenDataGridColumn TItem="BellSourceDto" Property="IMEI" Title="IMEI" />
+                    <RadzenDataGridColumn TItem="BellSourceDto" Property="Amount" Title="Amount" />
+                    <RadzenDataGridColumn TItem="BellSourceDto" Property="Comment" Title="Comment" />
+                    <RadzenDataGridColumn TItem="BellSourceDto" Property="TransactionDate" Title="TransactionDate" />
+                    <RadzenDataGridColumn TItem="BellSourceDto" Property="CustomerName" Title="CustomerName" />
+                    <RadzenDataGridColumn TItem="BellSourceDto" Property="CommissionDetailes" Title="CommissionDetailes" />
+                </Columns>
+            </RadzenDataGrid>
+        </RadzenTabsItem>
+    </Tabs>
+
+</RadzenTabs>
+
+<hr class="featurette-divider">
+
+@code {
+    int selectedIndex = 0;
+
+    List<StaplesSourceDto> staplesSources = new();
+    List<CompareBellStaple> compareBellStaple = new();
+    RadzenDataGrid<BellSourceDto> grid = new RadzenDataGrid<BellSourceDto>();
+
+    private bool busy;
+    List<BellSourceDto> bellSources = new();
+
+   
+ 
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+
+
+        compareBellStaple.AddRange(new List<CompareBellStaple>{
+            new CompareBellStaple() { MatchStatus = Common.Models.Enums.MatchStatus.Match, BPhone = "123", SPhone = "123", BAmount = "1", SAmount = "1", BComment = "11", SComment = "11", BCommissionDetails = "32", SCommissionDetails = "32", BCustomerName = "dasd", SCustomerName = "dasd", BIMEI = "2131324", SIMEI = "2131324",  SOrderNumber = "231", BOrderNumber = "231", STransactionDate = "2023-04-04", BTransactionDate = "2023-04-04" },
+            new CompareBellStaple() { MatchStatus = Common.Models.Enums.MatchStatus.MissmatchResolved, BPhone = "123", SPhone = "123", BAmount = "1", SAmount = "1", BComment = "11", SComment = "11", BCommissionDetails = "32", SCommissionDetails = "32", BCustomerName = "dasd", SCustomerName = "dasd", BIMEI = "2131324", SIMEI = "2131324",  SOrderNumber = "231", BOrderNumber = "231", STransactionDate = "2023-04-04", BTransactionDate = "2023-04-04" },
+            new CompareBellStaple() { MatchStatus = Common.Models.Enums.MatchStatus.MissmatchResolved, BPhone = "123", SPhone = "123", BAmount = "1", SAmount = "1", BComment = "11", SComment = "11", BCommissionDetails = "32", SCommissionDetails = "32", BCustomerName = "dasd", SCustomerName = "dasd", BIMEI = "2131324", SIMEI = "2131324",  SOrderNumber = "231", BOrderNumber = "231", STransactionDate = "2023-04-04", BTransactionDate = "2023-04-04" }
+        });
+        StateHasChanged();
+
+    }
+
+    private async Task FetchData()
+    {
+        await SyncData.FetchDataFromServerDb();
+        bellSources = await Localdb.GetBellSourceFromLocalDb();
+
+    }
+
+    private async Task LoadFromLocalDB()
+    {
+        bellSources = await Localdb.GetBellSourceFromLocalDb();
+        staplesSources = await Localdb.GetStapleSourceFromLocalDb(); 
+    }
+
+    
+
+}
