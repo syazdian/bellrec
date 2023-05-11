@@ -8,27 +8,30 @@
         <h2 class="featurette-heading">FILTERS</h2>
     </div>
     <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem" Class="rz-p-4 rz-mb-6 rz-border-radius-1" Style="border: var(--rz-grid-cell-border);">
+        <RadzenFormField Text="Rebate Type" Variant=@variantStyle Style="flex: 1;">
+            <RadzenDropDown Data=@rebateType @bind-Value="@rebateValue" AllowClear=true  />
+        </RadzenFormField>
+        <RadzenFormField Text="LOB" Variant=@variantStyle Style="flex: 1;">
+            <RadzenDropDown Data=@loBs @bind-Value="@lobValue" Change="@SetSubLob" AllowClear=true />
+            <RadzenDropDown Data=@subLOBs @bind-Value="@subLobValue" AllowClear=true />
+        </RadzenFormField>
+        <RadzenFormField Text="Brand" Variant=@variantStyle Style="flex: 1;">
+            <RadzenDropDown Data=@brands @bind-Value="@brandValue" AllowClear=true />
+        </RadzenFormField>
+        <RadzenFormField Text="Location" Variant=@variantStyle Style="flex: 1;">
+            <RadzenDropDown Data=@locations @bind-Value="@locationValue" AllowClear=true />
+        </RadzenFormField>
+    </RadzenStack>
+
+    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem" Class="rz-p-4 rz-mb-6 rz-border-radius-1" Style="border: var(--rz-grid-cell-border);">
+       
+           
         <RadzenLabel Text="Transaction Date" />
         <RadzenDatePicker @bind-Value=@StartDate ShowTime="true" ShowSeconds="true" HoursStep="1.5" MinutesStep="5" SecondsStep="10" DateFormat="MM/dd/yyyy HH:mm" />
         to
         <RadzenDatePicker @bind-Value=@EndDate ShowTime="true" ShowSeconds="true" HoursStep="1.5" MinutesStep="5" SecondsStep="10" DateFormat="MM/dd/yyyy HH:mm" />
     </RadzenStack>
-    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem" Class="rz-p-4 rz-mb-6 rz-border-radius-1" Style="border: var(--rz-grid-cell-border);">
-        <RadzenFormField Text="LOB" Variant=@variantStyle Style="flex: 1;">
-            <RadzenDropDown Data=@loBs @bind-Value="@lobValue" Change="@SetSubLob" AllowClear=true  />
-            <RadzenDropDown Data=@subLOBs @bind-Value="@subLobValue" AllowClear=true />
-        </RadzenFormField>
-        <RadzenFormField Text="Brand" Variant=@variantStyle Style="flex: 1;">
-            <RadzenDropDown Data=@brands @bind-Value="@brandValue" AllowClear=true  />
-        </RadzenFormField>
-        <RadzenFormField Text="Rebate Type" Variant=@variantStyle Style="flex: 1;">
-            <RadzenDropDown Data=@rebateType @bind-Value="@rebateValue" AllowClear=true  />
-        </RadzenFormField>
-        <RadzenFormField Text="Location" Variant=@variantStyle Style="flex: 1;">
-            <RadzenDropDown Data=@locations @bind-Value="@locationValue" AllowClear=true  />
-        </RadzenFormField>
-    </RadzenStack>
-
+  
     <div class="rz-text-align-right">
         <RadzenButton Click=@(ResetFilter) Text="Reset Filter" ButtonStyle="ButtonStyle.Warning" />
         <RadzenButton Click=@(ApplyFilter) Text="Apply Filter" ButtonStyle="ButtonStyle.Primary" />
@@ -52,6 +55,9 @@
     List<string> locations = new();
     FilterItems filterItems = new();
 
+    [Parameter]
+    public EventCallback<string> SubLobFilterChanged { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
@@ -70,8 +76,9 @@
         StateHasChanged();
     }
 
-    protected void ApplyFilter()
+    protected async void ApplyFilter(MouseEventArgs e)
     {
+        await SubLobFilterChanged.InvokeAsync(subLobValue);
 
     }
 

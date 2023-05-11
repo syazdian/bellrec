@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Bell.Reconciliation.Common.Models.Enums;
+using System;
 using System.Collections.Generic;
 
 namespace Bell.Reconciliation.Web.Server.Data;
@@ -24,4 +25,11 @@ public partial class BellSource
     public string? CommissionDetails { get; set; }
 
     public string? Lob { get; set; }
+
+    public string? SubLob { get; set; }
+    public string? RebateType { get; set; }
+    public bool Reconciled { get; }
+    public string? ReconciledBy { get; set; }
+    public DateTime ReconciledDate { get; }
+    public MatchStatus MatchStatus { get; set; }
 }

@@ -2,7 +2,27 @@
 @using Bell.Reconciliation.Frontend.Shared.Pages.Shared
 <PageTitle>Bell Compare Page</PageTitle>
 <div class="container marketing">
-    <TopFilters></TopFilters>
-    <TableCompare></TableCompare>
+    <TopFilters SubLobFilterChanged="(e)=>SwitchBetweenSubLob(e)"></TopFilters>
+
+    @if (WirelessSubLob == "Wireless")
+    {
+        <TableCompareCellphone></TableCompareCellphone>
+    }else
+    {
+        <TableCompareNonCellphone ></TableCompareNonCellphone>
+
+    }
+
     
 </div>
+
+@code{
+
+    string WirelessSubLob;
+    public void SwitchBetweenSubLob(string subLob)
+    {
+        WirelessSubLob = subLob;
+        StateHasChanged();
+    }
+
+}
