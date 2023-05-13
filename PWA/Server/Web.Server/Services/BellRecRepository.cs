@@ -10,6 +10,9 @@ namespace Bell.Reconciliation.Web.Server.Services
         {
         }
 
+        List<Data.BellSource> bellBuld = new List<BellSource> ();
+        List<Data.StaplesSource> stapleBuld = new List<StaplesSource>();
+
         string[] Brands = { "Bell", "Virgin", "Lucky Mobile" };
         string[] Lobs = { "Wireless", "Wireline" };
         string[] WirelessSubLOBs = { "Wireless", "IoT", "Mobile Data"};
@@ -48,7 +51,6 @@ namespace Bell.Reconciliation.Web.Server.Services
                                 if (rand.Next(0, 100) <= 50) //wireless sublob - mobile with line
                                 {
                                     var bellsource = getBellSource(Id: i, WirelessLob: true, WirelessSubLob: true);
-                                    db.BellSources.Add(bellsource);
 
                                     var bellSource2 = bellsource.Adapt<Data.BellSource>();
                                     var bellSource3 = bellsource.Adapt<Data.BellSource>();
@@ -68,23 +70,23 @@ namespace Bell.Reconciliation.Web.Server.Services
                                     bellSource2.Id = i + 1;
                                     bellSource3.Id = i + 2;
 
-                                    db.BellSources.Add(bellsource);
-                                    db.BellSources.Add(bellSource2);
-                                    db.BellSources.Add(bellSource3);
+                                    bellBuld.Add(bellsource);
+                                    bellBuld.Add(bellSource2);
+                                    bellBuld.Add(bellSource3);
 
                                     i += 2;
                                 }
                                 else//lob:wireliss - sublub:non-wireless
                                 {
-                                    var bellsourceEE = getBellSource(Id:i, WirelessLob: true, WirelessSubLob: false);
-
-                                    db.BellSources.Add(bellsourceEE);
+                                    var bellsource = getBellSource(Id:i, WirelessLob: true, WirelessSubLob: false);
+                                    bellBuld.Add(bellsource);
                                 }
                             }
                             else//Wired lob
                             {
-                                var bellsourceEE = getBellSource(Id: i, WirelessLob: false);
-                                db.BellSources.Add(bellsourceEE);
+                                var bellsource = getBellSource(Id: i, WirelessLob: false);
+                                bellBuld.Add(bellsource);
+
                             }
                         }
                         else if (randNom <= 2 * DifferenceRate) // only in staple
@@ -94,7 +96,6 @@ namespace Bell.Reconciliation.Web.Server.Services
                                 if (rand.Next(0, 100) <= 50) //wireless sublob - mobile with line
                                 {
                                     var staplesSource = getStapleSource(Id: i, WirelessLob: true, WirelessSubLob: true);
-                                    db.StaplesSources.Add(staplesSource);
 
                                     var staplesSource2 = staplesSource.Adapt<Data.StaplesSource>();
                                     var staplesSource3 = staplesSource.Adapt<Data.StaplesSource>();
@@ -114,9 +115,9 @@ namespace Bell.Reconciliation.Web.Server.Services
                                     staplesSource2.Id = i + 1;
                                     staplesSource3.Id = i + 2;
 
-                                    db.StaplesSources.Add(staplesSource);
-                                    db.StaplesSources.Add(staplesSource2);
-                                    db.StaplesSources.Add(staplesSource3);
+                                    stapleBuld.Add(staplesSource);
+                                    stapleBuld.Add(staplesSource2);
+                                    stapleBuld.Add(staplesSource3);
 
                                     i += 2;
                                 }
@@ -124,14 +125,16 @@ namespace Bell.Reconciliation.Web.Server.Services
                                 {
                                     var stapeSource = getStapleSource(Id: i, WirelessLob: true, WirelessSubLob: false);
 
-                                    db.StaplesSources.Add(stapeSource);
+                                    stapleBuld.Add(stapeSource);
+
                                 }
                             }
                             else//Wired lob
                             {
                                 var stapeSource = getStapleSource(Id: i, WirelessLob: false);
 
-                                db.StaplesSources.Add(stapeSource);
+                                stapleBuld.Add(stapeSource);
+
                             }
 
                         }
@@ -143,7 +146,6 @@ namespace Bell.Reconciliation.Web.Server.Services
                                 {
                                     #region staple
                                     var staplesSource = getStapleSource(Id: i, WirelessLob: true, WirelessSubLob: true);
-                                    db.StaplesSources.Add(staplesSource);
 
                                     var staplesSource2 = staplesSource.Adapt<Data.StaplesSource>();
                                     var staplesSource3 = staplesSource.Adapt<Data.StaplesSource>();
@@ -167,7 +169,6 @@ namespace Bell.Reconciliation.Web.Server.Services
 
                                     #region bell
                                     var bellsource = getBellSource(Id: i, WirelessLob: true, WirelessSubLob: true);
-                                    db.BellSources.Add(bellsource);
 
                                     var bellSource2 = bellsource.Adapt<Data.BellSource>();
                                     var bellSource3 = bellsource.Adapt<Data.BellSource>();
@@ -193,13 +194,13 @@ namespace Bell.Reconciliation.Web.Server.Services
                                     makeSameThenDifferentObjects(bellSource2, staplesSource2);
                                     makeSameThenDifferentObjects(bellSource3, staplesSource3);
 
-                                    db.StaplesSources.Add(staplesSource);
-                                    db.StaplesSources.Add(staplesSource2);
-                                    db.StaplesSources.Add(staplesSource3);
-                                    
-                                    db.BellSources.Add(bellsource);
-                                    db.BellSources.Add(bellSource2);
-                                    db.BellSources.Add(bellSource3);
+                                    stapleBuld.Add(staplesSource);
+                                    stapleBuld.Add(staplesSource2);
+                                    stapleBuld.Add(staplesSource3);
+
+                                    bellBuld.Add(bellsource);
+                                    bellBuld.Add(bellSource2);
+                                    bellBuld.Add(bellSource3);
                                     i += 2;
                                 }
                                 else //lob:wireliss - sublub:non-wireless
@@ -208,18 +209,18 @@ namespace Bell.Reconciliation.Web.Server.Services
                                     var bellSource = getBellSource(Id: i, WirelessLob: true, WirelessSubLob: false);
                                     makeSameThenDifferentObjects(bellSource, stapeSource);
 
-                                    db.StaplesSources.Add(stapeSource); 
-                                    db.BellSources.Add(bellSource);
+                                    stapleBuld.Add(stapeSource);
+                                    bellBuld.Add(bellSource);
                                 }
                             }
                             else//Wired lob
                             {
                                 var stapeSource = getStapleSource(Id: i, WirelessLob: false);
                                 var bellSource = getBellSource(Id: i, WirelessLob: false);
-                                makeSameThenDifferentObjects(bellSource, stapeSource);
-
-                                db.StaplesSources.Add(stapeSource);
-                                db.BellSources.Add(bellSource);
+                                makeSameThenDifferentObjects(bellSource, stapeSource);                                    
+                                    
+                                stapleBuld.Add(stapeSource);
+                                bellBuld.Add(bellSource);
                             }
                         }
 
@@ -232,7 +233,6 @@ namespace Bell.Reconciliation.Web.Server.Services
                             {
                                 #region staple
                                 var staplesSource = getStapleSource(Id: i, WirelessLob: true, WirelessSubLob: true);
-                                db.StaplesSources.Add(staplesSource);
 
                                 var staplesSource2 = staplesSource.Adapt<Data.StaplesSource>();
                                 var staplesSource3 = staplesSource.Adapt<Data.StaplesSource>();
@@ -256,7 +256,6 @@ namespace Bell.Reconciliation.Web.Server.Services
 
                                 #region bell
                                 var bellsource = getBellSource(Id: i, WirelessLob: true, WirelessSubLob: true);
-                                db.BellSources.Add(bellsource);
 
                                 var bellSource2 = bellsource.Adapt<Data.BellSource>();
                                 var bellSource3 = bellsource.Adapt<Data.BellSource>();
@@ -283,13 +282,13 @@ namespace Bell.Reconciliation.Web.Server.Services
                                 makeSameObjects(bellSource2, staplesSource2);
                                 makeSameObjects(bellSource3, staplesSource3);
 
-                                db.StaplesSources.Add(staplesSource);
-                                db.StaplesSources.Add(staplesSource2);
-                                db.StaplesSources.Add(staplesSource3);
-                                
-                                db.BellSources.Add(bellsource);
-                                db.BellSources.Add(bellSource2);
-                                db.BellSources.Add(bellSource3);
+                                stapleBuld.Add(staplesSource);
+                                stapleBuld.Add(staplesSource2);
+                                stapleBuld.Add(staplesSource3);
+
+                                bellBuld.Add(bellsource);
+                                bellBuld.Add(bellSource2);
+                                bellBuld.Add(bellSource3);
                             }
                             else //lob:wireliss - sublub:non-wireless
                             {
@@ -297,8 +296,9 @@ namespace Bell.Reconciliation.Web.Server.Services
                                 var bellSource = getBellSource(Id: i, WirelessLob: true, WirelessSubLob: false);
                                 makeSameObjects(bellSource, stapeSource);
 
-                                db.StaplesSources.Add(stapeSource);
-                                db.BellSources.Add(bellSource);
+
+                                stapleBuld.Add(stapeSource);
+                                bellBuld.Add(bellSource);
                             }
                         }
                         else//Wired lob
@@ -307,13 +307,22 @@ namespace Bell.Reconciliation.Web.Server.Services
                             var bellSource = getBellSource(Id: i, WirelessLob: false);
                             makeSameObjects(bellSource, stapeSource);
 
-                            db.StaplesSources.Add(stapeSource);
-                            db.BellSources.Add(bellSource);
+
+                            stapleBuld.Add(stapeSource);
+                            bellBuld.Add(bellSource);
                         }
                     }
 
-                    Console.WriteLine(i);
-                    db.SaveChanges();
+                    if(bellBuld.Count + stapleBuld.Count>990)
+                    {
+                        db.StaplesSources.AddRange(stapleBuld);
+                        stapleBuld = new List<StaplesSource>();
+
+                        db.BellSources.AddRange(bellBuld);
+                        bellBuld = new List<BellSource>();
+
+                        db.SaveChanges();
+                    }
                 }
                 return "Done";
             }
