@@ -1,5 +1,6 @@
 ﻿using Bell.Reconciliation.Web.Server.Data;
 using Mapster;
+using System.Diagnostics.Eventing.Reader;
 
 namespace Bell.Reconciliation.Web.Server.Services
 {
@@ -9,20 +10,25 @@ namespace Bell.Reconciliation.Web.Server.Services
         {
         }
 
+        List<Data.BellSource> bellBuld = new List<BellSource> ();
+        List<Data.StaplesSource> stapleBuld = new List<StaplesSource>();
+
+        string[] Brands = { "Bell", "Virgin", "Lucky Mobile" };
+        string[] Lobs = { "Wireless", "Wireline" };
+        string[] WirelessSubLOBs = { "Wireless", "IoT", "Mobile Data"};
+        string[] WiredSubLOBs = { "Home Internet", "Home Internet", "Home Television", "Home Phone", "SMB Internet" };
+        string[] Locations = { "Toronto", "Ottawa", "London", "Kingston", "Windsor", "Hamilton", "Barrie", "Kitchener", "Mississagua" };
+        string[] RebateTypes = { "Commission", "Down Payment", "Tax Rebate" };
+        string[] Products = { "iPhone 13 128GB Red", "iPhone 14 128GB Black", "iPhone 13 256GB Gold","2-Year NAC WRLS 35+",
+"2-Year NAC WRLS 55+","iPhone 13 128GB Gold","iPhone 14 256GB Gold","iPhone 14 256GB Black"};
+        List<string> salesPersons = new();
+        Random rand = new Random();
+        BellRecContext db = new BellRecContext();
         public string DBGenerator(int RecordNom, string DeleteOldRecords, int DifferenceRate)
         {
             try
             {
-                BellRecContext db = new BellRecContext();
-                Random rand = new Random();
 
-                string[] Brands = { "Bell", "Virgin", "Lucky Mobile" };
-                string[] LOBs = { "Wireless", "IoT", "Mobile Data", "Home Internet", "Home Internet", "Home Television", "Home Phone", "SMB Internet" };
-                string[] Locations = { "Toronto", "Ottawa", "London", "Kingston", "Windsor", "Hamilton", "Barrie", "Kitchener", "Mississagua" };
-                string[] RebateTypes = { "Commission", "Down Payment", "Tax Rebate" };
-                string[] Products = { "iPhone 13 128GB Red", "iPhone 14 128GB Black", "iPhone 13 256GB Gold","2-Year NAC WRLS 35+",
-        "2-Year NAC WRLS 55+","iPhone 13 128GB Gold","iPhone 14 256GB Gold","iPhone 14 256GB Black"};
-                List<string> salesPersons = new();
                 for (int i = 0; i < 10; i++)
                     salesPersons.Add(getSampleName(db, rand));
 
@@ -33,70 +39,290 @@ namespace Bell.Reconciliation.Web.Server.Services
                     db.SaveChanges();
                 }
 
-                Data.BellSource bellSource;
-                Data.StaplesSource staplesSource;
-                for (int i = 1; i < RecordNom; i += 3)
+                for (int i = 1; i < RecordNom; i += 1)
                 {
-                    bellSource = new Data.BellSource();
-                    staplesSource = new Data.StaplesSource();
-
-                    bellSource.Id = i;
-                    bellSource.Phone = rand.NextInt64(11234567890, 99999999999);
-                    bellSource.Amount = rand.Next(1, 10);
-                    bellSource.Comment = string.Empty;
-                    bellSource.CommissionDetails = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 8);
-                    bellSource.CustomerName = getSampleName(db, rand);
-                    bellSource.Imei = rand.NextInt64(1234567890, 9876543210);
-                    bellSource.Lob = LOBs[rand.Next(0, LOBs.Length - 1)];
-                    bellSource.OrderNumber = rand.NextInt64(11234567890, 99999999999);
-                    bellSource.TransactionDate = DateTime.Now.AddDays(new Random().Next(-100000, 0)).ToShortDateString();
-                    db.BellSources.Add(bellSource);
-
-                    staplesSource.OrderNumber = bellSource.OrderNumber;
-                    if (rand.Next(0, 100) <= DifferenceRate)
+                    var randNom = rand.Next(0, 100);
+                    if (randNom <= 3 * DifferenceRate) // has difference
                     {
-                        staplesSource.CustomerName = getSampleName(db, rand);
-                        staplesSource.Amount = rand.Next(1, 10);
-                        staplesSource.Imei = rand.NextInt64(1234567890, 9876543210);
-                        staplesSource.Phone = long.Parse(((long)new Random().Next(0, 100000) * (long)new Random().Next(0, 100000)).ToString().PadLeft(10, '0'));
-                        staplesSource.Comment = string.Empty;
+                        if (randNom <= DifferenceRate) //only bell
+                        {
+                            if (rand.Next(0, 100) <= 50) //wireless LOB
+                            {
+                                if (rand.Next(0, 100) <= 50) //wireless sublob - mobile with line
+                                {
+                                    var bellsource = getBellSource(Id: i, WirelessLob: true, WirelessSubLob: true);
+
+                                    var bellSource2 = bellsource.Adapt<Data.BellSource>();
+                                    var bellSource3 = bellsource.Adapt<Data.BellSource>();
+
+                                    bellSource2.RebateType = RebateTypes[1];
+                                    bellSource3.RebateType = RebateTypes[2];
+
+                                    bellSource2.Phone = bellsource.Phone;
+                                    bellSource3.Phone = bellsource.Phone;
+
+                                    bellSource2.Imei = bellsource.Imei;
+                                    bellSource3.Imei = bellsource.Imei;
+
+                                    bellSource2.Amount = rand.Next(100, 1500);
+                                    bellSource3.Amount = rand.Next(100, 1500);
+
+                                    bellSource2.Id = i + 1;
+                                    bellSource3.Id = i + 2;
+
+                                    bellBuld.Add(bellsource);
+                                    bellBuld.Add(bellSource2);
+                                    bellBuld.Add(bellSource3);
+
+                                    i += 2;
+                                }
+                                else//lob:wireliss - sublub:non-wireless
+                                {
+                                    var bellsource = getBellSource(Id:i, WirelessLob: true, WirelessSubLob: false);
+                                    bellBuld.Add(bellsource);
+                                }
+                            }
+                            else//Wired lob
+                            {
+                                var bellsource = getBellSource(Id: i, WirelessLob: false);
+                                bellBuld.Add(bellsource);
+
+                            }
+                        }
+                        else if (randNom <= 2 * DifferenceRate) // only in staple
+                        {
+                            if (rand.Next(0, 100) <= 50) //wireless LOB
+                            {
+                                if (rand.Next(0, 100) <= 50) //wireless sublob - mobile with line
+                                {
+                                    var staplesSource = getStapleSource(Id: i, WirelessLob: true, WirelessSubLob: true);
+
+                                    var staplesSource2 = staplesSource.Adapt<Data.StaplesSource>();
+                                    var staplesSource3 = staplesSource.Adapt<Data.StaplesSource>();
+
+                                    staplesSource2.RebateType = RebateTypes[1];
+                                    staplesSource3.RebateType = RebateTypes[2];
+
+                                    staplesSource2.Phone = staplesSource.Phone;
+                                    staplesSource3.Phone = staplesSource.Phone;
+
+                                    staplesSource2.Imei = staplesSource.Imei;
+                                    staplesSource3.Imei = staplesSource.Imei;
+
+                                    staplesSource2.Amount = rand.Next(100, 1500);
+                                    staplesSource3.Amount = rand.Next(100, 1500);
+
+                                    staplesSource2.Id = i + 1;
+                                    staplesSource3.Id = i + 2;
+
+                                    stapleBuld.Add(staplesSource);
+                                    stapleBuld.Add(staplesSource2);
+                                    stapleBuld.Add(staplesSource3);
+
+                                    i += 2;
+                                }
+                                else //lob:wireliss - sublub:non-wireless
+                                {
+                                    var stapeSource = getStapleSource(Id: i, WirelessLob: true, WirelessSubLob: false);
+
+                                    stapleBuld.Add(stapeSource);
+
+                                }
+                            }
+                            else//Wired lob
+                            {
+                                var stapeSource = getStapleSource(Id: i, WirelessLob: false);
+
+                                stapleBuld.Add(stapeSource);
+
+                            }
+
+                        }
+                        else //if(randNom <= 3*DifferenceRate) //both with difference
+                        {
+                            if (rand.Next(0, 100) <= 50) //wireless LOB
+                            {
+                                if (rand.Next(0, 100) <= 50) //wireless sublob - mobile with line
+                                {
+                                    #region staple
+                                    var staplesSource = getStapleSource(Id: i, WirelessLob: true, WirelessSubLob: true);
+
+                                    var staplesSource2 = staplesSource.Adapt<Data.StaplesSource>();
+                                    var staplesSource3 = staplesSource.Adapt<Data.StaplesSource>();
+
+                                    staplesSource2.RebateType = RebateTypes[1];
+                                    staplesSource3.RebateType = RebateTypes[2];
+
+                                    staplesSource2.Phone = staplesSource.Phone;
+                                    staplesSource3.Phone = staplesSource.Phone;
+
+                                    staplesSource2.Imei = staplesSource.Imei;
+                                    staplesSource3.Imei = staplesSource.Imei;
+
+                                    staplesSource2.Amount = rand.Next(100, 1500);
+                                    staplesSource3.Amount = rand.Next(100, 1500);
+
+                                    staplesSource2.Id = i + 1;
+                                    staplesSource3.Id = i + 2;
+
+                                    #endregion
+
+                                    #region bell
+                                    var bellsource = getBellSource(Id: i, WirelessLob: true, WirelessSubLob: true);
+
+                                    var bellSource2 = bellsource.Adapt<Data.BellSource>();
+                                    var bellSource3 = bellsource.Adapt<Data.BellSource>();
+
+                                    bellSource2.RebateType = RebateTypes[1];
+                                    bellSource3.RebateType = RebateTypes[2];
+
+                                    bellSource2.Phone = bellsource.Phone;
+                                    bellSource3.Phone = bellsource.Phone;
+
+                                    bellSource2.Imei = bellsource.Imei;
+                                    bellSource3.Imei = bellsource.Imei;
+
+                                    bellSource2.Amount = rand.Next(100, 1500);
+                                    bellSource3.Amount = rand.Next(100, 1500);
+
+                                    bellSource2.Id = i + 1;
+                                    bellSource3.Id = i + 2;
+
+                                    #endregion
+
+                                    makeSameThenDifferentObjects(bellsource, staplesSource);
+                                    makeSameThenDifferentObjects(bellSource2, staplesSource2);
+                                    makeSameThenDifferentObjects(bellSource3, staplesSource3);
+
+                                    stapleBuld.Add(staplesSource);
+                                    stapleBuld.Add(staplesSource2);
+                                    stapleBuld.Add(staplesSource3);
+
+                                    bellBuld.Add(bellsource);
+                                    bellBuld.Add(bellSource2);
+                                    bellBuld.Add(bellSource3);
+                                    i += 2;
+                                }
+                                else //lob:wireliss - sublub:non-wireless
+                                {
+                                    var stapeSource = getStapleSource(Id: i, WirelessLob: true, WirelessSubLob: false);
+                                    var bellSource = getBellSource(Id: i, WirelessLob: true, WirelessSubLob: false);
+                                    makeSameThenDifferentObjects(bellSource, stapeSource);
+
+                                    stapleBuld.Add(stapeSource);
+                                    bellBuld.Add(bellSource);
+                                }
+                            }
+                            else//Wired lob
+                            {
+                                var stapeSource = getStapleSource(Id: i, WirelessLob: false);
+                                var bellSource = getBellSource(Id: i, WirelessLob: false);
+                                makeSameThenDifferentObjects(bellSource, stapeSource);                                    
+                                    
+                                stapleBuld.Add(stapeSource);
+                                bellBuld.Add(bellSource);
+                            }
+                        }
+
                     }
-                    else
+                    else //nodifference
                     {
-                        staplesSource.CustomerName = bellSource.CustomerName;
-                        staplesSource.Amount = bellSource.Amount;
-                        staplesSource.Imei = bellSource.Imei;
-                        staplesSource.Phone = bellSource.Phone;
-                        staplesSource.Comment = bellSource.Comment;
+                        if (rand.Next(0, 100) <= 50) //wireless LOB
+                        {
+                            if (rand.Next(0, 100) <= 50) //wireless sublob - mobile with line
+                            {
+                                #region staple
+                                var staplesSource = getStapleSource(Id: i, WirelessLob: true, WirelessSubLob: true);
+
+                                var staplesSource2 = staplesSource.Adapt<Data.StaplesSource>();
+                                var staplesSource3 = staplesSource.Adapt<Data.StaplesSource>();
+
+                                staplesSource2.RebateType = RebateTypes[1];
+                                staplesSource3.RebateType = RebateTypes[2];
+
+                                staplesSource2.Phone = staplesSource.Phone;
+                                staplesSource3.Phone = staplesSource.Phone;
+
+                                staplesSource2.Imei = staplesSource.Imei;
+                                staplesSource3.Imei = staplesSource.Imei;
+
+                                staplesSource2.Amount = rand.Next(100, 1500);
+                                staplesSource3.Amount = rand.Next(100, 1500);
+
+                                staplesSource2.Id = i + 1;
+                                staplesSource3.Id = i + 2;
+
+                                #endregion
+
+                                #region bell
+                                var bellsource = getBellSource(Id: i, WirelessLob: true, WirelessSubLob: true);
+
+                                var bellSource2 = bellsource.Adapt<Data.BellSource>();
+                                var bellSource3 = bellsource.Adapt<Data.BellSource>();
+
+                                bellSource2.RebateType = RebateTypes[1];
+                                bellSource3.RebateType = RebateTypes[2];
+
+                                bellSource2.Phone = bellsource.Phone;
+                                bellSource3.Phone = bellsource.Phone;
+
+                                bellSource2.Imei = bellsource.Imei;
+                                bellSource3.Imei = bellsource.Imei;
+
+                                bellSource2.Amount = rand.Next(100, 1500);
+                                bellSource3.Amount = rand.Next(100, 1500);
+
+                                bellSource2.Id = i + 1;
+                                bellSource3.Id = i + 2;
+
+                                #endregion
+                                i += 2;
+
+                                makeSameObjects(bellsource, staplesSource);
+                                makeSameObjects(bellSource2, staplesSource2);
+                                makeSameObjects(bellSource3, staplesSource3);
+
+                                stapleBuld.Add(staplesSource);
+                                stapleBuld.Add(staplesSource2);
+                                stapleBuld.Add(staplesSource3);
+
+                                bellBuld.Add(bellsource);
+                                bellBuld.Add(bellSource2);
+                                bellBuld.Add(bellSource3);
+                            }
+                            else //lob:wireliss - sublub:non-wireless
+                            {
+                                var stapeSource = getStapleSource(Id: i, WirelessLob: true, WirelessSubLob: false);
+                                var bellSource = getBellSource(Id: i, WirelessLob: true, WirelessSubLob: false);
+                                makeSameObjects(bellSource, stapeSource);
+
+
+                                stapleBuld.Add(stapeSource);
+                                bellBuld.Add(bellSource);
+                            }
+                        }
+                        else//Wired lob
+                        {
+                            var stapeSource = getStapleSource(Id: i, WirelessLob: false);
+                            var bellSource = getBellSource(Id: i, WirelessLob: false);
+                            makeSameObjects(bellSource, stapeSource);
+
+
+                            stapleBuld.Add(stapeSource);
+                            bellBuld.Add(bellSource);
+                        }
                     }
 
-                    staplesSource.Brand = Brands[rand.Next(0, Brands.Length - 1)];
-                    staplesSource.DeviceCo = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 8);
-                    staplesSource.Location = Locations[rand.Next(0, Locations.Length - 1)];
-                    staplesSource.Msf = rand.Next(5, 1400);
-                    staplesSource.Product = Products[rand.Next(0, Products.Length - 1)];
-                    staplesSource.Rec = "FALSE";
-                    staplesSource.SalesPerson = salesPersons[rand.Next(0, salesPersons.Count - 1)];
-                    staplesSource.TaxCode = rand.NextInt64(11234567890, 99999999999);
-                    staplesSource.TransactionDate = DateTime.Now.AddDays(rand.Next(-100000, 0)).ToShortDateString();
+                    if(bellBuld.Count + stapleBuld.Count>990)
+                    {
+                        db.StaplesSources.AddRange(stapleBuld);
+                        stapleBuld = new List<StaplesSource>();
 
-                    var staplesSource2 = staplesSource.Adapt<Data.StaplesSource>();
-                    var staplesSource3 = staplesSource.Adapt<Data.StaplesSource>();
+                        db.BellSources.AddRange(bellBuld);
+                        bellBuld = new List<BellSource>();
 
-                    staplesSource.Id = bellSource.Id;
-                    staplesSource.RebateType = RebateTypes[0];
-
-                    staplesSource2.Id = bellSource.Id + 1;
-                    staplesSource2.RebateType = RebateTypes[1];
-
-                    staplesSource3.Id = bellSource.Id + 2;
-                    staplesSource3.RebateType = RebateTypes[2];
-
-                    db.StaplesSources.Add(staplesSource);
-                    db.StaplesSources.Add(staplesSource2);
-                    db.StaplesSources.Add(staplesSource3);
-
-                    db.SaveChanges();
+                        db.SaveChanges();
+                    }
                 }
                 return "Done";
             }
@@ -116,6 +342,128 @@ namespace Bell.Reconciliation.Web.Server.Services
             var lastname = db.SampleNames.OrderBy(c => c.FirstName).Skip(inx).Take(1).First().LastName;
 
             return firstname + " " + lastname;
+        }
+
+        private Data.BellSource getBellSource(int Id , bool WirelessLob = false, bool WirelessSubLob= false)
+        {
+            Data.BellSource bellSource = new Data.BellSource();
+
+            bellSource.Id = Id;
+            bellSource.Phone = 0;// rand.NextInt64(11234567890, 99999999999);
+            bellSource.Amount = rand.Next(100, 1500);
+            bellSource.Comment = string.Empty;
+            bellSource.CommissionDetails = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 8);
+            bellSource.CustomerName = getSampleName(db, rand);
+            bellSource.OrderNumber = rand.NextInt64(11234567890, 99999999999);
+            bellSource.TransactionDate = DateTime.Now.AddDays(new Random().Next(-1000, 0)).ToShortDateString();
+            bellSource.Reconciled = "False";
+
+            if(WirelessLob == false)
+            {
+                bellSource.Lob = Lobs[1];
+                bellSource.RebateType = RebateTypes[0];
+                bellSource.SubLob = WiredSubLOBs[rand.Next(WiredSubLOBs.Length - 1)];
+            }
+            else
+            {
+                bellSource.Lob = Lobs[0];
+                if(WirelessSubLob == false)
+                {
+                    bellSource.RebateType = RebateTypes[0];
+                    bellSource.SubLob = WirelessSubLOBs[rand.Next(1, 2)];
+                }
+                else // WirelessLob is true and WirelessSubLob is true too
+                {
+                    bellSource.SubLob = WirelessSubLOBs[0];
+                    bellSource.RebateType = RebateTypes[0];
+                    bellSource.Phone = rand.NextInt64(11234567890, 99999999999);
+                    bellSource.Imei = rand.NextInt64(1234567890, 9876543210);
+                    bellSource.Amount = rand.Next(100, 1500);
+                }
+            }
+
+            return bellSource;
+        }
+
+        private Data.StaplesSource getStapleSource(int Id, bool WirelessLob = false, bool WirelessSubLob = false)
+        {
+            var staplesSource = new Data.StaplesSource();
+
+            staplesSource.Phone = 0;// bellSource.Phone;
+
+            staplesSource.Id = Id;
+            staplesSource.Comment = string.Empty;
+            staplesSource.Brand = Brands[rand.Next(0, Brands.Length - 1)];
+            staplesSource.DeviceCo = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 8);
+            staplesSource.Location = Locations[rand.Next(0, Locations.Length - 1)];
+            staplesSource.Msf = rand.Next(5, 1400);
+            staplesSource.Product = Products[rand.Next(0, Products.Length - 1)];
+            staplesSource.Rec = "FALSE";
+            staplesSource.SalesPerson = salesPersons[rand.Next(0, salesPersons.Count - 1)];
+            staplesSource.TaxCode = rand.NextInt64(11234567890, 99999999999);
+            staplesSource.TransactionDate = DateTime.Now.AddDays(rand.Next(-1000, 0)).ToShortDateString();
+            staplesSource.CustomerName = getSampleName(db, rand);
+            staplesSource.Amount = rand.Next(100, 1500);
+            staplesSource.OrderNumber = rand.NextInt64(11234567890, 99999999999);
+            staplesSource.Reconciled = "FALSE";
+
+            if (WirelessLob == false)
+            {
+                staplesSource.RebateType = RebateTypes[0];
+
+                var r = rand.Next(1, 2);
+                staplesSource.SubLob = WirelessSubLOBs[r];
+            }
+            else
+            {
+                if (WirelessSubLob == false)
+                {
+                    staplesSource.RebateType = RebateTypes[0];
+                    var r = rand.Next(1, 2);
+                    staplesSource.SubLob = WirelessSubLOBs[r];
+                }
+                else // WirelessLob is true and WirelessSubLob is true too
+                {
+                    staplesSource.SubLob = WirelessSubLOBs[0];
+                    staplesSource.RebateType = RebateTypes[0];
+                    staplesSource.Phone = rand.NextInt64(11234567890, 99999999999);
+                    staplesSource.Imei = rand.NextInt64(1234567890, 9876543210);
+                    staplesSource.Amount = rand.Next(100, 1500);
+                }
+            }
+
+            return staplesSource;
+        }
+
+        private void makeSameObjects(Data.BellSource bell, Data.StaplesSource staple)
+        {
+            var reservedId = staple.Id;
+            staple = bell.Adapt<Data.StaplesSource>();
+            staple.Id = reservedId;
+
+        }
+
+        private void makeSameThenDifferentObjects(Data.BellSource bell, Data.StaplesSource staple)
+        {
+            var reservedId = staple.Id;
+            staple = bell.Adapt<Data.StaplesSource>();
+            staple.Id = reservedId;
+
+            var rnd = rand.Next(100);
+            if(rnd < 90)
+                staple.Amount = bell.Amount + rnd;
+            if(rnd < 80)
+                staple.Product = Products[rand.Next(0, Products.Length - 1)];
+            if(rnd < 70)
+                staple.SalesPerson = salesPersons[rand.Next(0, salesPersons.Count - 1)];
+            if(rnd < 60)
+                staple.TaxCode = rand.NextInt64(11234567890, 99999999999);
+            if(rnd < 50)
+                staple.TransactionDate = DateTime.Now.AddDays(rand.Next(-1000, 0)).ToShortDateString();
+            if(rnd < 40)
+                staple.Brand = Brands[rand.Next(0, Brands.Length - 1)];
+            if(rnd < 30)
+                staple.CustomerName = getSampleName(db, rand);
         }
     }
 }

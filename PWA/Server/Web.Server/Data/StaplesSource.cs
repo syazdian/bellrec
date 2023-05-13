@@ -1,5 +1,4 @@
-﻿using Bell.Reconciliation.Common.Models.Enums;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace Bell.Reconciliation.Web.Server.Data;
@@ -40,9 +39,15 @@ public partial class StaplesSource
 
     public string? Brand { get; set; }
 
+    public string? Lob { get; set; }
+
     public string? SubLob { get; set; }
-    public bool Reconciled { get; }
+
+    public string? Reconciled { get; set; }
+
     public string? ReconciledBy { get; set; }
-    public DateTime ReconciledDate { get; }
-    public MatchStatus MatchStatus { get; set; }
+
+    public string? ReconciledDate { get; set; }
+
+    public long? MatchStatus { get; set; }
 }
