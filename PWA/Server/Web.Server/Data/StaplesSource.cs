@@ -43,7 +43,7 @@ public partial class StaplesSource
 
     public string? SubLob { get; set; }
 
-    public long? Reconciled { get; set; }
+    public string? Reconciled { get; set; }
 
     public string? ReconciledBy { get; set; }
 
