@@ -1,28 +1,108 @@
 ﻿@page "/"
 @using Bell.Reconciliation.Frontend.Shared.Pages.Shared
+@using Bell.Reconciliation.Frontend.Shared.ServiceInterfaces;
+@inject ILocalDbRepository _localdb
+@inject ISyncData SyncData
 <PageTitle>Bell Compare Page</PageTitle>
-<div class="container marketing">
-    <TopFilters SubLobFilterChanged="(e)=>SwitchBetweenSubLob(e)"></TopFilters>
 
-    @if (WirelessSubLob == "Wireless")
+@if (!uiDbExist)
+{
+    @if (!localDbExist)
     {
-        <TableCompareCellphone></TableCompareCellphone>
-    }else
-    {
-        <TableCompareNonCellphone ></TableCompareNonCellphone>
-
+        <RadzenButton ButtonStyle="ButtonStyle.Dark" Text="Fetch Data from Server" Click="FetchData"></RadzenButton>
     }
-
+    <LocalDbLoader message="Loading Data ...."></LocalDbLoader>
     
-</div>
+}
+@*if ()
+{
+    if (showloader)
+    {
+        <LocalDbLoader message="Loading Data from localDb to Ui"></LocalDbLoader>
+    }
+}*@
+else
+{
 
-@code{
+    <div class="container marketing">
+        <TopFilters SubLobFilterChanged="(e)=>SwitchBetweenSubLob(e)"></TopFilters>
 
+        @if (WirelessSubLob == "Wireless")
+        {
+            <TableCompareCellphone bellSources="bellSources" staplesSources="staplesSources"></TableCompareCellphone>
+        }
+        else
+        {
+            <TableCompareNonCellphone bellSources="bellSources" staplesSources="staplesSources"></TableCompareNonCellphone>
+
+        }
+
+
+    </div>
+}
+
+
+@code {
+    List<BellSourceDto> bellSources = new();
+    List<StaplesSourceDto> staplesSources = new();
     string WirelessSubLob;
-    public void SwitchBetweenSubLob(string subLob)
+    bool localDbExist = true;
+    bool uiDbExist = false;
+    bool showloader = false;
+    protected override async Task OnInitializedAsync()
+    {
+        if (await CheckDbExist())
+        {
+            await LoadDatabaseInUi();
+        }
+        //else
+        //{
+        //    await FetchData();
+        //}
+        StateHasChanged();
+    }
+    public async void SwitchBetweenSubLob(string subLob)
     {
         WirelessSubLob = subLob;
+    }
+
+    public async Task<bool> CheckDbExist()
+    {
+        localDbExist = await _localdb.LocalDbExist();
         StateHasChanged();
+        return localDbExist;
+    }
+
+    public async Task<bool> UiDbExist()
+    {
+        if (bellSources.Count > 1)
+        {
+            uiDbExist = true;
+            return true;
+        }
+        uiDbExist = false;
+        return false;
+    }
+    private async Task FetchData()
+    {
+        showloader = true;
+        localDbExist = false;
+        await SyncData.FetchDataFromServerDb();
+        localDbExist = true;
+        await LoadDatabaseInUi();
+
+        StateHasChanged();
+    }
+    private async Task LoadDatabaseInUi()
+    {
+        showloader = true;
+        uiDbExist = false;
+        bellSources = await _localdb.GetBellSourceFromLocalDb();
+        staplesSources = await _localdb.GetStapleSourceFromLocalDb();
+        uiDbExist = true;
+        showloader = false;
+        StateHasChanged();
+
     }
 
 }

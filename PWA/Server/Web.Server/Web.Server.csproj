@@ -10,6 +10,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Domain\**" />
+    <Compile Remove="Repository\**" />
+    <Content Remove="Domain\**" />
+    <Content Remove="Repository\**" />
+    <EmbeddedResource Remove="Domain\**" />
+    <EmbeddedResource Remove="Repository\**" />
+    <None Remove="Domain\**" />
+    <None Remove="Repository\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="BellRecRepository.cs" />
     <Compile Remove="DatabaseGenerator.cs" />
   </ItemGroup>
@@ -27,11 +38,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Client\Web\Client\Web.Client.csproj" />
     <ProjectReference Include="..\..\Common\Models\Common.Models.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Domain\" />
-    <Folder Include="Repository\" />
   </ItemGroup>
 
 

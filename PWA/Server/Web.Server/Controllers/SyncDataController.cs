@@ -9,33 +9,47 @@ namespace Bell.Reconciliation.Web.Server.Controllers;
 [Route("api/[controller]")]
 public class SyncDataController : Controller
 {
-    private readonly DatabaseGenerator _databaseGenerator;
-    private readonly BellRecRepository _bellRepo;
+    private readonly ServerDbRepository _dbRepo;
+    private readonly DatabaseGenerator _dbGenerator;
 
-    public SyncDataController(DatabaseGenerator databaseGenerator, BellRecRepository bellRepo)
+    public SyncDataController(ServerDbRepository dbRepo, DatabaseGenerator dbGenerator)
     {
-        _databaseGenerator = databaseGenerator;
-        _bellRepo = bellRepo;
+        _dbRepo = dbRepo;
+        _dbGenerator = dbGenerator;
     }
 
-    [HttpGet("FetchFromDatabase")]
-    public async Task<IActionResult> FetchFromDatabase()
+    [HttpGet("FetchCountServerDatabase")]
+    public async Task<IActionResult> FetchCountServerDatabase()
     {
-        var items = await _databaseGenerator.FetchFromDatabaseBellStaplesSource();
+        var bellStapleCountDto = await _dbRepo.CountBellStapleRows();
+        return Ok(bellStapleCountDto);
+    }
+
+    [HttpGet("FetchFromServerDatabase")]
+    public async Task<IActionResult> FetchFromServerDatabase()
+    {
+        var items = await _dbRepo.FetchFromDatabaseBellStaplesSource();
         return Ok(items);
     }
 
-    [HttpGet("GetBellSourceitems/{Id}")]
-    public async Task<IActionResult> GetBellSourceitems([FromRoute] int Id = 0)
+    [HttpGet("GetBellSourceItems/{startCount}/{endCount}")]
+    public async Task<IActionResult> GetBellSourceItems([FromRoute] int startCount = 1, int endCount = 1)
     {
-        var items = await _databaseGenerator.BellSourceGeneratorFromMemory(Id);
+        var items = await _dbRepo.GetBellSource(startCount, endCount);
         return Ok(items);
     }
 
-    [HttpGet("FillSqlite/{RecordNom}/{DeleteOldRecords}/{DifferenceRate}")]
-    public async Task<IActionResult> FillSqlite([FromRoute] int RecordNom, string DeleteOldRecords, int DifferenceRate)
+    [HttpGet("GetStaplesSourceItems/{startCount}/{endCount}")]
+    public async Task<IActionResult> GetStaplesSourceItems([FromRoute] int startCount = 1, int endCount = 1)
     {
-        var res = _bellRepo.DBGenerator(RecordNom, DeleteOldRecords, DifferenceRate);
+        var items = await _dbRepo.GetStaplesSource(startCount, endCount);
+        return Ok(items);
+    }
+
+    [HttpGet("GenerateServerDb/{recordNom}/{deleteOldRecords}/{differenceRate}")]
+    public async Task<IActionResult> GenerateServerDb([FromRoute] int recordNom, string deleteOldRecords, int differenceRate)
+    {
+        var res = _dbGenerator.DBGenerator(recordNom, deleteOldRecords, differenceRate);
         return Ok(res);
     }
 }
