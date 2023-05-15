@@ -3,9 +3,7 @@
 @inject ISyncData SyncData
 @inject ILocalDbRepository Localdb
 
-<RadzenButton ButtonStyle="ButtonStyle.Dark" Text="Fetch Data from Server" Click="FetchData"></RadzenButton>
-<RadzenButton ButtonStyle="ButtonStyle.Warning" Text="Load data from localDB" Click="LoadFromLocalDB"></RadzenButton>
-<br />
+
 NON CELLPHONE
 <RadzenTabs  RenderMode="Radzen.TabRenderMode.Client" @bind-SelectedIndex=@selectedIndex>
     <Tabs>
@@ -62,12 +60,14 @@ NON CELLPHONE
 @code {
     int selectedIndex = 0;
 
-    List<StaplesSourceDto> staplesSources = new();
+    [Parameter]
+    public List<BellSourceDto> bellSources { get; set; }
+    [Parameter]
+    public List<StaplesSourceDto> staplesSources { get; set; }
     List<CompareBellStaple> compareBellStaple = new();
     RadzenDataGrid<BellSourceDto> grid = new RadzenDataGrid<BellSourceDto>();
 
     private bool busy;
-    List<BellSourceDto> bellSources = new();
 
 
 
@@ -86,18 +86,18 @@ NON CELLPHONE
 
     }
 
-    private async Task FetchData()
-    {
-        await SyncData.FetchDataFromServerDb();
-        bellSources = await Localdb.GetBellSourceFromLocalDb();
+    //private async Task FetchData()
+    //{
+    //    await SyncData.FetchDataFromServerDb();
+    //    bellSources = await Localdb.GetBellSourceFromLocalDb();
 
-    }
+    //}
 
-    private async Task LoadFromLocalDB()
-    {
-        bellSources = await Localdb.GetBellSourceFromLocalDb();
-        staplesSources = await Localdb.GetStapleSourceFromLocalDb(); 
-    }
+    //private async Task LoadFromLocalDB()
+    //{
+    //    bellSources = await Localdb.GetBellSourceFromLocalDb();
+    //    staplesSources = await Localdb.GetStapleSourceFromLocalDb(); 
+    //}
 
     
 

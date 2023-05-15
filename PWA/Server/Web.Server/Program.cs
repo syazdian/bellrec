@@ -1,3 +1,7 @@
+using Bell.Reconciliation.Web.Server.Data;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+
 namespace Bell.Reconciliation.Web.Server;
 
 public class Program
@@ -14,8 +18,10 @@ public class Program
         var filterItems = GetFilterItems(builder);
         builder.Services.AddSingleton(filterItems);
 
+        builder.Services.AddTransient<ServerDbRepository>();
+        builder.Services.AddDbContext<BellRecContext>(options =>
+                options.UseSqlite(builder.Configuration.GetSection("constring").Get<string>()));
         builder.Services.AddTransient<DatabaseGenerator>();
-        builder.Services.AddTransient<BellRecRepository>();
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.

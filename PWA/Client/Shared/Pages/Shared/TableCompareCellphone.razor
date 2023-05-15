@@ -3,14 +3,11 @@
 @inject ISyncData SyncData
 @inject ILocalDbRepository Localdb
 
-<RadzenButton ButtonStyle="ButtonStyle.Dark" Text="Fetch Data from Server" Click="FetchData"></RadzenButton>
-<RadzenButton ButtonStyle="ButtonStyle.Warning" Text="Load data from localDB" Click="LoadFromLocalDB"></RadzenButton>
-<br />
 CELLPHONE
 <RadzenTabs  RenderMode="Radzen.TabRenderMode.Client" @bind-SelectedIndex=@selectedIndex>
     <Tabs>
         <RadzenTabsItem Text="Only in Staples">
-            <RadzenDataGrid ColumnWidth="150px" AllowFiltering="true" AllowPaging="true" PageSize="8" AllowSorting="true" Data="@staplesSources" TItem="StaplesSourceDto">
+            <RadzenDataGrid AllowVirtualization="true" ColumnWidth="150px" AllowFiltering="true" AllowPaging="true" PageSize="8" AllowSorting="true" Data="@staplesSources" TItem="StaplesSourceDto">
                 <Columns>
                     <RadzenDataGridColumn TItem="StaplesSourceDto" Property="OrderNumber" Title="OrderNumber" />
                     <RadzenDataGridColumn TItem="StaplesSourceDto" Property="Phone" Title="Phone" />
@@ -71,13 +68,14 @@ CELLPHONE
 
 @code {
     int selectedIndex = 0;
-
-    List<StaplesSourceDto> staplesSources = new();
+    [Parameter]
+    public List<BellSourceDto> bellSources { get; set; }
+    [Parameter]
+    public List<StaplesSourceDto> staplesSources { get; set; }
     List<CompareBellStaple> compareBellStaple = new();
     RadzenDataGrid<BellSourceDto> grid = new RadzenDataGrid<BellSourceDto>();
 
     private bool busy;
-    List<BellSourceDto> bellSources = new();
 
    
  
@@ -97,18 +95,16 @@ CELLPHONE
 
     }
 
-    private async Task FetchData()
-    {
-        await SyncData.FetchDataFromServerDb();
-        bellSources = await Localdb.GetBellSourceFromLocalDb();
+    //private async Task FetchData()
+    //{
+    //    await SyncData.FetchDataFromServerDb();
+    //}
 
-    }
-
-    private async Task LoadFromLocalDB()
-    {
-        bellSources = await Localdb.GetBellSourceFromLocalDb();
-        staplesSources = await Localdb.GetStapleSourceFromLocalDb(); 
-    }
+    //private async Task LoadFromLocalDB()
+    //{
+    //    bellSources = await Localdb.GetBellSourceFromLocalDb();
+    //    staplesSources = await Localdb.GetStapleSourceFromLocalDb(); 
+    //}
 
     
 
