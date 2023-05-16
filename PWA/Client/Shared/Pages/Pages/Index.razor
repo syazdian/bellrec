@@ -29,7 +29,7 @@ else
 
         @if (WirelessSubLob == "Wireless")
         {
-            <TableCompareCellphone bellSources="bellSources" staplesSources="staplesSources"></TableCompareCellphone>
+            <TableCompareCellphone bellSources="bellSources" staplesSources="staplesSources" compareBellStaple="compreBellStapleCellPhone"></TableCompareCellphone>
         }
         else
         {
@@ -45,6 +45,8 @@ else
 @code {
     List<BellSourceDto> bellSources = new();
     List<StaplesSourceDto> staplesSources = new();
+    List<CompareBellStapleCellPhone> compreBellStapleCellPhone = new();
+
     string WirelessSubLob;
     bool localDbExist = true;
     bool uiDbExist = false;
@@ -99,6 +101,7 @@ else
         uiDbExist = false;
         bellSources = await _localdb.GetBellSourceFromLocalDb();
         staplesSources = await _localdb.GetStapleSourceFromLocalDb();
+        compreBellStapleCellPhone = await _localdb.GetBellStapleCompareFromLocalDb();
         uiDbExist = true;
         showloader = false;
         StateHasChanged();

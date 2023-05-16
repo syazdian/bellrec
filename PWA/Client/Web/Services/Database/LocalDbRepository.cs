@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace Bell.Reconciliation.Frontend.Web.Services.Database;
 
@@ -71,6 +72,42 @@ public class LocalDbRepository : ILocalDbRepository
         List<StaplesSourceDto> staplesSources = await ctx.StaplesSources.ToListAsync();
         return staplesSources;
     }
+    
+    public async Task<List<CompareBellStapleCellPhone>> GetBellStapleCompareFromLocalDb()
+    {
+        using var ctx = await _dbContextFactory.CreateDbContextAsync();
+        //FormattableString query = $"SELECT stp.Amount as SAmount, stp.Phone as SPhone, bll.Amount as BAmount, bll.Phone as BPhone FROM \"BellSource\" as bll\r\njoin \"StaplesSource\" as stp on bll.Id = stp.id where bll.SubLob = 'Wireless' and stp.SubLob = 'Wireless' ";
+        //var bellStaplesCompres = ctx.Database.SqlQuery<CompareBellStapleCellPhoneDto>(query).ToList();
+
+        var query = from b in ctx.BellSources
+                                 join s in ctx.StaplesSources on b.Id equals s.Id
+                    where s.SubLob == "Wireless" && b.SubLob=="Wireless"
+                                 select new CompareBellStapleCellPhone
+                                 {
+                                     BAmount = b.Amount.ToString(),
+                                     BPhone = b.Phone.ToString(),
+                                     BComment = b.Comment.ToString(),
+                                     BOrderNumber = b.OrderNumber.ToString(),
+                                     BIMEI = b.Imei.ToString(),
+                                     BTransactionDate = b.TransactionDate.ToString() ,
+                                     BCustomerName = b.CustomerName.ToString(),
+                                     BRebateType = b.RebateType.ToString(),
+
+                                     SAmount = s.Amount.ToString(),
+                                     SPhone = s.Phone.ToString(),
+                                     SComment = s.Comment.ToString(),
+                                     SOrderNumber = s.OrderNumber.ToString(),
+                                     SIMEI = s.Imei.ToString(),
+                                     STransactionDate = s.TransactionDate.ToString(),
+                                     SCustomerName = s.CustomerName.ToString(),
+                                     SRebateType = b.RebateType.ToString(),
+
+                                 };
+        var bellStaplesCompres = query.ToList();
+
+        return bellStaplesCompres;
+    }
+
 
     public async Task<bool> LocalDbExist()
     {

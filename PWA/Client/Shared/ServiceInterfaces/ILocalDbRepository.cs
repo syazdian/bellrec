@@ -5,6 +5,7 @@ public interface ILocalDbRepository
     Task<List<BellSourceDto>> GetBellSourceFromLocalDb();
 
     Task<List<StaplesSourceDto>> GetStapleSourceFromLocalDb();
+    Task<List<CompareBellStapleCellPhone>> GetBellStapleCompareFromLocalDb();
 
     Task<int> InsertDataToLocalDbAsync(BellStaplesSourceDto bellStaplesSources);
 
