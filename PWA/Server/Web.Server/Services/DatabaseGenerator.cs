@@ -352,7 +352,7 @@ namespace Bell.Reconciliation.Web.Server.Services
             bellSource.Phone = 0;// rand.NextInt64(11234567890, 99999999999);
             bellSource.Amount = rand.Next(100, 1500);
             bellSource.Comment = string.Empty;
-            bellSource.CommissionDetails = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 8);
+            // bellSource.CommissionDetails = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 8);
             bellSource.CustomerName = GetSampleName(db, rand);
             bellSource.OrderNumber = rand.NextInt64(11234567890, 99999999999);
             bellSource.TransactionDate = DateTime.Now.AddDays(new Random().Next(-1000, 0)).ToShortDateString();
@@ -377,7 +377,7 @@ namespace Bell.Reconciliation.Web.Server.Services
                     bellSource.SubLob = WirelessSubLOBs[0];
                     bellSource.RebateType = RebateTypes[0];
                     bellSource.Phone = rand.NextInt64(11234567890, 99999999999);
-                    bellSource.Imei = rand.NextInt64(1234567890, 9876543210);
+                    bellSource.Imei = rand.NextInt64(1234567890, 9876543210).ToString();
                     bellSource.Amount = rand.Next(100, 1500);
                 }
             }
@@ -427,7 +427,7 @@ namespace Bell.Reconciliation.Web.Server.Services
                     staplesSource.SubLob = WirelessSubLOBs[0];
                     staplesSource.RebateType = RebateTypes[0];
                     staplesSource.Phone = rand.NextInt64(11234567890, 99999999999);
-                    staplesSource.Imei = rand.NextInt64(1234567890, 9876543210);
+                    staplesSource.Imei = rand.NextInt64(1234567890, 9876543210).ToString();
                     staplesSource.Amount = rand.Next(100, 1500);
                 }
             }

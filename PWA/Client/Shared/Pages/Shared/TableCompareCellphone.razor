@@ -11,7 +11,7 @@ CELLPHONE
                 <Columns>
                     <RadzenDataGridColumn TItem="StaplesSourceDto" Property="OrderNumber" Title="OrderNumber" />
                     <RadzenDataGridColumn TItem="StaplesSourceDto" Property="Phone" Title="Phone" />
-                    <RadzenDataGridColumn TItem="StaplesSourceDto" Property="IMEI" Title="IMEI" />
+                    <RadzenDataGridColumn  Property="IMEI" Title="IMEI" />
                     <RadzenDataGridColumn TItem="StaplesSourceDto" Property="Amount" Title="Amount" />
                     <RadzenDataGridColumn TItem="StaplesSourceDto" Property="Comment" Title="Comment" />
                     <RadzenDataGridColumn TItem="StaplesSourceDto" Property="TransactionDate" Title="TransactionDate" />
@@ -46,7 +46,7 @@ CELLPHONE
             <RadzenDataGrid AllowVirtualization="true"  ColumnWidth="150px" AllowFiltering="true" AllowPaging="true" PageSize="8" AllowSorting="true"
                             Data="@bellSources" @ref="grid" TItem="BellSourceDto">
                 <Columns>
-                    <RadzenDataGridColumn TItem="BellSourceDto" Property="OrderNumber" Title="OrderNumber#" />
+                    <RadzenDataGridColumn TItem="BellSourceDto" Property="OrderNumber" Title="OrderNumber" />
                     <RadzenDataGridColumn TItem="BellSourceDto" Property="Phone" Title="Phone" />
                     <RadzenDataGridColumn TItem="BellSourceDto" Property="IMEI" Title="IMEI" />
                     <RadzenDataGridColumn TItem="BellSourceDto" Property="Amount" Title="Amount" />
@@ -73,8 +73,8 @@ CELLPHONE
 
     private bool busy;
 
-   
- 
+
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -82,10 +82,9 @@ CELLPHONE
 
 
 
-        compareBellStaple.AddRange(new List<CompareBellStaple>{
-            new CompareBellStaple() { MatchStatus = Common.Models.Enums.MatchStatus.Match, BPhone = "123", SPhone = "123", BAmount = "1", SAmount = "1", BComment = "11", SComment = "11", BCommissionDetails = "32", SCommissionDetails = "32", BCustomerName = "dasd", SCustomerName = "dasd", BIMEI = "2131324", SIMEI = "2131324",  SOrderNumber = "231", BOrderNumber = "231", STransactionDate = "2023-04-04", BTransactionDate = "2023-04-04" },
-            new CompareBellStaple() { MatchStatus = Common.Models.Enums.MatchStatus.MissmatchResolved, BPhone = "123", SPhone = "123", BAmount = "1", SAmount = "1", BComment = "11", SComment = "11", BCommissionDetails = "32", SCommissionDetails = "32", BCustomerName = "dasd", SCustomerName = "dasd", BIMEI = "2131324", SIMEI = "2131324",  SOrderNumber = "231", BOrderNumber = "231", STransactionDate = "2023-04-04", BTransactionDate = "2023-04-04" },
-            new CompareBellStaple() { MatchStatus = Common.Models.Enums.MatchStatus.MissmatchResolved, BPhone = "123", SPhone = "123", BAmount = "1", SAmount = "1", BComment = "11", SComment = "11", BCommissionDetails = "32", SCommissionDetails = "32", BCustomerName = "dasd", SCustomerName = "dasd", BIMEI = "2131324", SIMEI = "2131324",  SOrderNumber = "231", BOrderNumber = "231", STransactionDate = "2023-04-04", BTransactionDate = "2023-04-04" }
+        compareBellStaple.AddRange(new List<CompareBellStaple>
+        {
+            
         });
         StateHasChanged();
 

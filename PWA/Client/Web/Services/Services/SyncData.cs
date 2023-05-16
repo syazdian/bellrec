@@ -4,7 +4,7 @@ public class SyncData : ISyncData
 {
     private readonly HttpClient _httpClient;
     private readonly ILocalDbRepository _localDb;
-    private const int packageSize = 500;
+    private const int packageSize = 1000;
 
     //TODO: THIS IS FOR DEV IT SHOULD BE BELL AND STAPLES COUNT
     private const int maximumDownload = 1000;
