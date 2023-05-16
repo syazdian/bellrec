@@ -15,13 +15,13 @@ public partial class BellSource
 
     public long? OrderNumber { get; set; }
 
-    public long? Imei { get; set; }
+    public string? Imei { get; set; }
 
     public string? TransactionDate { get; set; }
 
     public string? CustomerName { get; set; }
 
-    public string? CommissionDetails { get; set; }
+    //public string? CommissionDetails { get; set; }
 
     public string? Lob { get; set; }
 

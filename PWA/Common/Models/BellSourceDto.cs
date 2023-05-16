@@ -5,9 +5,8 @@ public class BellSourceDto
     public int Id { get; set; }
     public long? Amount { get; set; }
     public string? Comment { get; set; }
-    public string? CommissionDetails { get; set; }
     public string? CustomerName { get; set; }
-    public long? Imei { get; set; }
+    public string? Imei { get; set; }
     public long? OrderNumber { get; set; }
     public long? Phone { get; set; }
     public string? TransactionDate { get; set; }

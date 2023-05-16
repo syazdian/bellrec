@@ -21,7 +21,7 @@ public partial class StaplesSource
 
     public string? Rec { get; set; }
 
-    public long? Imei { get; set; }
+    public string? Imei { get; set; }
 
     public string? TransactionDate { get; set; }
 
