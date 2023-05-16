@@ -10,31 +10,30 @@ NON CELLPHONE
         <RadzenTabsItem Text="Only in Staples">
             <RadzenDataGrid ColumnWidth="150px" AllowFiltering="true" AllowPaging="true" PageSize="8" AllowSorting="true" Data="@staplesSources" TItem="StaplesSourceDto">
                 <Columns>
-                    <RadzenDataGridColumn TItem="StaplesSourceDto" Property="OrderNumber" Title="OrderNumber" />
+                   <RadzenDataGridColumn TItem="StaplesSourceDto" Property="OrderNumber" Title="OrderNumber" />
                     <RadzenDataGridColumn TItem="StaplesSourceDto" Property="Amount" Title="Amount" />
                     <RadzenDataGridColumn TItem="StaplesSourceDto" Property="Comment" Title="Comment" />
                     <RadzenDataGridColumn TItem="StaplesSourceDto" Property="TransactionDate" Title="TransactionDate" />
                     <RadzenDataGridColumn TItem="StaplesSourceDto" Property="CustomerName" Title="CustomerName" />
-                    <RadzenDataGridColumn TItem="StaplesSourceDto" Property="CommissionDetailes" Title="CommissionDetailes" />
                 </Columns>
             </RadzenDataGrid>
         </RadzenTabsItem>
         <RadzenTabsItem Text="In both">
             <RadzenDataGrid ColumnWidth="150px" AllowFiltering="true" AllowPaging="true" PageSize="8" AllowSorting="true" Data="@compareBellStaple" TItem="CompareBellStaple">
                 <Columns>
-                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="MatchStatus" Title="STP Consolidate" />
-                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="SOrderNumber" Title="STP Order# Staples" />
-                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="SAmount" Title="STP Amount Staples" />
-                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="SComment" Title="STP Comment Staples" />
-                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="STransactionDate" Title="STP TransactionDate Staples" />
-                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="SCustomerName" Title="STP CustomerName Staples" />
-                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="SCommissionDetailes" Title="STP CommissionDetailes Staples" />
-                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="BOrderNumber" Title="Bell Order# " />
-                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="BAmount" Title="Bell Amount " />
-                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="BComment" Title="Bell Comment " />
-                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="BTransactionDate" Title="Bell TransactionDate " />
-                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="BCustomerName" Title="Bell CustomerName " />
-                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="BCommissionDetailes" Title="Bell CommissionDetailes " />
+                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="MatchStatus" Title="Consolidate" />
+
+                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="SOrderNumber" Title="S.Order" />
+                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="SAmount" Title="S.Amount " />
+                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="SComment" Title="S.Comment " />
+                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="STransactionDate" Title="S.TransactionDate " />
+                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="SCustomerName" Title="S.CustomerName " />
+
+                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="BOrderNumber" Title="B.Order" />
+                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="BAmount" Title="B.Amount " />
+                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="BComment" Title="B.Comment " />
+                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="BTransactionDate" Title="B.TransactionDate " />
+                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="BCustomerName" Title="B.CustomerName " />
                 </Columns>
             </RadzenDataGrid>
         </RadzenTabsItem>
@@ -42,12 +41,11 @@ NON CELLPHONE
             <RadzenDataGrid AllowVirtualization="true"  ColumnWidth="150px" AllowFiltering="true" AllowPaging="true" PageSize="8" AllowSorting="true"
                             Data="@bellSources" @ref="grid" TItem="BellSourceDto">
                 <Columns>
-                    <RadzenDataGridColumn TItem="BellSourceDto" Property="OrderNumber" Title="OrderNumber" />
+                    <RadzenDataGridColumn TItem="BellSourceDto" Property="OrderNumber" Title="OrderNumber#" />
                     <RadzenDataGridColumn TItem="BellSourceDto" Property="Amount" Title="Amount" />
                     <RadzenDataGridColumn TItem="BellSourceDto" Property="Comment" Title="Comment" />
                     <RadzenDataGridColumn TItem="BellSourceDto" Property="TransactionDate" Title="TransactionDate" />
                     <RadzenDataGridColumn TItem="BellSourceDto" Property="CustomerName" Title="CustomerName" />
-                    <RadzenDataGridColumn TItem="BellSourceDto" Property="CommissionDetailes" Title="CommissionDetailes" />
                 </Columns>
             </RadzenDataGrid>
         </RadzenTabsItem>
@@ -78,9 +76,9 @@ NON CELLPHONE
 
 
         compareBellStaple.AddRange(new List<CompareBellStaple>{
-           new CompareBellStaple() { MatchStatus = Common.Models.Enums.MatchStatus.Match, BPhone = "123", SPhone = "123", BAmount = "1", SAmount = "1", BComment = "11", SComment = "11", BCommissionDetails = "32", SCommissionDetails = "32", BCustomerName = "dasd", SCustomerName = "dasd", BIMEI = "2131324", SIMEI = "2131324",  SOrderNumber = "231", BOrderNumber = "231", STransactionDate = "2023-04-04", BTransactionDate = "2023-04-04" },
-            new CompareBellStaple() { MatchStatus = Common.Models.Enums.MatchStatus.MissmatchResolved, BPhone = "123", SPhone = "123", BAmount = "1", SAmount = "1", BComment = "11", SComment = "11", BCommissionDetails = "32", SCommissionDetails = "32", BCustomerName = "dasd", SCustomerName = "dasd", BIMEI = "2131324", SIMEI = "2131324",  SOrderNumber = "231", BOrderNumber = "231", STransactionDate = "2023-04-04", BTransactionDate = "2023-04-04" },
-            new CompareBellStaple() { MatchStatus = Common.Models.Enums.MatchStatus.MissmatchResolved, BPhone = "123", SPhone = "123", BAmount = "1", SAmount = "1", BComment = "11", SComment = "11", BCommissionDetails = "32", SCommissionDetails = "32", BCustomerName = "dasd", SCustomerName = "dasd", BIMEI = "2131324", SIMEI = "2131324",  SOrderNumber = "231", BOrderNumber = "231", STransactionDate = "2023-04-04", BTransactionDate = "2023-04-04" }
+           new CompareBellStaple() { MatchStatus = Common.Models.Enums.MatchStatus.Match, BPhone = "123", SPhone = "123", BAmount = "1", SAmount = "1", BComment = "11", SComment = "11",  BCustomerName = "dasd", SCustomerName = "dasd", BIMEI = "2131324", SIMEI = "2131324",  SOrderNumber = "231", BOrderNumber = "231", STransactionDate = "2023-04-04", BTransactionDate = "2023-04-04" },
+            new CompareBellStaple() { MatchStatus = Common.Models.Enums.MatchStatus.MissmatchResolved, BPhone = "123", SPhone = "123", BAmount = "1", SAmount = "1", BComment = "11", SComment = "11", BCustomerName = "dasd", SCustomerName = "dasd", BIMEI = "2131324", SIMEI = "2131324",  SOrderNumber = "231", BOrderNumber = "231", STransactionDate = "2023-04-04", BTransactionDate = "2023-04-04" },
+            new CompareBellStaple() { MatchStatus = Common.Models.Enums.MatchStatus.MissmatchResolved, BPhone = "123", SPhone = "123", BAmount = "1", SAmount = "1", BComment = "11", SComment = "11",  BCustomerName = "dasd", SCustomerName = "dasd", BIMEI = "2131324", SIMEI = "2131324",  SOrderNumber = "231", BOrderNumber = "231", STransactionDate = "2023-04-04", BTransactionDate = "2023-04-04" }
          });
         StateHasChanged();
 

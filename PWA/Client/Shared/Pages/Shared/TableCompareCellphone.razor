@@ -11,35 +11,34 @@ CELLPHONE
                 <Columns>
                     <RadzenDataGridColumn TItem="StaplesSourceDto" Property="OrderNumber" Title="OrderNumber" />
                     <RadzenDataGridColumn TItem="StaplesSourceDto" Property="Phone" Title="Phone" />
-                    <RadzenDataGridColumn TItem="StaplesSourceDto" Property="IMEI" Title="IMEI" />
+                    <RadzenDataGridColumn TItem="StaplesSourceDto" Property="Imei" Title="IMEI" />
                     <RadzenDataGridColumn TItem="StaplesSourceDto" Property="Amount" Title="Amount" />
                     <RadzenDataGridColumn TItem="StaplesSourceDto" Property="Comment" Title="Comment" />
                     <RadzenDataGridColumn TItem="StaplesSourceDto" Property="TransactionDate" Title="TransactionDate" />
                     <RadzenDataGridColumn TItem="StaplesSourceDto" Property="CustomerName" Title="CustomerName" />
-                    <RadzenDataGridColumn TItem="StaplesSourceDto" Property="CommissionDetailes" Title="CommissionDetailes" />
                 </Columns>
             </RadzenDataGrid>
         </RadzenTabsItem>
         <RadzenTabsItem Text="In both">
             <RadzenDataGrid ColumnWidth="150px" AllowFiltering="true" AllowPaging="true" PageSize="8" AllowSorting="true" Data="@compareBellStaple" TItem="CompareBellStapleCellPhone" CellRender="@CellRender">
                 <Columns>
-                    @*<RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="MatchStatus" Title="Consolidate" />*@
+                    @*<RadzenDataGridColumn TItem="CompareBellStaple" Property="MatchStatus" Title="Consolidate" />*@
 
-                    <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="SPhone" Title="STP Phone#" />
-                    <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="SIMEI" Title="STP IMEI" />
-                    <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="SOrderNumber" Title="STP Order#" />
-                    <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="SAmount" Title="STP Amount " />
-                    <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="SComment" Title="STP Comment " />
-                    <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="STransactionDate" Title="STP TransactionDate " />
-                    <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="SCustomerName" Title="STP CustomerName " />
+                    <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="SPhone" Title="S.Phone" />
+                    <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="SIMEI" Title="S.IMEI" />
+                    <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="SOrderNumber" Title="S.Order" />
+                    <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="SAmount" Title="S.Amount " />
+                    <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="SComment" Title="S.Comment " />
+                    <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="STransactionDate" Title="S.TransactionDate " />
+                    <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="SCustomerName" Title="S.CustomerName " />
 
-                    <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="BPhone" Title="BellPhone#" />
-                    <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="BIMEI" Title="BellIMEI" />
-                    <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="BOrderNumber" Title="BellOrder# " />
-                    <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="BAmount" Title="BellAmount " />
-                    <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="BComment" Title="BellComment " />
-                    <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="BTransactionDate" Title="BellTransactionDate " />
-                    <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="BCustomerName" Title="BellCustomerName " />
+                    <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="BPhone" Title="B.Phone" />
+                    <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="BIMEI" Title="B.IMEI" />
+                    <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="BOrderNumber" Title="B.Order" />
+                    <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="BAmount" Title="B.Amount " />
+                    <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="BComment" Title="B.Comment " />
+                    <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="BTransactionDate" Title="B.TransactionDate " />
+                    <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="BCustomerName" Title="B.CustomerName " />
                 </Columns>
             </RadzenDataGrid>
         </RadzenTabsItem>
@@ -47,14 +46,13 @@ CELLPHONE
             <RadzenDataGrid AllowVirtualization="true"  ColumnWidth="150px" AllowFiltering="true" AllowPaging="true" PageSize="8" AllowSorting="true"
                             Data="@bellSources" @ref="grid" TItem="BellSourceDto">
                 <Columns>
-                    <RadzenDataGridColumn TItem="BellSourceDto" Property="OrderNumber" Title="OrderNumber#" />
+                    <RadzenDataGridColumn TItem="BellSourceDto" Property="OrderNumber" Title="OrderNumber" />
                     <RadzenDataGridColumn TItem="BellSourceDto" Property="Phone" Title="Phone" />
-                    <RadzenDataGridColumn TItem="BellSourceDto" Property="IMEI" Title="IMEI" />
+                    <RadzenDataGridColumn TItem="BellSourceDto" Property="Imei" Title="IMEI" />
                     <RadzenDataGridColumn TItem="BellSourceDto" Property="Amount" Title="Amount" />
                     <RadzenDataGridColumn TItem="BellSourceDto" Property="Comment" Title="Comment" />
                     <RadzenDataGridColumn TItem="BellSourceDto" Property="TransactionDate" Title="TransactionDate" />
                     <RadzenDataGridColumn TItem="BellSourceDto" Property="CustomerName" Title="CustomerName" />
-                    <RadzenDataGridColumn TItem="BellSourceDto" Property="CommissionDetailes" Title="CommissionDetailes" />
                 </Columns>
             </RadzenDataGrid>
         </RadzenTabsItem>
@@ -70,7 +68,7 @@ CELLPHONE
     public List<BellSourceDto> bellSources { get; set; }
     [Parameter]
     public List<StaplesSourceDto> staplesSources { get; set; }
-    
+
     [Parameter]
     public List<CompareBellStapleCellPhone> compareBellStaple { get; set; }
 
@@ -78,20 +76,13 @@ CELLPHONE
 
     private bool busy;
 
-   
- 
+
+
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-
-
-
-        //compareBellStaple.AddRange(new List<CompareBellStaple>{
-        //    new CompareBellStaple() { MatchStatus = Common.Models.Enums.MatchStatus.Match, BPhone = "1223", SPhone = "123", BAmount = "12", SAmount = "1", BComment = "11", SComment = "11", BCommissionDetails = "32", SCommissionDetails = "32", BCustomerName = "d12صثasd", SCustomerName = "dasd", BIMEI = "21343431324", SIMEI = "2131324",  SOrderNumber = "231", BOrderNumber = "231", STransactionDate = "2023-06-04", BTransactionDate = "2023-04-04" },
-        //    new CompareBellStaple() { MatchStatus = Common.Models.Enums.MatchStatus.MissmatchResolved, BPhone = "1234", SPhone = "123", BAmount = "1", SAmount = "1", BComment = "11", SComment = "11", BCommissionDetails = "32", SCommissionDetails = "32", BCustomerName = "dasd", SCustomerName = "dasd", BIMEI = "2131324", SIMEI = "2131324",  SOrderNumber = "231", BOrderNumber = "231", STransactionDate = "2023-04-04", BTransactionDate = "2023-04-04" },
-        //    new CompareBellStaple() { MatchStatus = Common.Models.Enums.MatchStatus.MissmatchResolved, BPhone = "123", SPhone = "123", BAmount = "1", SAmount = "1", BComment = "11", SComment = "11", BCommissionDetails = "32", SCommissionDetails = "32", BCustomerName = "dasd", SCustomerName = "dasd", BIMEI = "2131324", SIMEI = "2131324",  SOrderNumber = "231", BOrderNumber = "231", STransactionDate = "2023-04-04", BTransactionDate = "2023-04-04" }
-        //});
+        Console.WriteLine(compareBellStaple.Count);
         StateHasChanged();
 
     }
@@ -108,25 +99,25 @@ CELLPHONE
             args.Attributes.Add("style", $"background-color: {(args.Data.BPhone != args.Data.SPhone ? "var(--rz-warning)" : "var(--rz-base-background-color)")};");
         }
 
-        //if (args.Column.Property == "BCommissionDetails" || args.Column.Property == "SCommissionDetails")
-        //{
-        //    args.Attributes.Add("style", $"background-color: {(args.Data.BCommissionDetails != args.Data.SCommissionDetails ? "var(--rz-warning)" : "var(--rz-base-background-color)")};");
-        //}
+        if (args.Column.Property == "BCommissionDetails" || args.Column.Property == "SCommissionDetails")
+        {
+            args.Attributes.Add("style", $"background-color: {(args.Data.BCommissionDetails != args.Data.SCommissionDetails ? "var(--rz-warning)" : "var(--rz-base-background-color)")};");
+        }
 
-        //if (args.Column.Property == "BCustomerName" || args.Column.Property == "SCustomerName")
-        //{
-        //    args.Attributes.Add("style", $"background-color: {(args.Data.BCustomerName != args.Data.SCustomerName ? "var(--rz-warning)" : "var(--rz-base-background-color)")};");
-        //}
+        if (args.Column.Property == "BCustomerName" || args.Column.Property == "SCustomerName")
+        {
+            args.Attributes.Add("style", $"background-color: {(args.Data.BCustomerName != args.Data.SCustomerName ? "var(--rz-warning)" : "var(--rz-base-background-color)")};");
+        }
 
-        //if (args.Column.Property == "STransactionDate" || args.Column.Property == "BTransactionDate")
-        //{
-        //    args.Attributes.Add("style", $"background-color: {(args.Data.STransactionDate != args.Data.BTransactionDate ? "var(--rz-warning)" : "var(--rz-base-background-color)")};");
-        //}
+        if (args.Column.Property == "STransactionDate" || args.Column.Property == "BTransactionDate")
+        {
+            args.Attributes.Add("style", $"background-color: {(args.Data.STransactionDate != args.Data.BTransactionDate ? "var(--rz-warning)" : "var(--rz-base-background-color)")};");
+        }
 
-        //if (args.Column.Property == "SIMEI" || args.Column.Property == "BIMEI")
-        //{
-        //    args.Attributes.Add("style", $"background-color: {(args.Data.SIMEI != args.Data.BIMEI ? "var(--rz-warning)" : "var(--rz-base-background-color)")};");
-        //}
+        if (args.Column.Property == "SIMEI" || args.Column.Property == "BIMEI")
+        {
+            args.Attributes.Add("style", $"background-color: {(args.Data.SIMEI != args.Data.BIMEI ? "var(--rz-warning)" : "var(--rz-base-background-color)")};");
+        }
     }
 
     //private async Task FetchData()

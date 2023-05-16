@@ -62,14 +62,26 @@ public class LocalDbRepository : ILocalDbRepository
     public async Task<List<BellSourceDto>> GetBellSourceFromLocalDb()
     {
         using var ctx = await _dbContextFactory.CreateDbContextAsync();
-        List<BellSourceDto> bellSources = await ctx.BellSources.ToListAsync();
+        var query = from b in ctx.BellSources
+                    join s in ctx.StaplesSources
+                    on b.Id equals s.Id into joined
+                    from j in joined.DefaultIfEmpty()
+                    where b.SubLob == "Wireless" && j.SubLob == "Wireless"
+                    select b;
+        List<BellSourceDto> bellSources = await query.ToListAsync();//await ctx.BellSources.ToListAsync();
         return bellSources;
     }
 
     public async Task<List<StaplesSourceDto>> GetStapleSourceFromLocalDb()
     {
         using var ctx = await _dbContextFactory.CreateDbContextAsync();
-        List<StaplesSourceDto> staplesSources = await ctx.StaplesSources.ToListAsync();
+        var query = from s in ctx.StaplesSources
+                    join b in ctx.BellSources
+                    on s.Id equals b.Id into joined
+                    from j in joined.DefaultIfEmpty()
+                    where s.SubLob == "Wireless" && j.SubLob == "Wireless"
+                    select s;
+        List<StaplesSourceDto> staplesSources = await query.ToListAsync();// await ctx.StaplesSources.ToListAsync();
         return staplesSources;
     }
     
@@ -80,24 +92,24 @@ public class LocalDbRepository : ILocalDbRepository
         //var bellStaplesCompres = ctx.Database.SqlQuery<CompareBellStapleCellPhoneDto>(query).ToList();
 
         var query = from b in ctx.BellSources
-                                 join s in ctx.StaplesSources on b.Id equals s.Id
+                    join s in ctx.StaplesSources on b.Id equals s.Id
                     where s.SubLob == "Wireless" && b.SubLob=="Wireless"
                                  select new CompareBellStapleCellPhone
                                  {
-                                     BAmount = b.Amount.ToString(),
                                      BPhone = b.Phone.ToString(),
-                                     BComment = b.Comment.ToString(),
-                                     BOrderNumber = b.OrderNumber.ToString(),
                                      BIMEI = b.Imei.ToString(),
+                                     BOrderNumber = b.OrderNumber.ToString(),
+                                     BAmount = b.Amount.ToString(),
+                                     BComment = b.Comment.ToString(),
                                      BTransactionDate = b.TransactionDate.ToString() ,
                                      BCustomerName = b.CustomerName.ToString(),
                                      BRebateType = b.RebateType.ToString(),
 
-                                     SAmount = s.Amount.ToString(),
                                      SPhone = s.Phone.ToString(),
-                                     SComment = s.Comment.ToString(),
-                                     SOrderNumber = s.OrderNumber.ToString(),
                                      SIMEI = s.Imei.ToString(),
+                                     SOrderNumber = s.OrderNumber.ToString(),
+                                     SAmount = s.Amount.ToString(),
+                                     SComment = s.Comment.ToString(),
                                      STransactionDate = s.TransactionDate.ToString(),
                                      SCustomerName = s.CustomerName.ToString(),
                                      SRebateType = b.RebateType.ToString(),
