@@ -3,8 +3,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bell.Reconciliation.Common.Models
-{
+namespace Bell.Reconciliation.Common.Models;
     public class CompareBellStapleCellPhone
     {
         public MatchStatus MatchStatus { get; set; }
@@ -29,4 +28,3 @@ namespace Bell.Reconciliation.Common.Models
         public string BCommissionDetails { get; set; }
         public string BRebateType { get; set; }
     }
-}
