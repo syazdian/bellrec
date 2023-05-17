@@ -66,7 +66,7 @@ public class LocalDbRepository : ILocalDbRepository
 
         var query = ctx.BellSources.Where(b => b.SubLob == "Wireless" && !ctx.StaplesSources.Any(s => s.Id == b.Id));
 
-        List<BellSourceDto> bellSources = await ctx.BellSources.ToListAsync();
+        List<BellSourceDto> bellSources = await query.ToListAsync();//  ctx.BellSources.ToListAsync();
         return bellSources;
     }
 
@@ -75,7 +75,7 @@ public class LocalDbRepository : ILocalDbRepository
         using var ctx = await _dbContextFactory.CreateDbContextAsync();
         var query = ctx.StaplesSources.Where(s => s.SubLob == "Wireless" && !ctx.BellSources.Any(b => b.Id == s.Id));
 
-        List<StaplesSourceDto> staplesSources =  await ctx.StaplesSources.ToListAsync();
+        List<StaplesSourceDto> staplesSources = await query.ToListAsync();// ctx.StaplesSources.ToListAsync();
         return staplesSources;
     }
     
@@ -134,7 +134,6 @@ public class LocalDbRepository : ILocalDbRepository
     
     public async Task<List<CompareBellStapleNonCellPhone>> GetBellStapleCompareNonCellPhoneFromLocalDb()
     {
-        return new List<CompareBellStapleNonCellPhone>();
         using var ctx = await _dbContextFactory.CreateDbContextAsync();
         //FormattableString query = $"SELECT stp.Amount as SAmount, stp.Phone as SPhone, bll.Amount as BAmount, bll.Phone as BPhone FROM \"BellSource\" as bll\r\njoin \"StaplesSource\" as stp on bll.Id = stp.id where bll.SubLob = 'Wireless' and stp.SubLob = 'Wireless' ";
         //var bellStaplesCompres = ctx.Database.SqlQuery<CompareBellStapleCellPhoneDto>(query).ToList();
