@@ -5,6 +5,9 @@
 
 
 NON CELLPHONE
+<div class="rz-text-align-left">
+    <RadzenButton Text="Save Changes" ButtonStyle="ButtonStyle.Primary" />
+</div>
 <RadzenTabs  RenderMode="Radzen.TabRenderMode.Client" @bind-SelectedIndex=@selectedIndex>
     <Tabs>
         <RadzenTabsItem Text="Only in Staples">
@@ -19,10 +22,25 @@ NON CELLPHONE
             </RadzenDataGrid>
         </RadzenTabsItem>
         <RadzenTabsItem Text="In both">
-            <RadzenDataGrid ColumnWidth="150px" AllowFiltering="true" AllowPaging="true" PageSize="8" AllowSorting="true" Data="@CompareBellStaple" TItem="CompareBellStapleNonCellPhone" CellRender="@CellRender">
+         
+
+            <RadzenDataGrid @ref="Grid" AllowRowSelectOnRowClick="@allowRowSelectOnRowClick" AllowFiltering="true" CellRender="@CellRender"
+                            FilterPopupRenderMode="PopupRenderMode.OnDemand" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                            AllowPaging="true" PageSize="10"
+                            AllowSorting="true" Data="@CompareBellStaple" TItem="CompareBellStapleNonCellPhone" ColumnWidth="200px"
+                            SelectionMode="DataGridSelectionMode.Multiple" @bind-Value=@selectedProducts class="m-4">
                 <Columns>
-                    @*//TODO auto generate value for this property*@
-@*                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="MatchStatus" Title="Consolidate" />*@
+                    <RadzenDataGridColumn TItem="CompareBellStapleNonCellPhone" Width="60px" Sortable="false" Filterable="false">
+                        <HeaderTemplate>
+                            <RadzenCheckBox TriState="false" TValue="bool"
+                                            Value="@(CompareBellStaple.Any(i => selectedProducts != null && selectedProducts.Contains(i)))"
+                                            Change="@(args => selectedProducts = args ? CompareBellStaple.ToList() : null)" />
+                        </HeaderTemplate>
+                        <Template Context="data">
+                            <RadzenCheckBox TriState="false" Value="@(selectedProducts != null && selectedProducts.Contains(data))"
+                                            TValue="bool" Change=@(args => { if(!allowRowSelectOnRowClick) { Grid.SelectRow(data); }}) />
+                        </Template>
+                    </RadzenDataGridColumn>
                     <RadzenDataGridColumn TItem="CompareBellStapleNonCellPhone" Property="SOrderNumber" Title="S.Order" />
                     <RadzenDataGridColumn TItem="CompareBellStapleNonCellPhone" Property="SAmount" Title="S.Amount " />
                     <RadzenDataGridColumn TItem="CompareBellStapleNonCellPhone" Property="SComment" Title="S.Comment " />
@@ -39,7 +57,7 @@ NON CELLPHONE
         </RadzenTabsItem>
         <RadzenTabsItem Text="Only in Bell">
             <RadzenDataGrid AllowVirtualization="true"  ColumnWidth="150px" AllowFiltering="true" AllowPaging="true" PageSize="8" AllowSorting="true"
-                            Data="@BellSources" @ref="grid" TItem="BellSourceDto">
+                            Data="@BellSources" @ref="GridBS" TItem="BellSourceDto">
                 <Columns>
                     <RadzenDataGridColumn TItem="BellSourceDto" Property="OrderNumber" Title="OrderNumber#" />
                     <RadzenDataGridColumn TItem="BellSourceDto" Property="Amount" Title="Amount" />
@@ -50,8 +68,10 @@ NON CELLPHONE
             </RadzenDataGrid>
         </RadzenTabsItem>
     </Tabs>
-
+  
 </RadzenTabs>
+
+
 
 <hr class="featurette-divider">
 
@@ -64,10 +84,15 @@ NON CELLPHONE
     public List<StaplesSourceDto> StaplesSources { get; set; }
     [Parameter]
     public List<CompareBellStapleNonCellPhone> CompareBellStaple { get; set; }
-    RadzenDataGrid<BellSourceDto> grid = new RadzenDataGrid<BellSourceDto>();
+    RadzenDataGrid<CompareBellStapleNonCellPhone> Grid = new RadzenDataGrid<CompareBellStapleNonCellPhone>();
+    RadzenDataGrid<BellSourceDto> GridBS = new RadzenDataGrid<BellSourceDto>();
+
+
+    IList<CompareBellStapleNonCellPhone> selectedProducts;
+
 
     private bool busy;
-
+    bool allowRowSelectOnRowClick = true;
 
 
     protected override async Task OnInitializedAsync()

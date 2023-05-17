@@ -20,7 +20,9 @@ CELLPHONE
             </RadzenDataGrid>
         </RadzenTabsItem>
         <RadzenTabsItem Text="In both">
-            <RadzenDataGrid ColumnWidth="150px" AllowFiltering="true" AllowPaging="true" PageSize="8" AllowSorting="true" Data="@CompareBellStaple" TItem="CompareBellStapleCellPhone" CellRender="@CellRender">
+            <RadzenDataGrid ColumnWidth="150px" SelectionMode="DataGridSelectionMode.Single" AllowFiltering="true" 
+            AllowPaging="true" PageSize="8" AllowSorting="true" Data="@CompareBellStaple" 
+            TItem="CompareBellStapleCellPhone" CellRender="@CellRender">
                 <Columns>
                     
                     @*//TODO auto generate value for this property*@
