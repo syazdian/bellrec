@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Bell.Reconciliation.Common.Models;
+using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace Bell.Reconciliation.Frontend.Web.Services.Database;
 
@@ -58,19 +60,113 @@ public class LocalDbRepository : ILocalDbRepository
         }
     }
 
-    public async Task<List<BellSourceDto>> GetBellSourceFromLocalDb()
+    public async Task<List<BellSourceDto>> GetBellSourceCellPhoneFromLocalDb()
     {
         using var ctx = await _dbContextFactory.CreateDbContextAsync();
-        List<BellSourceDto> bellSources = await ctx.BellSources.ToListAsync();
+
+        var query = ctx.BellSources.Where(b => b.SubLob == "Wireless" && !ctx.StaplesSources.Any(s => s.Id == b.Id));
+
+        List<BellSourceDto> bellSources = await query.ToListAsync();//  ctx.BellSources.ToListAsync();
         return bellSources;
     }
 
-    public async Task<List<StaplesSourceDto>> GetStapleSourceFromLocalDb()
+    public async Task<List<StaplesSourceDto>> GetStapleSourceCellPhoneFromLocalDb()
     {
         using var ctx = await _dbContextFactory.CreateDbContextAsync();
-        List<StaplesSourceDto> staplesSources = await ctx.StaplesSources.ToListAsync();
+        var query = ctx.StaplesSources.Where(s => s.SubLob == "Wireless" && !ctx.BellSources.Any(b => b.Id == s.Id));
+
+        List<StaplesSourceDto> staplesSources = await query.ToListAsync();// ctx.StaplesSources.ToListAsync();
         return staplesSources;
     }
+    
+    public async Task<List<CompareBellStapleCellPhone>> GetBellStapleCompareCellPhoneFromLocalDb()
+    {
+        using var ctx = await _dbContextFactory.CreateDbContextAsync();
+        //FormattableString query = $"SELECT stp.Amount as SAmount, stp.Phone as SPhone, bll.Amount as BAmount, bll.Phone as BPhone FROM \"BellSource\" as bll\r\njoin \"StaplesSource\" as stp on bll.Id = stp.id where bll.SubLob = 'Wireless' and stp.SubLob = 'Wireless' ";
+        //var bellStaplesCompres = ctx.Database.SqlQuery<CompareBellStapleCellPhoneDto>(query).ToList();
+
+        var query = from b in ctx.BellSources
+                    join s in ctx.StaplesSources on b.Id equals s.Id
+                    where s.SubLob == "Wireless" && b.SubLob=="Wireless"
+                                 select new CompareBellStapleCellPhone
+                                 {
+                                     BPhone = b.Phone.ToString(),
+                                     BIMEI = b.Imei.ToString(),
+                                     BOrderNumber = b.OrderNumber.ToString(),
+                                     BAmount = b.Amount.ToString(),
+                                     BComment = b.Comment.ToString(),
+                                     BTransactionDate = b.TransactionDate.ToString() ,
+                                     BCustomerName = b.CustomerName.ToString(),
+                                     BRebateType = b.RebateType.ToString(),
+                                     BReconciled = b.Reconciled,
+
+                                     SPhone = s.Phone.ToString(),
+                                     SIMEI = s.Imei.ToString(),
+                                     SOrderNumber = s.OrderNumber.ToString(),
+                                     SAmount = s.Amount.ToString(),
+                                     SComment = s.Comment.ToString(),
+                                     STransactionDate = s.TransactionDate.ToString(),
+                                     SCustomerName = s.CustomerName.ToString(),
+                                     SRebateType = b.RebateType.ToString(),
+                                     SReconciled = b.Reconciled
+
+                                 };
+        var bellStaplesCompres = query.ToList();
+
+        return bellStaplesCompres;
+    }
+    
+    public async Task<List<BellSourceDto>> GetBellSourceNonCellPhoneFromLocalDb()
+    {
+        using var ctx = await _dbContextFactory.CreateDbContextAsync();
+        var query = ctx.BellSources.Where(b => b.SubLob != "Wireless" && !ctx.StaplesSources.Any(s => s.Id == b.Id));
+       
+        List<BellSourceDto> bellSources = await query.ToListAsync();//await ctx.BellSources.ToListAsync();
+        return bellSources;
+    }
+
+    public async Task<List<StaplesSourceDto>> GetStapleSourceNonCellPhoneFromLocalDb()
+    {
+        using var ctx = await _dbContextFactory.CreateDbContextAsync();
+        var query = ctx.StaplesSources.Where(s => s.SubLob != "Wireless" && !ctx.BellSources.Any(b => b.Id == s.Id));
+
+        List<StaplesSourceDto> staplesSources = await query.ToListAsync();// await ctx.StaplesSources.ToListAsync();
+        return staplesSources;
+    }
+    
+    public async Task<List<CompareBellStapleNonCellPhone>> GetBellStapleCompareNonCellPhoneFromLocalDb()
+    {
+        using var ctx = await _dbContextFactory.CreateDbContextAsync();
+        //FormattableString query = $"SELECT stp.Amount as SAmount, stp.Phone as SPhone, bll.Amount as BAmount, bll.Phone as BPhone FROM \"BellSource\" as bll\r\njoin \"StaplesSource\" as stp on bll.Id = stp.id where bll.SubLob = 'Wireless' and stp.SubLob = 'Wireless' ";
+        //var bellStaplesCompres = ctx.Database.SqlQuery<CompareBellStapleCellPhoneDto>(query).ToList();
+
+        var query = from b in ctx.BellSources
+                    join s in ctx.StaplesSources on b.Id equals s.Id
+                    where s.SubLob != "Wireless" && b.SubLob!="Wireless"
+                                 select new CompareBellStapleNonCellPhone
+                                 {
+                                     BOrderNumber = b.OrderNumber.ToString(),
+                                     BAmount = b.Amount.ToString(),
+                                     BComment = b.Comment.ToString(),
+                                     BTransactionDate = b.TransactionDate.ToString() ,
+                                     BCustomerName = b.CustomerName.ToString(),
+                                     BRebateType = b.RebateType.ToString(),
+                                     BReconciled = b.Reconciled,
+
+                                     SOrderNumber = s.OrderNumber.ToString(),
+                                     SAmount = s.Amount.ToString(),
+                                     SComment = s.Comment.ToString(),
+                                     STransactionDate = s.TransactionDate.ToString(),
+                                     SCustomerName = s.CustomerName.ToString(),
+                                     SRebateType = s.RebateType.ToString(),
+                                     SReconciled = s.Reconciled,
+
+                                 };
+        var bellStaplesCompres = query.ToList();
+
+        return bellStaplesCompres;
+    }
+
 
     public async Task<bool> LocalDbExist()
     {

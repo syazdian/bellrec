@@ -7,7 +7,7 @@ CELLPHONE
 <RadzenTabs  RenderMode="Radzen.TabRenderMode.Client" @bind-SelectedIndex=@selectedIndex>
     <Tabs>
         <RadzenTabsItem Text="Only in Staples">
-            <RadzenDataGrid AllowVirtualization="true" ColumnWidth="150px" AllowFiltering="true" AllowPaging="true" PageSize="8" AllowSorting="true" Data="@staplesSources" TItem="StaplesSourceDto">
+            <RadzenDataGrid AllowVirtualization="true" ColumnWidth="150px" AllowFiltering="true" AllowPaging="true" PageSize="8" AllowSorting="true" Data="@StaplesSources" TItem="StaplesSourceDto">
                 <Columns>
                     <RadzenDataGridColumn TItem="StaplesSourceDto" Property="OrderNumber" Title="OrderNumber" />
                     <RadzenDataGridColumn TItem="StaplesSourceDto" Property="Phone" Title="Phone" />
@@ -20,31 +20,33 @@ CELLPHONE
             </RadzenDataGrid>
         </RadzenTabsItem>
         <RadzenTabsItem Text="In both">
-            <RadzenDataGrid ColumnWidth="150px" AllowFiltering="true" AllowPaging="true" PageSize="8" AllowSorting="true" Data="@compareBellStaple" TItem="CompareBellStaple">
+            <RadzenDataGrid ColumnWidth="150px" SelectionMode="DataGridSelectionMode.Single" AllowFiltering="true" 
+            AllowPaging="true" PageSize="8" AllowSorting="true" Data="@CompareBellStaple" 
+            TItem="CompareBellStapleCellPhone" CellRender="@CellRender">
                 <Columns>
-                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="MatchStatus" Title="Consolidate" />
+                    
+                    <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="MatchStatus" Title="Consolidate" />
+                    <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="SPhone" Title="S.Phone" />
+                    <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="SIMEI" Title="S.IMEI" />
+                    <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="SOrderNumber" Title="S.Order" />
+                    <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="SAmount" Title="S.Amount " />
+                    <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="SComment" Title="S.Comment " />
+                    <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="STransactionDate" Title="S.TransactionDate " />
+                    <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="SCustomerName" Title="S.CustomerName " />
 
-                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="SPhone" Title="S.Phone" />
-                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="SIMEI" Title="S.IMEI" />
-                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="SOrderNumber" Title="S.Order" />
-                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="SAmount" Title="S.Amount " />
-                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="SComment" Title="S.Comment " />
-                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="STransactionDate" Title="S.TransactionDate " />
-                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="SCustomerName" Title="S.CustomerName " />
-
-                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="BPhone" Title="B.Phone" />
-                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="BIMEI" Title="B.IMEI" />
-                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="BOrderNumber" Title="B.Order" />
-                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="BAmount" Title="B.Amount " />
-                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="BComment" Title="B.Comment " />
-                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="BTransactionDate" Title="B.TransactionDate " />
-                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="BCustomerName" Title="B.CustomerName " />
+                    <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="BPhone" Title="B.Phone" />
+                    <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="BIMEI" Title="B.IMEI" />
+                    <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="BOrderNumber" Title="B.Order" />
+                    <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="BAmount" Title="B.Amount " />
+                    <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="BComment" Title="B.Comment " />
+                    <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="BTransactionDate" Title="B.TransactionDate " />
+                    <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="BCustomerName" Title="B.CustomerName " />
                 </Columns>
             </RadzenDataGrid>
         </RadzenTabsItem>
         <RadzenTabsItem Text="Only in Bell">
             <RadzenDataGrid AllowVirtualization="true"  ColumnWidth="150px" AllowFiltering="true" AllowPaging="true" PageSize="8" AllowSorting="true"
-                            Data="@bellSources" @ref="grid" TItem="BellSourceDto">
+                            Data="@BellSources" @ref="grid" TItem="BellSourceDto">
                 <Columns>
                     <RadzenDataGridColumn TItem="BellSourceDto" Property="OrderNumber" Title="OrderNumber" />
                     <RadzenDataGridColumn TItem="BellSourceDto" Property="Phone" Title="Phone" />
@@ -65,10 +67,13 @@ CELLPHONE
 @code {
     int selectedIndex = 0;
     [Parameter]
-    public List<BellSourceDto> bellSources { get; set; }
+    public List<BellSourceDto> BellSources { get; set; }
     [Parameter]
-    public List<StaplesSourceDto> staplesSources { get; set; }
-    List<CompareBellStaple> compareBellStaple = new();
+    public List<StaplesSourceDto> StaplesSources { get; set; }
+
+    [Parameter]
+    public List<CompareBellStapleCellPhone> CompareBellStaple { get; set; }
+
     RadzenDataGrid<BellSourceDto> grid = new RadzenDataGrid<BellSourceDto>();
 
     private bool busy;
@@ -79,15 +84,27 @@ CELLPHONE
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-
-
-
-        compareBellStaple.AddRange(new List<CompareBellStaple>
-        {
-            
-        });
+        Console.WriteLine(CompareBellStaple.Count);
         StateHasChanged();
 
+    }
+
+    void CellRender(DataGridCellRenderEventArgs<CompareBellStapleCellPhone> args)
+    {
+        if (args.Column.Property == "SAmount" || args.Column.Property == "BAmount")
+        {
+            args.Attributes.Add("style", $"background-color: {(args.Data.SAmount != args.Data.BAmount ? "var(--rz-warning)" : "var(--rz-base-background-color)")};");
+        }
+
+        if (args.Column.Property == "BCustomerName" || args.Column.Property == "SCustomerName")
+        {
+            args.Attributes.Add("style", $"background-color: {(args.Data.BCustomerName != args.Data.SCustomerName ? "var(--rz-warning)" : "var(--rz-base-background-color)")};");
+        }
+
+        if (args.Column.Property == "STransactionDate" || args.Column.Property == "BTransactionDate")
+        {
+            args.Attributes.Add("style", $"background-color: {(args.Data.STransactionDate != args.Data.BTransactionDate ? "var(--rz-warning)" : "var(--rz-base-background-color)")};");
+        }
     }
 
     //private async Task FetchData()

@@ -2,9 +2,12 @@
 
 public interface ILocalDbRepository
 {
-    Task<List<BellSourceDto>> GetBellSourceFromLocalDb();
-
-    Task<List<StaplesSourceDto>> GetStapleSourceFromLocalDb();
+    Task<List<BellSourceDto>> GetBellSourceCellPhoneFromLocalDb();
+    Task<List<StaplesSourceDto>> GetStapleSourceCellPhoneFromLocalDb();
+    Task<List<CompareBellStapleCellPhone>> GetBellStapleCompareCellPhoneFromLocalDb(); 
+    Task<List<BellSourceDto>> GetBellSourceNonCellPhoneFromLocalDb();
+    Task<List<StaplesSourceDto>> GetStapleSourceNonCellPhoneFromLocalDb();
+    Task<List<CompareBellStapleNonCellPhone>> GetBellStapleCompareNonCellPhoneFromLocalDb();
 
     Task<int> InsertDataToLocalDbAsync(BellStaplesSourceDto bellStaplesSources);
 
