@@ -96,16 +96,6 @@ CELLPHONE
             args.Attributes.Add("style", $"background-color: {(args.Data.SAmount != args.Data.BAmount ? "var(--rz-warning)" : "var(--rz-base-background-color)")};");
         }
 
-        //if (args.Column.Property == "BPhone" || args.Column.Property == "SPhone")
-        //{
-        //    args.Attributes.Add("style", $"background-color: {(args.Data.BPhone != args.Data.SPhone ? "var(--rz-warning)" : "var(--rz-base-background-color)")};");
-        //}
-
-        //if (args.Column.Property == "BCommissionDetails" || args.Column.Property == "SCommissionDetails")
-        //{
-        //    args.Attributes.Add("style", $"background-color: {(args.Data.BCommissionDetails != args.Data.SCommissionDetails ? "var(--rz-warning)" : "var(--rz-base-background-color)")};");
-        //}
-
         if (args.Column.Property == "BCustomerName" || args.Column.Property == "SCustomerName")
         {
             args.Attributes.Add("style", $"background-color: {(args.Data.BCustomerName != args.Data.SCustomerName ? "var(--rz-warning)" : "var(--rz-base-background-color)")};");
@@ -115,11 +105,6 @@ CELLPHONE
         {
             args.Attributes.Add("style", $"background-color: {(args.Data.STransactionDate != args.Data.BTransactionDate ? "var(--rz-warning)" : "var(--rz-base-background-color)")};");
         }
-
-        //if (args.Column.Property == "SIMEI" || args.Column.Property == "BIMEI")
-        //{
-        //    args.Attributes.Add("style", $"background-color: {(args.Data.SIMEI != args.Data.BIMEI ? "var(--rz-warning)" : "var(--rz-base-background-color)")};");
-        //}
     }
 
     //private async Task FetchData()
