@@ -8,7 +8,7 @@ NON CELLPHONE
 <RadzenTabs  RenderMode="Radzen.TabRenderMode.Client" @bind-SelectedIndex=@selectedIndex>
     <Tabs>
         <RadzenTabsItem Text="Only in Staples">
-            <RadzenDataGrid ColumnWidth="150px" AllowFiltering="true" AllowPaging="true" PageSize="8" AllowSorting="true" Data="@staplesSources" TItem="StaplesSourceDto">
+            <RadzenDataGrid ColumnWidth="150px" AllowFiltering="true" AllowPaging="true" PageSize="8" AllowSorting="true" Data="@StaplesSources" TItem="StaplesSourceDto">
                 <Columns>
                    <RadzenDataGridColumn TItem="StaplesSourceDto" Property="OrderNumber" Title="OrderNumber" />
                     <RadzenDataGridColumn TItem="StaplesSourceDto" Property="Amount" Title="Amount" />
@@ -19,7 +19,7 @@ NON CELLPHONE
             </RadzenDataGrid>
         </RadzenTabsItem>
         <RadzenTabsItem Text="In both">
-            <RadzenDataGrid ColumnWidth="150px" AllowFiltering="true" AllowPaging="true" PageSize="8" AllowSorting="true" Data="@compareBellStaple" TItem="CompareBellStapleNonCellPhone" CellRender="@CellRender">
+            <RadzenDataGrid ColumnWidth="150px" AllowFiltering="true" AllowPaging="true" PageSize="8" AllowSorting="true" Data="@CompareBellStaple" TItem="CompareBellStapleNonCellPhone" CellRender="@CellRender">
                 <Columns>
 @*                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="MatchStatus" Title="Consolidate" />*@
                     <RadzenDataGridColumn TItem="CompareBellStapleNonCellPhone" Property="SOrderNumber" Title="S.Order" />
@@ -38,7 +38,7 @@ NON CELLPHONE
         </RadzenTabsItem>
         <RadzenTabsItem Text="Only in Bell">
             <RadzenDataGrid AllowVirtualization="true"  ColumnWidth="150px" AllowFiltering="true" AllowPaging="true" PageSize="8" AllowSorting="true"
-                            Data="@bellSources" @ref="grid" TItem="BellSourceDto">
+                            Data="@BellSources" @ref="grid" TItem="BellSourceDto">
                 <Columns>
                     <RadzenDataGridColumn TItem="BellSourceDto" Property="OrderNumber" Title="OrderNumber#" />
                     <RadzenDataGridColumn TItem="BellSourceDto" Property="Amount" Title="Amount" />
@@ -58,11 +58,11 @@ NON CELLPHONE
     int selectedIndex = 0;
 
     [Parameter]
-    public List<BellSourceDto> bellSources { get; set; }
+    public List<BellSourceDto> BellSources { get; set; }
     [Parameter]
-    public List<StaplesSourceDto> staplesSources { get; set; }
+    public List<StaplesSourceDto> StaplesSources { get; set; }
     [Parameter]
-    public List<CompareBellStapleNonCellPhone> compareBellStaple { get; set; }
+    public List<CompareBellStapleNonCellPhone> CompareBellStaple { get; set; }
     RadzenDataGrid<BellSourceDto> grid = new RadzenDataGrid<BellSourceDto>();
 
     private bool busy;
