@@ -21,6 +21,7 @@ NON CELLPHONE
         <RadzenTabsItem Text="In both">
             <RadzenDataGrid ColumnWidth="150px" AllowFiltering="true" AllowPaging="true" PageSize="8" AllowSorting="true" Data="@CompareBellStaple" TItem="CompareBellStapleNonCellPhone" CellRender="@CellRender">
                 <Columns>
+                    @*//TODO auto generate value for this property*@
 @*                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="MatchStatus" Title="Consolidate" />*@
                     <RadzenDataGridColumn TItem="CompareBellStapleNonCellPhone" Property="SOrderNumber" Title="S.Order" />
                     <RadzenDataGridColumn TItem="CompareBellStapleNonCellPhone" Property="SAmount" Title="S.Amount " />

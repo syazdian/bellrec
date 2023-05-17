@@ -22,6 +22,8 @@ CELLPHONE
         <RadzenTabsItem Text="In both">
             <RadzenDataGrid ColumnWidth="150px" AllowFiltering="true" AllowPaging="true" PageSize="8" AllowSorting="true" Data="@CompareBellStaple" TItem="CompareBellStapleCellPhone" CellRender="@CellRender">
                 <Columns>
+                    
+                    @*//TODO auto generate value for this property*@
                     @*<RadzenDataGridColumn TItem="CompareBellStaple" Property="MatchStatus" Title="Consolidate" />*@
 
                     <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="SPhone" Title="S.Phone" />
