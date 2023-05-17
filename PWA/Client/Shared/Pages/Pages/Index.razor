@@ -29,7 +29,7 @@ else
 
         @if (WirelessSubLob == "Wireless")
         {
-            <TableCompareCellphone BellSources="bellSourcesCellPhone" StaplesSources="staplesSourcesCellPhone" CompareBellStaple="compreBellStapleCellPhone"></TableCompareCellphone>
+            <TableCompareCellphone BellSources="bellSourcesCellPhone" StaplesSources="staplesSourcesCellPhone" CompareBellStaple="compareBellStapleCellPhone"></TableCompareCellphone>
         }
         else
         {
@@ -45,7 +45,7 @@ else
 @code {
     List<BellSourceDto> bellSourcesCellPhone = new();
     List<StaplesSourceDto> staplesSourcesCellPhone = new();
-    List<CompareBellStapleCellPhone> compreBellStapleCellPhone = new();
+    List<CompareBellStapleCellPhone> compareBellStapleCellPhone = new();
 
     List<BellSourceDto> bellSourcesNonCellPhone = new();
     List<StaplesSourceDto> staplesSourcesNonCellPhone = new();
@@ -105,15 +105,11 @@ else
         uiDbExist = false;
         bellSourcesCellPhone = await _localdb.GetBellSourceCellPhoneFromLocalDb();
         staplesSourcesCellPhone = await _localdb.GetStapleSourceCellPhoneFromLocalDb();
-        compreBellStapleCellPhone = await _localdb.GetBellStapleCompareCellPhoneFromLocalDb();
-
-        Console.WriteLine(string.Format("{0} {1} {2}",bellSourcesCellPhone.Count,staplesSourcesCellPhone.Count,compreBellStapleCellPhone.Count));
+        compareBellStapleCellPhone = await _localdb.GetBellStapleCompareCellPhoneFromLocalDb();
 
         bellSourcesNonCellPhone = await _localdb.GetBellSourceNonCellPhoneFromLocalDb();
         staplesSourcesNonCellPhone = await _localdb.GetStapleSourceNonCellPhoneFromLocalDb();
         compreBellStapleNonCellPhone = await _localdb.GetBellStapleCompareNonCellPhoneFromLocalDb();
-
-        Console.WriteLine(string.Format("{0} {1} {2}", bellSourcesNonCellPhone.Count, staplesSourcesNonCellPhone.Count, compreBellStapleNonCellPhone.Count));
 
         uiDbExist = true;
         showloader = false;
