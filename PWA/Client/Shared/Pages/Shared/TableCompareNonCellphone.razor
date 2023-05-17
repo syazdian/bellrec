@@ -19,21 +19,20 @@ NON CELLPHONE
             </RadzenDataGrid>
         </RadzenTabsItem>
         <RadzenTabsItem Text="In both">
-            <RadzenDataGrid ColumnWidth="150px" AllowFiltering="true" AllowPaging="true" PageSize="8" AllowSorting="true" Data="@compareBellStaple" TItem="CompareBellStaple">
+            <RadzenDataGrid ColumnWidth="150px" AllowFiltering="true" AllowPaging="true" PageSize="8" AllowSorting="true" Data="@compareBellStaple" TItem="CompareBellStapleNonCellPhone" CellRender="@CellRender">
                 <Columns>
-                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="MatchStatus" Title="Consolidate" />
+@*                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="MatchStatus" Title="Consolidate" />*@
+                    <RadzenDataGridColumn TItem="CompareBellStapleNonCellPhone" Property="SOrderNumber" Title="S.Order" />
+                    <RadzenDataGridColumn TItem="CompareBellStapleNonCellPhone" Property="SAmount" Title="S.Amount " />
+                    <RadzenDataGridColumn TItem="CompareBellStapleNonCellPhone" Property="SComment" Title="S.Comment " />
+                    <RadzenDataGridColumn TItem="CompareBellStapleNonCellPhone" Property="STransactionDate" Title="S.TransactionDate " />
+                    <RadzenDataGridColumn TItem="CompareBellStapleNonCellPhone" Property="SCustomerName" Title="S.CustomerName " />
 
-                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="SOrderNumber" Title="S.Order" />
-                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="SAmount" Title="S.Amount " />
-                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="SComment" Title="S.Comment " />
-                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="STransactionDate" Title="S.TransactionDate " />
-                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="SCustomerName" Title="S.CustomerName " />
-
-                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="BOrderNumber" Title="B.Order" />
-                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="BAmount" Title="B.Amount " />
-                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="BComment" Title="B.Comment " />
-                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="BTransactionDate" Title="B.TransactionDate " />
-                    <RadzenDataGridColumn TItem="CompareBellStaple" Property="BCustomerName" Title="B.CustomerName " />
+                    <RadzenDataGridColumn TItem="CompareBellStapleNonCellPhone" Property="BOrderNumber" Title="B.Order" />
+                    <RadzenDataGridColumn TItem="CompareBellStapleNonCellPhone" Property="BAmount" Title="B.Amount " />
+                    <RadzenDataGridColumn TItem="CompareBellStapleNonCellPhone" Property="BComment" Title="B.Comment " />
+                    <RadzenDataGridColumn TItem="CompareBellStapleNonCellPhone" Property="BTransactionDate" Title="B.TransactionDate " />
+                    <RadzenDataGridColumn TItem="CompareBellStapleNonCellPhone" Property="BCustomerName" Title="B.CustomerName " />
                 </Columns>
             </RadzenDataGrid>
         </RadzenTabsItem>
@@ -62,7 +61,8 @@ NON CELLPHONE
     public List<BellSourceDto> bellSources { get; set; }
     [Parameter]
     public List<StaplesSourceDto> staplesSources { get; set; }
-    List<CompareBellStaple> compareBellStaple = new();
+    [Parameter]
+    public List<CompareBellStapleNonCellPhone> compareBellStaple { get; set; }
     RadzenDataGrid<BellSourceDto> grid = new RadzenDataGrid<BellSourceDto>();
 
     private bool busy;
@@ -72,16 +72,26 @@ NON CELLPHONE
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-
-
-
-        compareBellStaple.AddRange(new List<CompareBellStaple>{
-           new CompareBellStaple() { MatchStatus = Common.Models.Enums.MatchStatus.Match, BPhone = "123", SPhone = "123", BAmount = "1", SAmount = "1", BComment = "11", SComment = "11",  BCustomerName = "dasd", SCustomerName = "dasd", BIMEI = "2131324", SIMEI = "2131324",  SOrderNumber = "231", BOrderNumber = "231", STransactionDate = "2023-04-04", BTransactionDate = "2023-04-04" },
-            new CompareBellStaple() { MatchStatus = Common.Models.Enums.MatchStatus.MissmatchResolved, BPhone = "123", SPhone = "123", BAmount = "1", SAmount = "1", BComment = "11", SComment = "11", BCustomerName = "dasd", SCustomerName = "dasd", BIMEI = "2131324", SIMEI = "2131324",  SOrderNumber = "231", BOrderNumber = "231", STransactionDate = "2023-04-04", BTransactionDate = "2023-04-04" },
-            new CompareBellStaple() { MatchStatus = Common.Models.Enums.MatchStatus.MissmatchResolved, BPhone = "123", SPhone = "123", BAmount = "1", SAmount = "1", BComment = "11", SComment = "11",  BCustomerName = "dasd", SCustomerName = "dasd", BIMEI = "2131324", SIMEI = "2131324",  SOrderNumber = "231", BOrderNumber = "231", STransactionDate = "2023-04-04", BTransactionDate = "2023-04-04" }
-         });
         StateHasChanged();
 
+    }
+
+    void CellRender(DataGridCellRenderEventArgs<CompareBellStapleNonCellPhone> args)
+    {
+        if (args.Column.Property == "SAmount" || args.Column.Property == "BAmount")
+        {
+            args.Attributes.Add("style", $"background-color: {(args.Data.SAmount != args.Data.BAmount ? "var(--rz-warning)" : "var(--rz-base-background-color)")};");
+        }
+
+        if (args.Column.Property == "BCustomerName" || args.Column.Property == "SCustomerName")
+        {
+            args.Attributes.Add("style", $"background-color: {(args.Data.BCustomerName != args.Data.SCustomerName ? "var(--rz-warning)" : "var(--rz-base-background-color)")};");
+        }
+
+        if (args.Column.Property == "STransactionDate" || args.Column.Property == "BTransactionDate")
+        {
+            args.Attributes.Add("style", $"background-color: {(args.Data.STransactionDate != args.Data.BTransactionDate ? "var(--rz-warning)" : "var(--rz-base-background-color)")};");
+        }
     }
 
     //private async Task FetchData()

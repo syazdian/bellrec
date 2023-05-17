@@ -12,7 +12,7 @@
         <RadzenButton ButtonStyle="ButtonStyle.Dark" Text="Fetch Data from Server" Click="FetchData"></RadzenButton>
     }
     <LocalDbLoader message="Loading Data ...."></LocalDbLoader>
-    
+
 }
 @*if ()
 {
@@ -29,11 +29,11 @@ else
 
         @if (WirelessSubLob == "Wireless")
         {
-            <TableCompareCellphone bellSources="bellSources" staplesSources="staplesSources" compareBellStaple="compreBellStapleCellPhone"></TableCompareCellphone>
+            <TableCompareCellphone bellSources="bellSourcesCellPhone" staplesSources="staplesSourcesCellPhone" compareBellStaple="compreBellStapleCellPhone"></TableCompareCellphone>
         }
         else
         {
-            <TableCompareNonCellphone bellSources="bellSources" staplesSources="staplesSources"></TableCompareNonCellphone>
+            <TableCompareNonCellphone bellSources="bellSourcesNonCellPhone" staplesSources="staplesSourcesNonCellPhone" compareBellStaple="compreBellStapleNonCellPhone"></TableCompareNonCellphone>
 
         }
 
@@ -43,9 +43,13 @@ else
 
 
 @code {
-    List<BellSourceDto> bellSources = new();
-    List<StaplesSourceDto> staplesSources = new();
+    List<BellSourceDto> bellSourcesCellPhone = new();
+    List<StaplesSourceDto> staplesSourcesCellPhone = new();
     List<CompareBellStapleCellPhone> compreBellStapleCellPhone = new();
+
+    List<BellSourceDto> bellSourcesNonCellPhone = new();
+    List<StaplesSourceDto> staplesSourcesNonCellPhone = new();
+    List<CompareBellStapleNonCellPhone> compreBellStapleNonCellPhone = new();
 
     string WirelessSubLob;
     bool localDbExist = true;
@@ -77,7 +81,7 @@ else
 
     public async Task<bool> UiDbExist()
     {
-        if (bellSources.Count > 1)
+        if (bellSourcesCellPhone.Count > 1)
         {
             uiDbExist = true;
             return true;
@@ -99,9 +103,18 @@ else
     {
         showloader = true;
         uiDbExist = false;
-        bellSources = await _localdb.GetBellSourceFromLocalDb();
-        staplesSources = await _localdb.GetStapleSourceFromLocalDb();
-        compreBellStapleCellPhone = await _localdb.GetBellStapleCompareFromLocalDb();
+        bellSourcesCellPhone = await _localdb.GetBellSourceCellPhoneFromLocalDb();
+        staplesSourcesCellPhone = await _localdb.GetStapleSourceCellPhoneFromLocalDb();
+        compreBellStapleCellPhone = await _localdb.GetBellStapleCompareCellPhoneFromLocalDb();
+
+        Console.WriteLine(string.Format("{0} {1} {2}",bellSourcesCellPhone.Count,staplesSourcesCellPhone.Count,compreBellStapleCellPhone.Count));
+
+        bellSourcesNonCellPhone = await _localdb.GetBellSourceNonCellPhoneFromLocalDb();
+        staplesSourcesNonCellPhone = await _localdb.GetStapleSourceNonCellPhoneFromLocalDb();
+        compreBellStapleNonCellPhone = await _localdb.GetBellStapleCompareNonCellPhoneFromLocalDb();
+
+        Console.WriteLine(string.Format("{0} {1} {2}", bellSourcesNonCellPhone.Count, staplesSourcesNonCellPhone.Count, compreBellStapleNonCellPhone.Count));
+
         uiDbExist = true;
         showloader = false;
         StateHasChanged();
