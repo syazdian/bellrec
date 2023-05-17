@@ -98,6 +98,7 @@ public class LocalDbRepository : ILocalDbRepository
                                      BTransactionDate = b.TransactionDate.ToString() ,
                                      BCustomerName = b.CustomerName.ToString(),
                                      BRebateType = b.RebateType.ToString(),
+                                     BReconciled = b.Reconciled,
 
                                      SPhone = s.Phone.ToString(),
                                      SIMEI = s.Imei.ToString(),
@@ -107,6 +108,7 @@ public class LocalDbRepository : ILocalDbRepository
                                      STransactionDate = s.TransactionDate.ToString(),
                                      SCustomerName = s.CustomerName.ToString(),
                                      SRebateType = b.RebateType.ToString(),
+                                     SReconciled = b.Reconciled
 
                                  };
         var bellStaplesCompres = query.ToList();
@@ -149,6 +151,7 @@ public class LocalDbRepository : ILocalDbRepository
                                      BTransactionDate = b.TransactionDate.ToString() ,
                                      BCustomerName = b.CustomerName.ToString(),
                                      BRebateType = b.RebateType.ToString(),
+                                     BReconciled = b.Reconciled,
 
                                      SOrderNumber = s.OrderNumber.ToString(),
                                      SAmount = s.Amount.ToString(),
@@ -156,6 +159,7 @@ public class LocalDbRepository : ILocalDbRepository
                                      STransactionDate = s.TransactionDate.ToString(),
                                      SCustomerName = s.CustomerName.ToString(),
                                      SRebateType = s.RebateType.ToString(),
+                                     SReconciled = s.Reconciled,
 
                                  };
         var bellStaplesCompres = query.ToList();
