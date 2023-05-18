@@ -6,7 +6,7 @@ public class StaplesSourceDto
 
     public long? Phone { get; set; }
 
-    public long? Amount { get; set; }
+    public decimal Amount { get; set; }
 
     public string? Comment { get; set; }
 
