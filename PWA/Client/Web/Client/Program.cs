@@ -1,3 +1,5 @@
+using Radzen;
+
 namespace Bell.Reconciliation.Client;
 
 public class Program
@@ -8,6 +10,7 @@ public class Program
         builder.RootComponents.Add<App>("#app");
         builder.RootComponents.Add<HeadOutlet>("head::after");
 
+        builder.Services.AddScoped<DialogService>();
         builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
         builder.Services.AddSqliteWasmDbContextFactory<StapleSourceContext>(opts => opts.UseSqlite("Data Source=StapleSource.sqlite3"));
 

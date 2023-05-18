@@ -6,7 +6,7 @@
         get
         {
             if (SReconciled == true && BReconciled == true)
-                return MatchStatus.MissmatchResolved; 
+                return MatchStatus.Reconciled; 
             else
             {
                 if (SAmount == BAmount && SOrderNumber == BOrderNumber && STransactionDate == BTransactionDate && SCustomerName == BCustomerName)
@@ -15,7 +15,7 @@
                 }
                 else
                 {
-                    return MatchStatus.MissmatchNonResolved;
+                    return MatchStatus.Missmatch;
                 }
 
             }
