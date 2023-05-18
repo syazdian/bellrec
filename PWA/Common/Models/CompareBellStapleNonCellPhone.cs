@@ -3,23 +3,7 @@
     {
         public MatchStatus MatchStatus 
         {
-        get
-        {
-            if (SReconciled == true && BReconciled == true)
-                return MatchStatus.Reconciled; 
-            else
-            {
-                if (SAmount == BAmount && SOrderNumber == BOrderNumber && STransactionDate == BTransactionDate && SCustomerName == BCustomerName)
-                {
-                    return MatchStatus.Match;
-                }
-                else
-                {
-                    return MatchStatus.Missmatch;
-                }
-
-            }
-        }
+            get; set;
         }
 
         public decimal SAmount { get; set; }
