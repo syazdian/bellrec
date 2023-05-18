@@ -105,6 +105,16 @@ CELLPHONE
         {
             args.Attributes.Add("style", $"background-color: {(args.Data.STransactionDate != args.Data.BTransactionDate ? "var(--rz-warning)" : "var(--rz-base-background-color)")};");
         }
+
+        if (args.Column.Property == "BIMEI" || args.Column.Property == "SIMEI")
+        {
+            args.Attributes.Add("style", $"background-color: {(args.Data.BIMEI != args.Data.SIMEI ? "var(--rz-warning)" : "var(--rz-base-background-color)")};");
+        }
+
+        if (args.Column.Property == "BPhone" || args.Column.Property == "SPhone")
+        {
+            args.Attributes.Add("style", $"background-color: {(args.Data.BPhone != args.Data.SPhone ? "var(--rz-warning)" : "var(--rz-base-background-color)")};");
+        }
     }
 
     //private async Task FetchData()
