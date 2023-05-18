@@ -456,7 +456,7 @@ namespace Bell.Reconciliation.Web.Server.Services
 
             if (bell.Imei != null && bell.Imei != "")
             {
-                if (rnd < 100)
+                if (rnd < 30)
                     bell.Imei = rand.NextInt64(1234567890, 9876543210).ToString();
                 else if (rnd > 80)
                     bell.Phone = rand.NextInt64(11234567890, 99999999999);
