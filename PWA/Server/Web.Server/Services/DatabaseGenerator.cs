@@ -10,8 +10,8 @@ namespace Bell.Reconciliation.Web.Server.Services
         {
         }
 
-        private List<Data.BellSource> bellBuld = new List<BellSource>();
-        private List<Data.StaplesSource> stapleBuld = new List<StaplesSource>();
+        private List<Data.BellSource> bellBuld = new List<Data.BellSource>();
+        private List<Data.StaplesSource> stapleBuld = new List<Data.StaplesSource>();
 
         private string[] Brands = { "Bell", "Virgin", "Lucky Mobile" };
         private string[] Lobs = { "Wireless", "Wireline" };
@@ -190,9 +190,9 @@ namespace Bell.Reconciliation.Web.Server.Services
 
                                     #endregion bell
 
-                                    MakeSameThenDifferentObjects(bellsource, staplesSource);
-                                    MakeSameThenDifferentObjects(bellSource2, staplesSource2);
-                                    MakeSameThenDifferentObjects(bellSource3, staplesSource3);
+                                    MakeSameThenDifferentObjects(ref bellsource, ref staplesSource);
+                                    MakeSameThenDifferentObjects(ref bellSource2, ref staplesSource2);
+                                    MakeSameThenDifferentObjects(ref bellSource3, ref staplesSource3);
 
                                     stapleBuld.Add(staplesSource);
                                     stapleBuld.Add(staplesSource2);
@@ -207,7 +207,7 @@ namespace Bell.Reconciliation.Web.Server.Services
                                 {
                                     var stapeSource = GetStapleSource(id: i, wirelessLob: true, wirelessSubLob: false);
                                     var bellSource = GetBellSource(id: i, wirelessLob: true, wirelessSubLob: false);
-                                    MakeSameThenDifferentObjects(bellSource, stapeSource);
+                                    MakeSameThenDifferentObjects(ref bellSource, ref stapeSource);
 
                                     stapleBuld.Add(stapeSource);
                                     bellBuld.Add(bellSource);
@@ -217,7 +217,7 @@ namespace Bell.Reconciliation.Web.Server.Services
                             {
                                 var stapeSource = GetStapleSource(id: i, wirelessLob: false);
                                 var bellSource = GetBellSource(id: i, wirelessLob: false);
-                                MakeSameThenDifferentObjects(bellSource, stapeSource);
+                                MakeSameThenDifferentObjects(ref bellSource, ref stapeSource);
 
                                 stapleBuld.Add(stapeSource);
                                 bellBuld.Add(bellSource);
@@ -280,9 +280,9 @@ namespace Bell.Reconciliation.Web.Server.Services
 
                                 i += 2;
 
-                                MakeSameObjects(bellsource, staplesSource);
-                                MakeSameObjects(bellSource2, staplesSource2);
-                                MakeSameObjects(bellSource3, staplesSource3);
+                                MakeSameObjects(ref bellsource, ref staplesSource);
+                                MakeSameObjects(ref bellSource2, ref staplesSource2);
+                                MakeSameObjects(ref bellSource3, ref staplesSource3);
 
                                 stapleBuld.Add(staplesSource);
                                 stapleBuld.Add(staplesSource2);
@@ -296,7 +296,7 @@ namespace Bell.Reconciliation.Web.Server.Services
                             {
                                 var stapeSource = GetStapleSource(id: i, wirelessLob: true, wirelessSubLob: false);
                                 var bellSource = GetBellSource(id: i, wirelessLob: true, wirelessSubLob: false);
-                                MakeSameObjects(bellSource, stapeSource);
+                                MakeSameObjects(ref bellSource, ref stapeSource);
 
                                 stapleBuld.Add(stapeSource);
                                 bellBuld.Add(bellSource);
@@ -306,7 +306,7 @@ namespace Bell.Reconciliation.Web.Server.Services
                         {
                             var stapeSource = GetStapleSource(id: i, wirelessLob: false);
                             var bellSource = GetBellSource(id: i, wirelessLob: false);
-                            MakeSameObjects(bellSource, stapeSource);
+                            MakeSameObjects(ref bellSource, ref stapeSource);
 
                             stapleBuld.Add(stapeSource);
                             bellBuld.Add(bellSource);
@@ -316,7 +316,7 @@ namespace Bell.Reconciliation.Web.Server.Services
                     if (bellBuld.Count + stapleBuld.Count > 990)
                     {
                         db.StaplesSources.AddRange(stapleBuld);
-                        stapleBuld = new List<StaplesSource>();
+                        stapleBuld = new List<Data.StaplesSource>();
 
                         db.BellSources.AddRange(bellBuld);
                         bellBuld = new List<BellSource>();
@@ -350,7 +350,7 @@ namespace Bell.Reconciliation.Web.Server.Services
 
             bellSource.Id = id;
             bellSource.Phone = 0;// rand.NextInt64(11234567890, 99999999999);
-            bellSource.Amount = rand.Next(100, 1500);
+            bellSource.Amount = rand.Next(-500, 1500);
             bellSource.Comment = string.Empty;
             // bellSource.CommissionDetails = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 8);
             bellSource.CustomerName = GetSampleName(db, rand);
@@ -403,12 +403,13 @@ namespace Bell.Reconciliation.Web.Server.Services
             staplesSource.TaxCode = rand.NextInt64(11234567890, 99999999999);
             staplesSource.TransactionDate = DateTime.Now.AddDays(rand.Next(-1000, 0)).ToShortDateString();
             staplesSource.CustomerName = GetSampleName(db, rand);
-            staplesSource.Amount = rand.Next(100, 1500);
+            staplesSource.Amount = rand.Next(-500, 1500);
             staplesSource.OrderNumber = rand.NextInt64(11234567890, 99999999999);
             staplesSource.Reconciled = "FALSE";
 
             if (wirelessLob == false)
             {
+                staplesSource.Lob = Lobs[1];
                 staplesSource.RebateType = RebateTypes[0];
 
                 var r = rand.Next(1, 2);
@@ -416,6 +417,7 @@ namespace Bell.Reconciliation.Web.Server.Services
             }
             else
             {
+                staplesSource.Lob = Lobs[0];
                 if (wirelessSubLob == false)
                 {
                     staplesSource.RebateType = RebateTypes[0];
@@ -435,34 +437,33 @@ namespace Bell.Reconciliation.Web.Server.Services
             return staplesSource;
         }
 
-        private void MakeSameObjects(Data.BellSource bell, Data.StaplesSource staple)
+        private void MakeSameObjects(ref Data.BellSource bell,ref Data.StaplesSource staple)
         {
-            var reservedId = staple.Id;
-            staple = bell.Adapt<Data.StaplesSource>();
-            staple.Id = reservedId;
+            var reservedId = bell.Id;
+            bell = staple.Adapt<Data.BellSource>();
+            bell.Id = reservedId;
         }
 
-        private void MakeSameThenDifferentObjects(Data.BellSource bell, Data.StaplesSource staple)
+        private void MakeSameThenDifferentObjects(ref Data.BellSource bell,ref Data.StaplesSource staple)
         {
-            var reservedId = staple.Id;
-            staple = bell.Adapt<Data.StaplesSource>();
-            staple.Id = reservedId;
+            var reservedId = bell.Id;
+            bell = staple.Adapt<Data.BellSource>();
+            bell.Id = reservedId;
 
             var rnd = rand.Next(100);
-            if (rnd < 90)
-                staple.Amount = bell.Amount + rnd;
-            if (rnd < 80)
-                staple.Product = Products[rand.Next(0, Products.Length - 1)];
-            if (rnd < 70)
-                staple.SalesPerson = salesPersons[rand.Next(0, salesPersons.Count - 1)];
-            if (rnd < 60)
-                staple.TaxCode = rand.NextInt64(11234567890, 99999999999);
-            if (rnd < 50)
-                staple.TransactionDate = DateTime.Now.AddDays(rand.Next(-1000, 0)).ToShortDateString();
-            if (rnd < 40)
-                staple.Brand = Brands[rand.Next(0, Brands.Length - 1)];
-            if (rnd < 30)
-                staple.CustomerName = GetSampleName(db, rand);
+            if (rnd < 100)
+                bell.Amount = bell.Amount + rnd;
+
+            if (bell.Imei != null && bell.Imei != "")
+            {
+                if (rnd < 100)
+                    bell.Imei = rand.NextInt64(1234567890, 9876543210).ToString();
+                else if (rnd > 80)
+                    bell.Phone = rand.NextInt64(11234567890, 99999999999);
+            }
+           
+            if (rnd < 25)
+                bell.CustomerName = GetSampleName(db, rand);
         }
     }
 }

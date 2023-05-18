@@ -22,7 +22,7 @@
         }
         }
 
-        public string SAmount { get; set; }
+        public decimal SAmount { get; set; }
         public string SComment { get; set; }
         public string SOrderNumber { get; set; }
         public string STransactionDate { get; set; }
@@ -30,7 +30,7 @@
         public string SRebateType { get; set; }
         public bool SReconciled { get; set; }
 
-        public string BAmount { get; set; }
+        public decimal BAmount { get; set; }
         public string BComment { get; set; }
         public string BOrderNumber { get; set; }
         public string BTransactionDate { get; set; }

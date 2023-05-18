@@ -93,7 +93,7 @@ public class LocalDbRepository : ILocalDbRepository
                                      BPhone = b.Phone.ToString(),
                                      BIMEI = b.Imei.ToString(),
                                      BOrderNumber = b.OrderNumber.ToString(),
-                                     BAmount = b.Amount.ToString(),
+                                     BAmount = b.Amount,
                                      BComment = b.Comment.ToString(),
                                      BTransactionDate = b.TransactionDate.ToString() ,
                                      BCustomerName = b.CustomerName.ToString(),
@@ -103,7 +103,7 @@ public class LocalDbRepository : ILocalDbRepository
                                      SPhone = s.Phone.ToString(),
                                      SIMEI = s.Imei.ToString(),
                                      SOrderNumber = s.OrderNumber.ToString(),
-                                     SAmount = s.Amount.ToString(),
+                                     SAmount = s.Amount,
                                      SComment = s.Comment.ToString(),
                                      STransactionDate = s.TransactionDate.ToString(),
                                      SCustomerName = s.CustomerName.ToString(),
@@ -146,7 +146,7 @@ public class LocalDbRepository : ILocalDbRepository
                                  select new CompareBellStapleNonCellPhone
                                  {
                                      BOrderNumber = b.OrderNumber.ToString(),
-                                     BAmount = b.Amount.ToString(),
+                                     BAmount = b.Amount,
                                      BComment = b.Comment.ToString(),
                                      BTransactionDate = b.TransactionDate.ToString() ,
                                      BCustomerName = b.CustomerName.ToString(),
@@ -154,7 +154,7 @@ public class LocalDbRepository : ILocalDbRepository
                                      BReconciled = b.Reconciled,
 
                                      SOrderNumber = s.OrderNumber.ToString(),
-                                     SAmount = s.Amount.ToString(),
+                                     SAmount = s.Amount,
                                      SComment = s.Comment.ToString(),
                                      STransactionDate = s.TransactionDate.ToString(),
                                      SCustomerName = s.CustomerName.ToString(),

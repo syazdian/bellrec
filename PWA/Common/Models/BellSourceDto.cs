@@ -3,7 +3,7 @@
 public class BellSourceDto
 {
     public int Id { get; set; }
-    public long? Amount { get; set; }
+    public Decimal Amount { get; set; }
     public string? Comment { get; set; }
     public string? CustomerName { get; set; }
     public string? Imei { get; set; }
