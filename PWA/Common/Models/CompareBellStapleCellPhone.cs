@@ -1,29 +1,7 @@
 ﻿namespace Bell.Reconciliation.Common.Models;
     public class CompareBellStapleCellPhone
     {
-        public MatchStatus MatchStatus 
-        {
-
-        get
-        {
-            if (SReconciled == true && BReconciled == true)
-                return MatchStatus.Reconciled;
-            else
-            {
-                if (SAmount == BAmount && SOrderNumber == BOrderNumber && STransactionDate == BTransactionDate && SCustomerName == BCustomerName)
-                {
-                    return MatchStatus.Match;
-                }
-                else
-                {
-                    return MatchStatus.Missmatch;
-                }
-
-            }
-        }
-
-        }
-
+        public MatchStatus MatchStatus { get; set; }
         public string SPhone { get; set; }
         public Decimal SAmount { get; set; }
         public string SComment { get; set; }

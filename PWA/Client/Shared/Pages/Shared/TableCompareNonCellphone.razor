@@ -42,7 +42,7 @@ NON CELLPHONE
                                             TValue="bool" Change=@(args => { if(!allowRowSelectOnRowClick) { Grid.SelectRow(data); }}) />
                         </Template>
                     </RadzenDataGridColumn>
-                    <RadzenDataGridColumn TItem="CompareBellStapleNonCellPhone" Context="order" Filterable="false" Sortable="false" TextAlign="TextAlign.Right">
+                    <RadzenDataGridColumn TItem="CompareBellStapleNonCellPhone" Context="record" Filterable="false" Sortable="false" TextAlign="TextAlign.Right">
                         <Template Context="compareRecord">
                             <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Medium" Click="@(args => EditRow(compareRecord))"  @onclick:stopPropagation="true">
                             </RadzenButton>

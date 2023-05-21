@@ -1,11 +1,7 @@
 ﻿namespace Bell.Reconciliation.Common.Models;
     public class CompareBellStapleNonCellPhone
     {
-        public MatchStatus MatchStatus 
-        {
-            get; set;
-        }
-
+        public MatchStatus MatchStatus {get; set;}
         public decimal SAmount { get; set; }
         public string SComment { get; set; }
         public string SOrderNumber { get; set; }
