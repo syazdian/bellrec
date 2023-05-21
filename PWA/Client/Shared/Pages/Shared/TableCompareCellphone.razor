@@ -3,6 +3,7 @@
 @using Bell.Reconciliation.Frontend.Shared.ServiceInterfaces;
 @inject ISyncData SyncData
 @inject ILocalDbRepository Localdb
+@inject DialogService dialogService
 
 CELLPHONE
 <RadzenTabs  RenderMode="Radzen.TabRenderMode.Client" @bind-SelectedIndex=@selectedIndex>
@@ -22,8 +23,8 @@ CELLPHONE
         </RadzenTabsItem>
         <RadzenTabsItem Text="In both">
             <RadzenDataGrid @ref="CompareGrid" ColumnWidth="150px" SelectionMode="DataGridSelectionMode.Single" AllowFiltering="true"
-                            AllowPaging="true" PageSize="8" AllowSorting="true" Data="@CompareBellStaple" 
-            TItem="CompareBellStapleCellPhone" CellRender="@CellRender">
+                            AllowPaging="true" PageSize="8" AllowSorting="true" Data="@CompareBellStaple"
+                            TItem="CompareBellStapleCellPhone" CellRender="@CellRender" CellDoubleClick="OnCellDoubleClick">
                 <Columns>
                     <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Context="record" Filterable="false" Sortable="false" TextAlign="TextAlign.Right">
                         <Template Context="compareRecord">
@@ -45,7 +46,7 @@ CELLPHONE
                     <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="SPhone" Title="S.Phone" />
                     <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="SIMEI" Title="S.IMEI" />
                     <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="SOrderNumber" Title="S.Order" />
-                    <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="SAmount" Title="S.Amount " />
+                    <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="SAmount" Title="S.Amount" />
                     <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="SComment" Title="S.Comment " >
                         <EditTemplate Context="record">
                             <RadzenTextArea @bind-Value="record.SComment" Style="width:100%; display: block" Name="SComment" />
@@ -58,7 +59,7 @@ CELLPHONE
                     <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="BPhone" Title="B.Phone" />
                     <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="BIMEI" Title="B.IMEI" />
                     <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="BOrderNumber" Title="B.Order" />
-                    <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="BAmount" Title="B.Amount " />
+                    <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="BAmount" Title="B.Amount" />
                     <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="BComment" Title="B.Comment " >
                         <EditTemplate Context="record">
                             <RadzenTextArea @bind-Value="record.BComment" Style="width:100%; display: block" Name="BComment" />
@@ -121,6 +122,16 @@ CELLPHONE
 
         StateHasChanged();
 
+    }
+
+    void OnCellDoubleClick(DataGridCellMouseEventArgs<CompareBellStapleCellPhone> args)
+    {
+        if (args.Column.Title == "S.Amount")
+        {
+            dialogService.Open<DialogComparePage>("SAmount CLicked");
+        }
+    //    var da = args.Data;
+    //    var col = args.Column;
     }
 
     void CellRender(DataGridCellRenderEventArgs<CompareBellStapleCellPhone> args)
