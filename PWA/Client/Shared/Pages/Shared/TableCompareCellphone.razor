@@ -14,7 +14,7 @@ CELLPHONE
                     <RadzenDataGridColumn TItem="StaplesSourceDto" Property="OrderNumber" Title="OrderNumber" />
                     <RadzenDataGridColumn TItem="StaplesSourceDto" Property="Phone" Title="Phone" />
                     <RadzenDataGridColumn TItem="StaplesSourceDto" Property="Imei" Title="IMEI" />
-                    <RadzenDataGridColumn TItem="StaplesSourceDto" Property="Amount" Title="Amount" />
+                    <RadzenDataGridColumn TItem="StaplesSourceDto" Property="Amount" Title="Amount" TextAlign="TextAlign.Right" />
                     <RadzenDataGridColumn TItem="StaplesSourceDto" Property="Comment" Title="Comment" />
                     <RadzenDataGridColumn TItem="StaplesSourceDto" Property="TransactionDate" Title="TransactionDate" />
                     <RadzenDataGridColumn TItem="StaplesSourceDto" Property="CustomerName" Title="CustomerName" />
@@ -46,7 +46,7 @@ CELLPHONE
                     <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="SPhone" Title="S.Phone" />
                     <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="SIMEI" Title="S.IMEI" />
                     <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="SOrderNumber" Title="S.Order" />
-                    <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="SAmount" Title="S.Amount" />
+                    <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="SAmount" Title="S.Amount" TextAlign="TextAlign.Right" />
                     <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="SComment" Title="S.Comment " >
                         <EditTemplate Context="record">
                             <RadzenTextArea @bind-Value="record.SComment" Style="width:100%; display: block" Name="SComment" />
@@ -59,7 +59,7 @@ CELLPHONE
                     <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="BPhone" Title="B.Phone" />
                     <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="BIMEI" Title="B.IMEI" />
                     <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="BOrderNumber" Title="B.Order" />
-                    <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="BAmount" Title="B.Amount" />
+                    <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="BAmount" Title="B.Amount" TextAlign="TextAlign.Right" />
                     <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="BComment" Title="B.Comment " >
                         <EditTemplate Context="record">
                             <RadzenTextArea @bind-Value="record.BComment" Style="width:100%; display: block" Name="BComment" />
@@ -78,7 +78,7 @@ CELLPHONE
                     <RadzenDataGridColumn TItem="BellSourceDto" Property="OrderNumber" Title="OrderNumber" />
                     <RadzenDataGridColumn TItem="BellSourceDto" Property="Phone" Title="Phone" />
                     <RadzenDataGridColumn TItem="BellSourceDto" Property="Imei" Title="IMEI" />
-                    <RadzenDataGridColumn TItem="BellSourceDto" Property="Amount" Title="Amount" />
+                    <RadzenDataGridColumn TItem="BellSourceDto" Property="Amount" Title="Amount" TextAlign="TextAlign.Right" />
                     <RadzenDataGridColumn TItem="BellSourceDto" Property="Comment" Title="Comment" />
                     <RadzenDataGridColumn TItem="BellSourceDto" Property="TransactionDate" Title="TransactionDate" />
                     <RadzenDataGridColumn TItem="BellSourceDto" Property="CustomerName" Title="CustomerName" />
@@ -126,12 +126,10 @@ CELLPHONE
 
     void OnCellDoubleClick(DataGridCellMouseEventArgs<CompareBellStapleCellPhone> args)
     {
-        if (args.Column.Title == "S.Amount")
+        if (args.Column.Title == "S.Amount" || args.Column.Title == "B.Amount")
         {
-            dialogService.Open<DialogComparePage>("SAmount CLicked");
+            dialogService.Open<DialogComparePage>(args.Column.Title + " CLicked");
         }
-    //    var da = args.Data;
-    //    var col = args.Column;
     }
 
     void CellRender(DataGridCellRenderEventArgs<CompareBellStapleCellPhone> args)

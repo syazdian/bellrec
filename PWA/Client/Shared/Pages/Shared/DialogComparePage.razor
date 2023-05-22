@@ -1,6 +1,55 @@
-﻿<h3>DialogComparePage</h3>
+﻿<table class="table table-bordered table-striped table-hover table-sm">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>price</th>
+            <th>date</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+            <tr>
+                <td>
+                @(
+                    randomstring(8)
+                )
+                </td>
+                <td>
+                @(
+                    getrandomDecimal()
+                )
+                </td>
+                <td>
+                @(
+                    getrandomDatetime()
+                )
+                </td>
+                <td>
+                @(
+                    randomstring(15)
+                )
+                </td>
+            </tr>
+    </tbody>
+</table>
+
 
 @code {
-    [Parameter]
-    public CompareBellStapleNonCellPhone CompareRecord { get; set; }
+    //[Parameter]
+    //public CompareBellStapleNonCellPhone CompareRecord { get; set; }
+
+    private string randomstring(int legnth)
+    {
+        return Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, legnth);
+    }
+
+    private decimal getrandomDecimal()
+    {
+        return (decimal)(new Random()).Next(-100, 1000);
+    }
+
+    private string getrandomDatetime()
+    {
+        return DateTime.Now.AddDays((new Random()).Next(-1000, 0)).ToShortDateString();
+    }
 }
