@@ -3,6 +3,6 @@
 public enum MatchStatus
 {
     Match = 1,
-    MissmatchResolved = 2,
-    MissmatchNonResolved = 3
+    Reconciled = 2,
+    Missmatch = 3
 }

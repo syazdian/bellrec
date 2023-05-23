@@ -1,20 +1,23 @@
 ﻿@using Bell.Reconciliation.Common.Models
+@using Bell.Reconciliation.Common.Models.Enums;
+@using Bell.Reconciliation.Frontend.Shared.Pages.Components
 @using Bell.Reconciliation.Frontend.Shared.ServiceInterfaces;
 @inject ISyncData SyncData
 @inject ILocalDbRepository Localdb
+@inject DialogService dialogService
 
 
-NON CELLPHONE
-<div class="rz-text-align-left">
-    <RadzenButton Text="Save Changes" ButtonStyle="ButtonStyle.Primary" />
-</div>
+<h2>
+@TitleSubLob
+</h2>
+
 <RadzenTabs  RenderMode="Radzen.TabRenderMode.Client" @bind-SelectedIndex=@selectedIndex>
     <Tabs>
         <RadzenTabsItem Text="Only in Staples">
-            <RadzenDataGrid ColumnWidth="150px" AllowFiltering="true" AllowPaging="true" PageSize="8" AllowSorting="true" Data="@StaplesSources" TItem="StaplesSourceDto">
+            <RadzenDataGrid  AllowFiltering="true" AllowPaging="true" PageSize="8" AllowSorting="true" Data="@StaplesSources" TItem="StaplesSourceDto">
                 <Columns>
                    <RadzenDataGridColumn TItem="StaplesSourceDto" Property="OrderNumber" Title="OrderNumber" />
-                    <RadzenDataGridColumn TItem="StaplesSourceDto" Property="Amount" Title="Amount" />
+                    <RadzenDataGridColumn Width="100px" TItem="StaplesSourceDto" Property="Amount" Title="Amount" TextAlign="TextAlign.Right" />
                     <RadzenDataGridColumn TItem="StaplesSourceDto" Property="Comment" Title="Comment" />
                     <RadzenDataGridColumn TItem="StaplesSourceDto" Property="TransactionDate" Title="TransactionDate" />
                     <RadzenDataGridColumn TItem="StaplesSourceDto" Property="CustomerName" Title="CustomerName" />
@@ -24,33 +27,51 @@ NON CELLPHONE
         <RadzenTabsItem Text="In both">
          
 
-            <RadzenDataGrid @ref="Grid" AllowRowSelectOnRowClick="@allowRowSelectOnRowClick" AllowFiltering="true" CellRender="@CellRender"
+            <RadzenDataGrid @ref="Grid" AllowRowSelectOnRowClick="@allowRowSelectOnRowClick" AllowFiltering="true" CellRender="@CellRender" CellDoubleClick="OnCellDoubleClick"
                             FilterPopupRenderMode="PopupRenderMode.OnDemand" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
                             AllowPaging="true" PageSize="10"
                             AllowSorting="true" Data="@CompareBellStaple" TItem="CompareBellStapleNonCellPhone" ColumnWidth="200px"
                             SelectionMode="DataGridSelectionMode.Multiple" @bind-Value=@selectedProducts class="m-4">
                 <Columns>
-                    <RadzenDataGridColumn TItem="CompareBellStapleNonCellPhone" Width="60px" Sortable="false" Filterable="false">
-                        <HeaderTemplate>
-                            <RadzenCheckBox TriState="false" TValue="bool"
-                                            Value="@(CompareBellStaple.Any(i => selectedProducts != null && selectedProducts.Contains(i)))"
-                                            Change="@(args => selectedProducts = args ? CompareBellStaple.ToList() : null)" />
-                        </HeaderTemplate>
-                        <Template Context="data">
-                            <RadzenCheckBox TriState="false" Value="@(selectedProducts != null && selectedProducts.Contains(data))"
-                                            TValue="bool" Change=@(args => { if(!allowRowSelectOnRowClick) { Grid.SelectRow(data); }}) />
+                   
+                    <RadzenDataGridColumn Width="75px" Title="Edit"
+                        TItem="CompareBellStapleNonCellPhone" Context="record" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
+                        <Template Context="compareRecord">
+                            <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Medium" Click="@(args => EditRow(compareRecord))"  @onclick:stopPropagation="true">
+                            </RadzenButton>
                         </Template>
+                        <EditTemplate Context="compareRecord">                           
+                            <RadzenButton Icon="check" ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Size="ButtonSize.Small" Click="@((args) => SaveRow(compareRecord))">
+                            </RadzenButton>
+                            <RadzenButton Icon="close" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Small" class="my-1 ms-1" Click="@((args) => CancelEdit(compareRecord))">
+                            </RadzenButton>
+                        </EditTemplate>
                     </RadzenDataGridColumn>
-                    <RadzenDataGridColumn TItem="CompareBellStapleNonCellPhone" Property="MatchStatus" Title="Consolidate" />
+
+                    <RadzenDataGridColumn TItem="CompareBellStapleNonCellPhone" Property="MatchStatus" Title="Consolidate" >
+                        <EditTemplate Context="record">
+                            <RadzenDropDown @bind-Value="record.MatchStatus" Data="@matchStatus" TextProperty="Value" ValueProperty="Key" Style="width:100%; display: block;" />
+                            
+                        </EditTemplate>
+                    </RadzenDataGridColumn>
                     <RadzenDataGridColumn TItem="CompareBellStapleNonCellPhone" Property="SOrderNumber" Title="S.Order" />
-                    <RadzenDataGridColumn TItem="CompareBellStapleNonCellPhone" Property="SAmount" Title="S.Amount " />
-                    <RadzenDataGridColumn TItem="CompareBellStapleNonCellPhone" Property="SComment" Title="S.Comment " />
+                    <RadzenDataGridColumn TItem="CompareBellStapleNonCellPhone" Width="100px" Filterable="false" Sortable="false" Property="SAmount" Title="S.Amount" TextAlign="TextAlign.Right" />
+                    <RadzenDataGridColumn TItem="CompareBellStapleNonCellPhone" Property="SComment" Title="S.Comment " >
+                        <EditTemplate Context="record">
+                            <EditComponent></EditComponent>
+                           @* <RadzenTextArea @bind-Value="record.SComment" Style="width:100%; display: block" Name="SComment" />*@
+                        </EditTemplate>
+                    </RadzenDataGridColumn>
                     <RadzenDataGridColumn TItem="CompareBellStapleNonCellPhone" Property="STransactionDate" Title="S.TransactionDate " />
                     <RadzenDataGridColumn TItem="CompareBellStapleNonCellPhone" Property="SCustomerName" Title="S.CustomerName " />
 
                     <RadzenDataGridColumn TItem="CompareBellStapleNonCellPhone" Property="BOrderNumber" Title="B.Order" />
-                    <RadzenDataGridColumn TItem="CompareBellStapleNonCellPhone" Property="BAmount" Title="B.Amount " />
-                    <RadzenDataGridColumn TItem="CompareBellStapleNonCellPhone" Property="BComment" Title="B.Comment " />
+                    <RadzenDataGridColumn TItem="CompareBellStapleNonCellPhone"  Width="100px" Filterable="false" Sortable="false" Property="BAmount" Title="B.Amount" TextAlign="TextAlign.Right" />
+                    <RadzenDataGridColumn TItem="CompareBellStapleNonCellPhone" Property="BComment" Title="B.Comment " >
+                        <EditTemplate Context="record">
+                            <RadzenTextArea @bind-Value="record.BComment" Style="width:100%; display: block" Name="BComment" />
+                        </EditTemplate>
+                    </RadzenDataGridColumn>
                     <RadzenDataGridColumn TItem="CompareBellStapleNonCellPhone" Property="BTransactionDate" Title="B.TransactionDate " />
                     <RadzenDataGridColumn TItem="CompareBellStapleNonCellPhone" Property="BCustomerName" Title="B.CustomerName " />
                 </Columns>
@@ -61,7 +82,7 @@ NON CELLPHONE
                             Data="@BellSources" @ref="GridBS" TItem="BellSourceDto">
                 <Columns>
                     <RadzenDataGridColumn TItem="BellSourceDto" Property="OrderNumber" Title="OrderNumber#" />
-                    <RadzenDataGridColumn TItem="BellSourceDto" Property="Amount" Title="Amount" />
+                    <RadzenDataGridColumn Width="100px" TItem="BellSourceDto" Property="Amount" Title="Amount" TextAlign="TextAlign.Right" />
                     <RadzenDataGridColumn TItem="BellSourceDto" Property="Comment" Title="Comment" />
                     <RadzenDataGridColumn TItem="BellSourceDto" Property="TransactionDate" Title="TransactionDate" />
                     <RadzenDataGridColumn TItem="BellSourceDto" Property="CustomerName" Title="CustomerName" />
@@ -85,8 +106,18 @@ NON CELLPHONE
     public List<StaplesSourceDto> StaplesSources { get; set; }
     [Parameter]
     public List<CompareBellStapleNonCellPhone> CompareBellStaple { get; set; }
+    [Parameter]
+    public string TitleSubLob { get; set; }
+
+    
     RadzenDataGrid<CompareBellStapleNonCellPhone> Grid = new RadzenDataGrid<CompareBellStapleNonCellPhone>();
     RadzenDataGrid<BellSourceDto> GridBS = new RadzenDataGrid<BellSourceDto>();
+
+
+    CompareBellStapleNonCellPhone recordToUpdate;
+
+
+    Dictionary<MatchStatus, MatchStatus> matchStatus;
 
 
     IList<CompareBellStapleNonCellPhone> selectedProducts;
@@ -99,8 +130,22 @@ NON CELLPHONE
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
+
+
+        matchStatus = Enum.GetValues(typeof(MatchStatus))
+               .Cast<MatchStatus>()
+               .ToDictionary(t => t, t => t);
+
         StateHasChanged();
 
+    }
+
+    void OnCellDoubleClick(DataGridCellMouseEventArgs<CompareBellStapleNonCellPhone> args)
+    {
+        if (args.Column.Title == "S.Order" || args.Column.Title == "B.Order")
+        {
+            dialogService.Open<DialogComparePage>(args.Column.Title + " CLicked");
+        }
     }
 
     void CellRender(DataGridCellRenderEventArgs<CompareBellStapleNonCellPhone> args)
@@ -119,6 +164,25 @@ NON CELLPHONE
         {
             args.Attributes.Add("style", $"background-color: {(args.Data.STransactionDate != args.Data.BTransactionDate ? "var(--rz-warning)" : "var(--rz-base-background-color)")};");
         }
+    }
+
+    async Task EditRow(CompareBellStapleNonCellPhone record)
+    {
+        recordToUpdate = record;
+        await Grid.EditRow(record);
+    }
+
+    async Task SaveRow(CompareBellStapleNonCellPhone record)
+    {
+        Console.WriteLine(record.MatchStatus);
+        await Grid.UpdateRow(record);
+    }
+
+    void CancelEdit(CompareBellStapleNonCellPhone record)
+    {
+        recordToUpdate = null;
+
+        Grid.CancelEditRow(record);
     }
 
     //private async Task FetchData()

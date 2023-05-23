@@ -1,4 +1,5 @@
 ﻿using Bell.Reconciliation.Common.Models;
+using Bell.Reconciliation.Common.Models.Enums;
 using Microsoft.EntityFrameworkCore;
 using System;
 
@@ -108,7 +109,11 @@ public class LocalDbRepository : ILocalDbRepository
                                      STransactionDate = s.TransactionDate.ToString(),
                                      SCustomerName = s.CustomerName.ToString(),
                                      SRebateType = b.RebateType.ToString(),
-                                     SReconciled = b.Reconciled
+                                     SReconciled = b.Reconciled,
+                                     MatchStatus = (s.Reconciled == true && b.Reconciled == true) ? MatchStatus.Reconciled :
+                                     ((s.Amount == b.Amount && s.OrderNumber == b.OrderNumber &&
+                                     s.TransactionDate == b.TransactionDate && s.CustomerName == b.CustomerName && s.Imei == b.Imei && s.Phone == s.Phone) ? MatchStatus.Match : MatchStatus.Missmatch)
+
 
                                  };
         var bellStaplesCompres = query.ToList();
@@ -160,6 +165,9 @@ public class LocalDbRepository : ILocalDbRepository
                                      SCustomerName = s.CustomerName.ToString(),
                                      SRebateType = s.RebateType.ToString(),
                                      SReconciled = s.Reconciled,
+                                     MatchStatus = (s.Reconciled == true && b.Reconciled == true) ? MatchStatus.Reconciled: 
+                                     ((s.Amount == b.Amount && s.OrderNumber == b.OrderNumber && 
+                                     s.TransactionDate == b.TransactionDate && s.CustomerName == b.CustomerName && s.Imei == b.Imei && s.Phone == s.Phone)? MatchStatus.Match : MatchStatus.Missmatch)
 
                                  };
         var bellStaplesCompres = query.ToList();
