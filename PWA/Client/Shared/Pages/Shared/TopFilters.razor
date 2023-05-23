@@ -8,12 +8,13 @@
         <h2 class="featurette-heading">FILTERS</h2>
     </div>
     <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem" Class="rz-p-4 rz-mb-6 rz-border-radius-1" Style="border: var(--rz-grid-cell-border);">
-        <RadzenFormField Text="Rebate Type" Variant=@variantStyle Style="flex: 1;">
-            <RadzenDropDown Data=@rebateType @bind-Value="@rebateValue" AllowClear=true  />
-        </RadzenFormField>
         <RadzenFormField Text="LOB" Variant=@variantStyle Style="flex: 1;">
             <RadzenDropDown Data=@loBs @bind-Value="@lobValue" Change="@SetSubLob" AllowClear=true />
             <RadzenDropDown Data=@subLOBs @bind-Value="@subLobValue" AllowClear=true />
+        </RadzenFormField>
+
+        <RadzenFormField Text="Rebate Type" Variant=@variantStyle Style="flex: 1;">
+            <RadzenDropDown Data=@rebateType @bind-Value="@rebateValue" AllowClear=true  />
         </RadzenFormField>
         <RadzenFormField Text="Brand" Variant=@variantStyle Style="flex: 1;">
             <RadzenDropDown Data=@brands @bind-Value="@brandValue" AllowClear=true />

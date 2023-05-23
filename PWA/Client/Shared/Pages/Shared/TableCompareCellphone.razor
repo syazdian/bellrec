@@ -1,11 +1,14 @@
 ﻿@using Bell.Reconciliation.Common.Models
 @using Bell.Reconciliation.Common.Models.Enums;
 @using Bell.Reconciliation.Frontend.Shared.ServiceInterfaces;
+@using Bell.Reconciliation.Frontend.Shared.Pages.Components;
 @inject ISyncData SyncData
 @inject ILocalDbRepository Localdb
 @inject DialogService dialogService
 
-CELLPHONE
+<h2>
+  Cell Phone
+</h2>
 <RadzenTabs  RenderMode="Radzen.TabRenderMode.Client" @bind-SelectedIndex=@selectedIndex>
     <Tabs>
         <RadzenTabsItem Text="Only in Staples">
@@ -14,7 +17,7 @@ CELLPHONE
                     <RadzenDataGridColumn TItem="StaplesSourceDto" Property="OrderNumber" Title="OrderNumber" />
                     <RadzenDataGridColumn TItem="StaplesSourceDto" Property="Phone" Title="Phone" />
                     <RadzenDataGridColumn TItem="StaplesSourceDto" Property="Imei" Title="IMEI" />
-                    <RadzenDataGridColumn TItem="StaplesSourceDto" Property="Amount" Title="Amount" TextAlign="TextAlign.Right" />
+                    <RadzenDataGridColumn Width="100px" TItem="StaplesSourceDto" Property="Amount" Title="Amount" TextAlign="TextAlign.Right" />
                     <RadzenDataGridColumn TItem="StaplesSourceDto" Property="Comment" Title="Comment" />
                     <RadzenDataGridColumn TItem="StaplesSourceDto" Property="TransactionDate" Title="TransactionDate" />
                     <RadzenDataGridColumn TItem="StaplesSourceDto" Property="CustomerName" Title="CustomerName" />
@@ -24,20 +27,22 @@ CELLPHONE
         <RadzenTabsItem Text="In both">
             <RadzenDataGrid @ref="CompareGrid" ColumnWidth="150px" SelectionMode="DataGridSelectionMode.Single" AllowFiltering="true"
                             AllowPaging="true" PageSize="8" AllowSorting="true" Data="@CompareBellStaple"
-                            TItem="CompareBellStapleCellPhone" CellRender="@CellRender" CellDoubleClick="OnCellDoubleClick">
+                            TItem="CompareBellStapleCellPhone" CellRender="@CellRender" CellClick="OnCellDoubleClick" >
                 <Columns>
-                    <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Context="record" Filterable="false" Sortable="false" TextAlign="TextAlign.Right">
+                    <RadzenDataGridColumn Width="75px" Title="Edit"
+                        TItem="CompareBellStapleCellPhone" Context="record" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
                         <Template Context="compareRecord">
                             <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Medium" Click="@(args => EditRow(compareRecord))" @onclick:stopPropagation="true">
                             </RadzenButton>
                         </Template>
                         <EditTemplate Context="compareRecord">
-                            <RadzenButton Icon="check" ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Size="ButtonSize.Medium" Click="@((args) => SaveRow(compareRecord))">
+                            <RadzenButton Icon="check" ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Size="ButtonSize.Small" Click="@((args) => SaveRow(compareRecord))">
                             </RadzenButton>
-                            <RadzenButton Icon="close" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Medium" class="my-1 ms-1" Click="@((args) => CancelEdit(compareRecord))">
+                            <RadzenButton Icon="close" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Small" class="my-1 ms-1" Click="@((args) => CancelEdit(compareRecord))">
                             </RadzenButton>
                         </EditTemplate>
                     </RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="SRebateType" Title="RebateType" />
                     <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="MatchStatus" Title="Consolidate" >
                         <EditTemplate Context="record">
                             <RadzenDropDown @bind-Value="record.MatchStatus" Data="@matchStatus" TextProperty="Value" ValueProperty="Key" Style="width:100%; display: block;" />
@@ -46,20 +51,26 @@ CELLPHONE
                     <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="SPhone" Title="S.Phone" />
                     <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="SIMEI" Title="S.IMEI" />
                     <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="SOrderNumber" Title="S.Order" />
-                    <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="SAmount" Title="S.Amount" TextAlign="TextAlign.Right" />
+                    <RadzenDataGridColumn Width="75px" Filterable="false" Sortable="false"
+                        TItem="CompareBellStapleCellPhone" Property="SAmount" Title="S.Amount" TextAlign="TextAlign.Right" />
                     <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="SComment" Title="S.Comment " >
                         <EditTemplate Context="record">
-                            <RadzenTextArea @bind-Value="record.SComment" Style="width:100%; display: block" Name="SComment" />
-                        </EditTemplate>
+                            <div class=" rz-text-align-left">
+                                <RadzenTextArea @bind-Value="record.SComment" Style="width:100%; display: block" Name="SComment" />
+                                <RadzenCheckBox TValue="bool" Value=@copyToBell  Name="CheckBox2" />
+                                <RadzenLabel Text="Copy to Bell" Component="CheckBox2" Style="margin-left: 8px; vertical-align: middle;" />
+                            </div>
+@*                            <RadzenTextArea @bind-Value="record.SComment" Style="width:100%; display: block" Name="SComment" />
+*@                        </EditTemplate>
                     </RadzenDataGridColumn>
                     <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="STransactionDate" Title="S.TransactionDate " />
                     <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="SCustomerName" Title="S.CustomerName " />
-                    <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="SRebateType" Title="S.RebateType " />
+                   
 
                     <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="BPhone" Title="B.Phone" />
                     <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="BIMEI" Title="B.IMEI" />
                     <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="BOrderNumber" Title="B.Order" />
-                    <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="BAmount" Title="B.Amount" TextAlign="TextAlign.Right" />
+                    <RadzenDataGridColumn Width="75px" Filterable="false" Sortable="false" TItem="CompareBellStapleCellPhone" Property="BAmount" Title="B.Amount" TextAlign="TextAlign.Right" />
                     <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="BComment" Title="B.Comment " >
                         <EditTemplate Context="record">
                             <RadzenTextArea @bind-Value="record.BComment" Style="width:100%; display: block" Name="BComment" />
@@ -67,7 +78,7 @@ CELLPHONE
                     </RadzenDataGridColumn>
                     <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="BTransactionDate" Title="B.TransactionDate " />
                     <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="BCustomerName" Title="B.CustomerName " />
-                    <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="BRebateType" Title="B.RebateType " />
+                    @*<RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="BRebateType" Title="B.RebateType " />*@
                 </Columns>
             </RadzenDataGrid>
         </RadzenTabsItem>
@@ -78,7 +89,7 @@ CELLPHONE
                     <RadzenDataGridColumn TItem="BellSourceDto" Property="OrderNumber" Title="OrderNumber" />
                     <RadzenDataGridColumn TItem="BellSourceDto" Property="Phone" Title="Phone" />
                     <RadzenDataGridColumn TItem="BellSourceDto" Property="Imei" Title="IMEI" />
-                    <RadzenDataGridColumn TItem="BellSourceDto" Property="Amount" Title="Amount" TextAlign="TextAlign.Right" />
+                    <RadzenDataGridColumn Width="100px" TItem="BellSourceDto" Property="Amount" Title="Amount" TextAlign="TextAlign.Right" />
                     <RadzenDataGridColumn TItem="BellSourceDto" Property="Comment" Title="Comment" />
                     <RadzenDataGridColumn TItem="BellSourceDto" Property="TransactionDate" Title="TransactionDate" />
                     <RadzenDataGridColumn TItem="BellSourceDto" Property="CustomerName" Title="CustomerName" />
@@ -108,9 +119,14 @@ CELLPHONE
     CompareBellStapleCellPhone recordToUpdate;
 
     private bool busy;
+    bool copyToBell;
 
-
-
+    //void CopyToBell(bool args)
+    //{
+    // if (copyToBell == args)
+    //     record.BComment = record.SComment; })
+        
+    //}
 
     protected override async Task OnInitializedAsync()
     {
@@ -124,11 +140,13 @@ CELLPHONE
 
     }
 
+   
+
     void OnCellDoubleClick(DataGridCellMouseEventArgs<CompareBellStapleCellPhone> args)
     {
-        if (args.Column.Title == "S.Amount" || args.Column.Title == "B.Amount")
+        if (args.Column.Title == "S.Order" || args.Column.Title == "B.Order")
         {
-            dialogService.Open<DialogComparePage>(args.Column.Title + " CLicked");
+            dialogService.Open<DialogComparePage>(args.Column.Title + "was clicked");
         }
     }
 
