@@ -16,13 +16,13 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.5" />
+    <PackageReference Include="SqliteWasmHelper" Version="1.1.1-beta-gd0df7e5d62" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Common\Models\Common.Models.csproj" />
     <ProjectReference Include="..\..\..\Common\Utilities\Common.Utilities.csproj" />
     <ProjectReference Include="..\..\Shared\ServiceInterfaces\Shared.ServiceInterfaces.csproj" />
-    <ProjectReference Include="..\SqliteWasmHelper\SqliteWasmHelper.csproj" />
   </ItemGroup>
 
 </Project>
