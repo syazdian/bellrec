@@ -47,7 +47,7 @@ else
     List<StaplesSourceDto> staplesSourcesCellPhone = new();
     List<CompareBellStapleCellPhone> compareBellStapleCellPhone = new();
 
-    IEnumerable<BellSourceDto> bellSourcesNonCellPhone;
+    List<BellSourceDto> bellSourcesNonCellPhone = new();
     List<StaplesSourceDto> staplesSourcesNonCellPhone = new();
     List<CompareBellStapleNonCellPhone> compreBellStapleNonCellPhone = new();
 
@@ -67,7 +67,7 @@ else
         //}
         StateHasChanged();
     }
-    public async Task SwitchBetweenSubLob(string subLob)
+    public async void SwitchBetweenSubLob(string subLob)
     {
         WirelessSubLob = subLob;
     }
@@ -81,7 +81,7 @@ else
 
     public async Task<bool> UiDbExist()
     {
-        if(true)// (bellSourcesCellPhone.Count > 1)
+        if (bellSourcesCellPhone.Count > 1)
         {
             uiDbExist = true;
             return true;

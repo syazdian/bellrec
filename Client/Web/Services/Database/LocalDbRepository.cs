@@ -160,11 +160,10 @@ public class LocalDbRepository : ILocalDbRepository
         return bellStaplesCompres;
     }
 
-    public async Task<IEnumerable<BellSourceDto>> GetBellSourceNonCellPhoneFromLocalDb()
+    public async Task<List<BellSourceDto>> GetBellSourceNonCellPhoneFromLocalDb()
     {
         using var ctx = await _dbContextFactory.CreateDbContextAsync();
         var query = ctx.BellSources.Where(b => b.SubLob != "Wireless" && !ctx.StaplesSources.Any(s => s.OrderNumber == b.OrderNumber && s.RebateType == b.RebateType));
-        return query;
 
         List<BellSourceDto> bellSources = await query.ToListAsync();
         return bellSources;

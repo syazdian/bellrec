@@ -5,7 +5,7 @@ public interface ILocalDbRepository
     Task<List<BellSourceDto>> GetBellSourceCellPhoneFromLocalDb();
     Task<List<StaplesSourceDto>> GetStapleSourceCellPhoneFromLocalDb();
     Task<List<CompareBellStapleCellPhone>> GetBellStapleCompareCellPhoneFromLocalDb(); 
-    Task<IEnumerable<BellSourceDto>> GetBellSourceNonCellPhoneFromLocalDb();
+    Task<List<BellSourceDto>> GetBellSourceNonCellPhoneFromLocalDb();
     Task<List<StaplesSourceDto>> GetStapleSourceNonCellPhoneFromLocalDb();
     Task<List<CompareBellStapleNonCellPhone>> GetBellStapleCompareNonCellPhoneFromLocalDb();
 
