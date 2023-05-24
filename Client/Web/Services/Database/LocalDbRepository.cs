@@ -83,10 +83,8 @@ public class LocalDbRepository : ILocalDbRepository
     public async Task<List<CompareBellStapleCellPhone>> GetBellStapleCompareCellPhoneFromLocalDb()
     {
         using var ctx = await _dbContextFactory.CreateDbContextAsync();
-        //FormattableString query = $"SELECT stp.Amount as SAmount, stp.Phone as SPhone, bll.Amount as BAmount, bll.Phone as BPhone FROM \"BellSource\" as bll\r\njoin \"StaplesSource\" as stp on bll.Id = stp.id where bll.SubLob = 'Wireless' and stp.SubLob = 'Wireless' ";
-        //var bellStaplesCompres = ctx.Database.SqlQuery<CompareBellStapleCellPhoneDto>(query).ToList();
 
-        var query_joinByPhone = from b in ctx.BellSources
+        var queryJoinByPhone = from b in ctx.BellSources
                      join s in ctx.StaplesSources on b.Phone equals s.Phone
                      where s.SubLob == "Wireless" && b.SubLob == "Wireless"
                      && s.RebateType == b.RebateType
@@ -117,9 +115,9 @@ public class LocalDbRepository : ILocalDbRepository
 
 
                      };
-        var list_joinByPhone = query_joinByPhone.ToList();
+        var listJoinByPhone = queryJoinByPhone.ToList();
 
-        var query_joinByImei = from b in ctx.BellSources
+        var queryJoinByImei = from b in ctx.BellSources
                      join s in ctx.StaplesSources on b.Imei equals s.Imei
                      where s.SubLob == "Wireless" && b.SubLob == "Wireless"
                      && s.Phone != b.Phone
@@ -151,10 +149,10 @@ public class LocalDbRepository : ILocalDbRepository
 
 
                      };
-        var list_joinByImei = query_joinByImei.ToList();
+        var listJoinByImei = queryJoinByImei.ToList();
 
 
-        var bellStaplesCompres = list_joinByPhone.Concat(list_joinByImei).ToList();
+        var bellStaplesCompres = listJoinByPhone.Concat(listJoinByImei).ToList();
 
         return bellStaplesCompres;
     }
@@ -180,8 +178,6 @@ public class LocalDbRepository : ILocalDbRepository
     public async Task<List<CompareBellStapleNonCellPhone>> GetBellStapleCompareNonCellPhoneFromLocalDb()
     {
         using var ctx = await _dbContextFactory.CreateDbContextAsync();
-        //FormattableString query = $"SELECT stp.Amount as SAmount, stp.Phone as SPhone, bll.Amount as BAmount, bll.Phone as BPhone FROM \"BellSource\" as bll\r\njoin \"StaplesSource\" as stp on bll.Id = stp.id where bll.SubLob = 'Wireless' and stp.SubLob = 'Wireless' ";
-        //var bellStaplesCompres = ctx.Database.SqlQuery<CompareBellStapleCellPhoneDto>(query).ToList();
 
         var query = from b in ctx.BellSources
                     join s in ctx.StaplesSources on b.OrderNumber equals s.OrderNumber
