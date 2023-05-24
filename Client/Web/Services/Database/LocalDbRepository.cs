@@ -180,8 +180,6 @@ public class LocalDbRepository : ILocalDbRepository
     public async Task<List<CompareBellStapleNonCellPhone>> GetBellStapleCompareNonCellPhoneFromLocalDb()
     {
         using var ctx = await _dbContextFactory.CreateDbContextAsync();
-        //FormattableString query = $"SELECT stp.Amount as SAmount, stp.Phone as SPhone, bll.Amount as BAmount, bll.Phone as BPhone FROM \"BellSource\" as bll\r\njoin \"StaplesSource\" as stp on bll.Id = stp.id where bll.SubLob = 'Wireless' and stp.SubLob = 'Wireless' ";
-        //var bellStaplesCompres = ctx.Database.SqlQuery<CompareBellStapleCellPhoneDto>(query).ToList();
 
         var query = from b in ctx.BellSources
                     join s in ctx.StaplesSources on b.OrderNumber equals s.OrderNumber
