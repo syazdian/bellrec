@@ -230,16 +230,5 @@ public class LocalDbRepository : ILocalDbRepository
         {
             return false;
         }
-
-        //bool tableExists = false;
-        //var tableName = "BellSources";
-        //var connection = ctx.Database.GetDbConnection();
-        //connection.Open();
-        //using (var command = connection.CreateCommand())
-        //{
-        //    command.CommandText = $"SELECT name FROM sqlite_master WHERE type='table' AND name='{tableName}'";
-        //    tableExists = command.ExecuteScalar() != null;
-        //}
-        //return tableExists;
     }
 }
