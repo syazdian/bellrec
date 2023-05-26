@@ -44,6 +44,7 @@ public class SyncData : ISyncData
     {
         try
         {
+            await _localDb.PurgeTables();
             var dbcount = await _httpClient.GetFromJsonAsync<BellStapleCountDto>($"/api/SyncData/FetchCountServerDatabase");
             if (dbcount is null || dbcount.StaplesCount == 0 || dbcount.BellCount == 0) throw new ArgumentNullException(nameof(dbcount));
             int startBellCount = 1;

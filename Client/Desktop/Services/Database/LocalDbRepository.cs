@@ -187,4 +187,19 @@ public class LocalDbRepository : ILocalDbRepository
         //}
         //return tableExists;
     }
+
+    public async Task<bool> PurgeTables()
+    {
+        try
+        {
+            await ctx.BellSources.ExecuteDeleteAsync();
+            await ctx.StaplesSources.ExecuteDeleteAsync();
+            await ctx.SaveChangesAsync();
+            return true;
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
 }
