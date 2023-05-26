@@ -16,6 +16,7 @@
     <ProjectReference Include="..\..\..\Common\Models\Common.Models.csproj" />
     <ProjectReference Include="..\..\..\Common\Utilities\Common.Utilities.csproj" />
     <ProjectReference Include="..\..\Shared\ServiceInterfaces\Shared.ServiceInterfaces.csproj" />
+    <ProjectReference Include="..\Desktop.Data\Desktop.Data.csproj" />
   </ItemGroup>
 
 </Project>

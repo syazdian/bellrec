@@ -1,4 +1,8 @@
-﻿namespace Bell.Reconciliation.Frontend.Web.Services;
+﻿using Bell.Reconciliation.Common.Models;
+using Bell.Reconciliation.Frontend.Shared.ServiceInterfaces;
+using System.Net.Http.Json;
+
+namespace Bell.Reconciliation.Frontend.Desktop.Services;
 
 public class SyncData : ISyncData
 {
