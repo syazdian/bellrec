@@ -33,10 +33,17 @@ namespace Bell.Reconciliation.Web.Server.Services
 
         public async Task<BellStapleCountDto> CountBellStapleRows()
         {
-            BellStapleCountDto bellStapleCountDto = new BellStapleCountDto();
-            bellStapleCountDto.BellCount = await _bellDbContext.BellSources.CountAsync();
-            bellStapleCountDto.StaplesCount = await _bellDbContext.StaplesSources.CountAsync();
-            return bellStapleCountDto;
+            try
+            {
+                BellStapleCountDto bellStapleCountDto = new BellStapleCountDto();
+                bellStapleCountDto.BellCount = await _bellDbContext.BellSources.CountAsync();
+                bellStapleCountDto.StaplesCount = await _bellDbContext.StaplesSources.CountAsync();
+                return bellStapleCountDto;
+            }
+            catch (Exception EX)
+            {
+                throw;
+            }
         }
 
         public async Task<List<BellSourceDto>> GetBellSource(int startCount = 1, int endCount = 1)
