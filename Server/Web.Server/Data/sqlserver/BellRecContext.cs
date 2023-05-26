@@ -29,7 +29,7 @@ public partial class BellRecContext : DbContext
         }
     }
 
-    // private partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+    // private void OnModelCreatingPartial(ModelBuilder modelBuilder);
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
