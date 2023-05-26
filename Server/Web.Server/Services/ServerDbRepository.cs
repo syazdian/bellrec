@@ -1,5 +1,5 @@
 ﻿using Bell.Reconciliation.Common.Models;
-using Bell.Reconciliation.Web.Server.Data;
+using Bell.Reconciliation.Web.Server.Data.Sqlserver;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
 using System.Xml;
@@ -8,19 +8,20 @@ namespace Bell.Reconciliation.Web.Server.Services
 {
     public class ServerDbRepository
     {
-        private readonly BellRecContext _sqlitedb;
+        private readonly IConfiguration _config;
+        private readonly BellRecContext _bellDbContext;
 
-        public ServerDbRepository(BellRecContext sqlitedb)
+        public ServerDbRepository(BellRecContext bellContext)
         {
-            _sqlitedb = sqlitedb;
+            _bellDbContext = bellContext;
         }
 
         public async Task<BellStaplesSourceDto> FetchFromDatabaseBellStaplesSource()
         {
-            var bellSourcesDb = _sqlitedb.BellSources.ToList();
+            var bellSourcesDb = _bellDbContext.BellSources.ToList();
             List<BellSourceDto> bellSources = bellSourcesDb.Adapt<List<BellSourceDto>>();
 
-            var stapleSourcesDb = await _sqlitedb.StaplesSources.ToListAsync();
+            var stapleSourcesDb = await _bellDbContext.StaplesSources.ToListAsync();
             List<StaplesSourceDto> stapleSources = stapleSourcesDb.Adapt<List<StaplesSourceDto>>();
 
             BellStaplesSourceDto bellstaple = new();
@@ -33,8 +34,8 @@ namespace Bell.Reconciliation.Web.Server.Services
         public async Task<BellStapleCountDto> CountBellStapleRows()
         {
             BellStapleCountDto bellStapleCountDto = new BellStapleCountDto();
-            bellStapleCountDto.BellCount = await _sqlitedb.BellSources.CountAsync();
-            bellStapleCountDto.StaplesCount = await _sqlitedb.StaplesSources.CountAsync();
+            bellStapleCountDto.BellCount = await _bellDbContext.BellSources.CountAsync();
+            bellStapleCountDto.StaplesCount = await _bellDbContext.StaplesSources.CountAsync();
             return bellStapleCountDto;
         }
 
@@ -42,7 +43,7 @@ namespace Bell.Reconciliation.Web.Server.Services
         {
             try
             {
-                var items = await _sqlitedb.BellSources.OrderBy(e => e.Id).Skip(startCount - 1).Take(endCount - startCount + 1).ToListAsync();
+                var items = await _bellDbContext.BellSources.OrderBy(e => e.Id).Skip(startCount - 1).Take(endCount - startCount + 1).ToListAsync();
                 var adapted = items.Adapt<List<BellSourceDto>>();
                 return adapted;
             }
@@ -54,7 +55,7 @@ namespace Bell.Reconciliation.Web.Server.Services
 
         public async Task<List<StaplesSourceDto>> GetStaplesSource(int startCount = 1, int endCount = 1)
         {
-            var items = await _sqlitedb.StaplesSources.OrderBy(e => e.Id).Skip(startCount - 1).Take(endCount - startCount + 1).ToListAsync();
+            var items = await _bellDbContext.StaplesSources.OrderBy(e => e.Id).Skip(startCount - 1).Take(endCount - startCount + 1).ToListAsync();
             var adapted = items.Adapt<List<StaplesSourceDto>>();
             return adapted;
         }

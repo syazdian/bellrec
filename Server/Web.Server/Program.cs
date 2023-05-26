@@ -1,6 +1,4 @@
-using Bell.Reconciliation.Web.Server.Data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 
 namespace Bell.Reconciliation.Web.Server;
 
@@ -19,8 +17,10 @@ public class Program
         builder.Services.AddSingleton(filterItems);
 
         builder.Services.AddTransient<ServerDbRepository>();
-        builder.Services.AddDbContext<BellRecContext>(options =>
-                options.UseSqlite(builder.Configuration.GetSection("constring").Get<string>()));
+        //builder.Services.AddDbContext<Web.Server.Data.sqlite.BellRecContext>(options =>
+        //        options.UseSqlite(builder.Configuration.GetSection("constring").Get<string>()));
+        builder.Services.AddDbContext<Web.Server.Data.Sqlserver.BellRecContext>(options =>
+                options.UseSqlServer());
         builder.Services.AddTransient<DatabaseGenerator>();
         var app = builder.Build();
 

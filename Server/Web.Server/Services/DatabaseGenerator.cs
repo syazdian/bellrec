@@ -1,6 +1,5 @@
-﻿using Bell.Reconciliation.Web.Server.Data;
+﻿using Bell.Reconciliation.Web.Server.Data.Sqlserver;
 using Mapster;
-using System.Diagnostics.Eventing.Reader;
 
 namespace Bell.Reconciliation.Web.Server.Services
 {
@@ -10,8 +9,8 @@ namespace Bell.Reconciliation.Web.Server.Services
         {
         }
 
-        private List<Data.BellSource> bellBuld = new List<Data.BellSource>();
-        private List<Data.StaplesSource> stapleBuld = new List<Data.StaplesSource>();
+        private List<BellSource> bellBuld = new List<BellSource>();
+        private List<StaplesSource> stapleBuld = new List<StaplesSource>();
 
         private string[] Brands = { "Bell", "Virgin", "Lucky Mobile" };
         private string[] Lobs = { "Wireless", "Wireline" };
@@ -54,8 +53,8 @@ namespace Bell.Reconciliation.Web.Server.Services
                                 {
                                     var bellsource = GetBellSource(id: i, wirelessLob: true, wirelessSubLob: true);
 
-                                    var bellSource2 = bellsource.Adapt<Data.BellSource>();
-                                    var bellSource3 = bellsource.Adapt<Data.BellSource>();
+                                    var bellSource2 = bellsource.Adapt<BellSource>();
+                                    var bellSource3 = bellsource.Adapt<BellSource>();
 
                                     bellSource2.RebateType = RebateTypes[1];
                                     bellSource3.RebateType = RebateTypes[2];
@@ -98,8 +97,8 @@ namespace Bell.Reconciliation.Web.Server.Services
                                 {
                                     var staplesSource = GetStapleSource(id: i, wirelessLob: true, wirelessSubLob: true);
 
-                                    var staplesSource2 = staplesSource.Adapt<Data.StaplesSource>();
-                                    var staplesSource3 = staplesSource.Adapt<Data.StaplesSource>();
+                                    var staplesSource2 = staplesSource.Adapt<StaplesSource>();
+                                    var staplesSource3 = staplesSource.Adapt<StaplesSource>();
 
                                     staplesSource2.RebateType = RebateTypes[1];
                                     staplesSource3.RebateType = RebateTypes[2];
@@ -146,8 +145,8 @@ namespace Bell.Reconciliation.Web.Server.Services
 
                                     var staplesSource = GetStapleSource(id: i, wirelessLob: true, wirelessSubLob: true);
 
-                                    var staplesSource2 = staplesSource.Adapt<Data.StaplesSource>();
-                                    var staplesSource3 = staplesSource.Adapt<Data.StaplesSource>();
+                                    var staplesSource2 = staplesSource.Adapt<StaplesSource>();
+                                    var staplesSource3 = staplesSource.Adapt<StaplesSource>();
 
                                     staplesSource2.RebateType = RebateTypes[1];
                                     staplesSource3.RebateType = RebateTypes[2];
@@ -170,8 +169,8 @@ namespace Bell.Reconciliation.Web.Server.Services
 
                                     var bellsource = GetBellSource(id: i, wirelessLob: true, wirelessSubLob: true);
 
-                                    var bellSource2 = bellsource.Adapt<Data.BellSource>();
-                                    var bellSource3 = bellsource.Adapt<Data.BellSource>();
+                                    var bellSource2 = bellsource.Adapt<BellSource>();
+                                    var bellSource3 = bellsource.Adapt<BellSource>();
 
                                     bellSource2.RebateType = RebateTypes[1];
                                     bellSource3.RebateType = RebateTypes[2];
@@ -234,8 +233,8 @@ namespace Bell.Reconciliation.Web.Server.Services
 
                                 var staplesSource = GetStapleSource(id: i, wirelessLob: true, wirelessSubLob: true);
 
-                                var staplesSource2 = staplesSource.Adapt<Data.StaplesSource>();
-                                var staplesSource3 = staplesSource.Adapt<Data.StaplesSource>();
+                                var staplesSource2 = staplesSource.Adapt<StaplesSource>();
+                                var staplesSource3 = staplesSource.Adapt<StaplesSource>();
 
                                 staplesSource2.RebateType = RebateTypes[1];
                                 staplesSource3.RebateType = RebateTypes[2];
@@ -258,8 +257,8 @@ namespace Bell.Reconciliation.Web.Server.Services
 
                                 var bellsource = GetBellSource(id: i, wirelessLob: true, wirelessSubLob: true);
 
-                                var bellSource2 = bellsource.Adapt<Data.BellSource>();
-                                var bellSource3 = bellsource.Adapt<Data.BellSource>();
+                                var bellSource2 = bellsource.Adapt<BellSource>();
+                                var bellSource3 = bellsource.Adapt<BellSource>();
 
                                 bellSource2.RebateType = RebateTypes[1];
                                 bellSource3.RebateType = RebateTypes[2];
@@ -313,10 +312,10 @@ namespace Bell.Reconciliation.Web.Server.Services
                         }
                     }
 
-                    if (bellBuld.Count + stapleBuld.Count > 990)
+                    if (bellBuld.Count + stapleBuld.Count > 990 || i >= recordNom - 20)
                     {
                         db.StaplesSources.AddRange(stapleBuld);
-                        stapleBuld = new List<Data.StaplesSource>();
+                        stapleBuld = new List<StaplesSource>();
 
                         db.BellSources.AddRange(bellBuld);
                         bellBuld = new List<BellSource>();
@@ -344,9 +343,9 @@ namespace Bell.Reconciliation.Web.Server.Services
             return firstname + " " + lastname;
         }
 
-        private Data.BellSource GetBellSource(int id, bool wirelessLob = false, bool wirelessSubLob = false)
+        private BellSource GetBellSource(int id, bool wirelessLob = false, bool wirelessSubLob = false)
         {
-            Data.BellSource bellSource = new Data.BellSource();
+            BellSource bellSource = new BellSource();
 
             bellSource.Id = id;
             bellSource.Phone = 0;// rand.NextInt64(11234567890, 99999999999);
@@ -377,7 +376,7 @@ namespace Bell.Reconciliation.Web.Server.Services
                     bellSource.SubLob = WirelessSubLOBs[0];
                     bellSource.RebateType = RebateTypes[0];
                     bellSource.Phone = rand.NextInt64(11234567890, 99999999999);
-                    bellSource.Imei = rand.NextInt64(1234567890, 9876543210).ToString();
+                    bellSource.Imei = rand.NextInt64(1234567890, 9876543210);
                     bellSource.Amount = rand.Next(100, 1500);
                 }
             }
@@ -385,9 +384,9 @@ namespace Bell.Reconciliation.Web.Server.Services
             return bellSource;
         }
 
-        private Data.StaplesSource GetStapleSource(int id, bool wirelessLob = false, bool wirelessSubLob = false)
+        private StaplesSource GetStapleSource(int id, bool wirelessLob = false, bool wirelessSubLob = false)
         {
-            var staplesSource = new Data.StaplesSource();
+            var staplesSource = new StaplesSource();
 
             staplesSource.Phone = 0;// bellSource.Phone;
 
@@ -429,7 +428,7 @@ namespace Bell.Reconciliation.Web.Server.Services
                     staplesSource.SubLob = WirelessSubLOBs[0];
                     staplesSource.RebateType = RebateTypes[0];
                     staplesSource.Phone = rand.NextInt64(11234567890, 99999999999);
-                    staplesSource.Imei = rand.NextInt64(1234567890, 9876543210).ToString();
+                    staplesSource.Imei = rand.NextInt64(1234567890, 9876543210);
                     staplesSource.Amount = rand.Next(100, 1500);
                 }
             }
@@ -437,27 +436,27 @@ namespace Bell.Reconciliation.Web.Server.Services
             return staplesSource;
         }
 
-        private void MakeSameObjects(ref Data.BellSource bell,ref Data.StaplesSource staple)
+        private void MakeSameObjects(ref BellSource bell,ref StaplesSource staple)
         {
             var reservedId = bell.Id;
-            bell = staple.Adapt<Data.BellSource>();
+            bell = staple.Adapt<BellSource>();
             bell.Id = reservedId;
         }
 
-        private void MakeSameThenDifferentObjects(ref Data.BellSource bell,ref Data.StaplesSource staple)
+        private void MakeSameThenDifferentObjects(ref BellSource bell,ref StaplesSource staple)
         {
             var reservedId = bell.Id;
-            bell = staple.Adapt<Data.BellSource>();
+            bell = staple.Adapt<BellSource>();
             bell.Id = reservedId;
 
             var rnd = rand.Next(100);
             if (rnd < 100)
                 bell.Amount = bell.Amount + rnd;
 
-            if (bell.Imei != null && bell.Imei != "")
+            if (bell.Imei != null )
             {
                 if (rnd < 30)
-                    bell.Imei = rand.NextInt64(1234567890, 9876543210).ToString();
+                    bell.Imei = rand.NextInt64(1234567890, 9876543210);
                 else if (rnd > 80)
                     bell.Phone = rand.NextInt64(11234567890, 99999999999);
             }

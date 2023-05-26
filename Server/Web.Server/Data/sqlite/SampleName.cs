@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Bell.Reconciliation.Web.Server.Data;
+namespace Bell.Reconciliation.Web.Server.Data.sqlite;
 
 public partial class SampleName
 {
