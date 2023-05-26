@@ -85,72 +85,67 @@ public class LocalDbRepository : ILocalDbRepository
         using var ctx = await _dbContextFactory.CreateDbContextAsync();
 
         var queryJoinByPhone = from b in ctx.BellSources
-                     join s in ctx.StaplesSources on b.Phone equals s.Phone
-                     where s.SubLob == "Wireless" && b.SubLob == "Wireless"
-                     && s.RebateType == b.RebateType
-                     select new CompareBellStapleCellPhone
-                     {
-                         BPhone = b.Phone.ToString(),
-                         BIMEI = b.Imei.ToString(),
-                         BOrderNumber = b.OrderNumber.ToString(),
-                         BAmount = b.Amount,
-                         BComment = b.Comment.ToString(),
-                         BTransactionDate = b.TransactionDate.ToString(),
-                         BCustomerName = b.CustomerName.ToString(),
-                         BRebateType = b.RebateType.ToString(),
-                         BReconciled = b.Reconciled,
+                               join s in ctx.StaplesSources on b.Phone equals s.Phone
+                               where s.SubLob == "Wireless" && b.SubLob == "Wireless"
+                               && s.RebateType == b.RebateType
+                               select new CompareBellStapleCellPhone
+                               {
+                                   BPhone = b.Phone.ToString(),
+                                   BIMEI = b.Imei.ToString(),
+                                   BOrderNumber = b.OrderNumber.ToString(),
+                                   BAmount = b.Amount,
+                                   BComment = b.Comment.ToString(),
+                                   BTransactionDate = b.TransactionDate.ToString(),
+                                   BCustomerName = b.CustomerName.ToString(),
+                                   BRebateType = b.RebateType.ToString(),
+                                   BReconciled = b.Reconciled,
 
-                         SPhone = s.Phone.ToString(),
-                         SIMEI = s.Imei.ToString(),
-                         SOrderNumber = s.OrderNumber.ToString(),
-                         SAmount = s.Amount,
-                         SComment = s.Comment.ToString(),
-                         STransactionDate = s.TransactionDate.ToString(),
-                         SCustomerName = s.CustomerName.ToString(),
-                         SRebateType = b.RebateType.ToString(),
-                         SReconciled = b.Reconciled,
-                         MatchStatus = (s.Reconciled == true && b.Reconciled == true) ? MatchStatus.Reconciled :
-                         ((s.Amount == b.Amount && s.OrderNumber == b.OrderNumber &&
-                         s.TransactionDate == b.TransactionDate && s.CustomerName == b.CustomerName && s.Imei == b.Imei && s.Phone == s.Phone) ? MatchStatus.Match : MatchStatus.Missmatch)
-
-
-                     };
+                                   SPhone = s.Phone.ToString(),
+                                   SIMEI = s.Imei.ToString(),
+                                   SOrderNumber = s.OrderNumber.ToString(),
+                                   SAmount = s.Amount,
+                                   SComment = s.Comment.ToString(),
+                                   STransactionDate = s.TransactionDate.ToString(),
+                                   SCustomerName = s.CustomerName.ToString(),
+                                   SRebateType = b.RebateType.ToString(),
+                                   SReconciled = b.Reconciled,
+                                   MatchStatus = (s.Reconciled == true && b.Reconciled == true) ? MatchStatus.Reconciled :
+                                   ((s.Amount == b.Amount && s.OrderNumber == b.OrderNumber &&
+                                   s.TransactionDate == b.TransactionDate && s.CustomerName == b.CustomerName && s.Imei == b.Imei && s.Phone == s.Phone) ? MatchStatus.Match : MatchStatus.Missmatch)
+                               };
         var listJoinByPhone = queryJoinByPhone.ToList();
 
         var queryJoinByImei = from b in ctx.BellSources
-                     join s in ctx.StaplesSources on b.Imei equals s.Imei
-                     where s.SubLob == "Wireless" && b.SubLob == "Wireless"
-                     && s.Phone != b.Phone
-                     && s.RebateType == b.RebateType
-                     select new CompareBellStapleCellPhone
-                     {
-                         BPhone = b.Phone.ToString(),
-                         BIMEI = b.Imei.ToString(),
-                         BOrderNumber = b.OrderNumber.ToString(),
-                         BAmount = b.Amount,
-                         BComment = b.Comment.ToString(),
-                         BTransactionDate = b.TransactionDate.ToString(),
-                         BCustomerName = b.CustomerName.ToString(),
-                         BRebateType = b.RebateType.ToString(),
-                         BReconciled = b.Reconciled,
+                              join s in ctx.StaplesSources on b.Imei equals s.Imei
+                              where s.SubLob == "Wireless" && b.SubLob == "Wireless"
+                              && s.Phone != b.Phone
+                              && s.RebateType == b.RebateType
+                              select new CompareBellStapleCellPhone
+                              {
+                                  BPhone = b.Phone.ToString(),
+                                  BIMEI = b.Imei.ToString(),
+                                  BOrderNumber = b.OrderNumber.ToString(),
+                                  BAmount = b.Amount,
+                                  BComment = b.Comment.ToString(),
+                                  BTransactionDate = b.TransactionDate.ToString(),
+                                  BCustomerName = b.CustomerName.ToString(),
+                                  BRebateType = b.RebateType.ToString(),
+                                  BReconciled = b.Reconciled,
 
-                         SPhone = s.Phone.ToString(),
-                         SIMEI = s.Imei.ToString(),
-                         SOrderNumber = s.OrderNumber.ToString(),
-                         SAmount = s.Amount,
-                         SComment = s.Comment.ToString(),
-                         STransactionDate = s.TransactionDate.ToString(),
-                         SCustomerName = s.CustomerName.ToString(),
-                         SRebateType = b.RebateType.ToString(),
-                         SReconciled = b.Reconciled,
-                         MatchStatus = (s.Reconciled == true && b.Reconciled == true) ? MatchStatus.Reconciled :
-                         ((s.Amount == b.Amount && s.OrderNumber == b.OrderNumber &&
-                         s.TransactionDate == b.TransactionDate && s.CustomerName == b.CustomerName && s.Imei == b.Imei && s.Phone == s.Phone) ? MatchStatus.Match : MatchStatus.Missmatch)
-
-
-                     };
+                                  SPhone = s.Phone.ToString(),
+                                  SIMEI = s.Imei.ToString(),
+                                  SOrderNumber = s.OrderNumber.ToString(),
+                                  SAmount = s.Amount,
+                                  SComment = s.Comment.ToString(),
+                                  STransactionDate = s.TransactionDate.ToString(),
+                                  SCustomerName = s.CustomerName.ToString(),
+                                  SRebateType = b.RebateType.ToString(),
+                                  SReconciled = b.Reconciled,
+                                  MatchStatus = (s.Reconciled == true && b.Reconciled == true) ? MatchStatus.Reconciled :
+                                  ((s.Amount == b.Amount && s.OrderNumber == b.OrderNumber &&
+                                  s.TransactionDate == b.TransactionDate && s.CustomerName == b.CustomerName && s.Imei == b.Imei && s.Phone == s.Phone) ? MatchStatus.Match : MatchStatus.Missmatch)
+                              };
         var listJoinByImei = queryJoinByImei.ToList();
-
 
         var bellStaplesCompres = listJoinByPhone.Concat(listJoinByImei).ToList();
 
@@ -203,13 +198,11 @@ public class LocalDbRepository : ILocalDbRepository
                         MatchStatus = (s.Reconciled == true && b.Reconciled == true) ? MatchStatus.Reconciled :
                         ((s.Amount == b.Amount && s.OrderNumber == b.OrderNumber &&
                         s.TransactionDate == b.TransactionDate && s.CustomerName == b.CustomerName && s.Imei == b.Imei && s.Phone == s.Phone) ? MatchStatus.Match : MatchStatus.Missmatch)
-
                     };
         var bellStaplesCompres = query.ToList();
 
         return bellStaplesCompres;
     }
-
 
     public async Task<bool> LocalDbExist()
     {
@@ -225,6 +218,22 @@ public class LocalDbRepository : ILocalDbRepository
         catch (Exception)
         {
             return false;
+        }
+    }
+
+    public async Task<bool> PurgeTables()
+    {
+        try
+        {
+            using var ctx = await _dbContextFactory.CreateDbContextAsync();
+            await ctx.BellSources.ExecuteDeleteAsync();
+            await ctx.StaplesSources.ExecuteDeleteAsync();
+            await ctx.SaveChangesAsync();
+            return true;
+        }
+        catch (Exception)
+        {
+            throw;
         }
     }
 }

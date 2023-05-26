@@ -4,7 +4,7 @@
 @using Bell.Reconciliation.Frontend.Shared.Pages.Components;
 @inject ISyncData SyncData
 @inject ILocalDbRepository Localdb
-@inject DialogService dialogService
+@*@inject DialogService dialogService*@
 
 <h2>
   Cell Phone
@@ -146,7 +146,7 @@
     {
         if (args.Column.Title == "S.Order" || args.Column.Title == "B.Order")
         {
-            dialogService.Open<DialogComparePage>(args.Column.Title + "was clicked");
+            //dialogService.Open<DialogComparePage>(args.Column.Title + "was clicked");
         }
     }
 
