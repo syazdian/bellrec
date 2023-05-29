@@ -29,8 +29,8 @@ public class Program
                    .AddJsonFile($"appsettings.json")
                    .Build();
         builder.Configuration.AddConfiguration(config);
-        builder.Services.AddDbContext<Web.Server.Data.Sqlserver.BellRecContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")));
+        var constring = builder.Configuration.GetConnectionString("SqlServer");
+        builder.Services.AddDbContext<Web.Server.Data.Sqlserver.BellRecContext>(options => options.UseSqlServer(constring));
 
         builder.Services.AddTransient<DatabaseGenerator>();
         var app = builder.Build();

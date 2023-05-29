@@ -15,27 +15,6 @@ public class SyncData : ISyncData
         _localDb = localDb;
     }
 
-    public async Task BellSourceGenerateFromMemory()
-    {
-        try
-        {
-            int lastId = 1;
-            do
-            {
-                //var bellList = await _httpClient.GetFromJsonAsync<List<BellSource>>($"/api/SyncData/GetBellSourceitems/{lastId}");
-                var bellList = await new HttpClient().GetFromJsonAsync<BellSourceDto[]>($"https://localhost:7131/api/syncdata/GetBellSourceitems/{lastId}");
-                if (bellList is not null)
-                    lastId = 1;// await InsertDataToDbAsync(bellList.ToList());
-                else
-                    return;
-            } while (lastId < 100000);
-        }
-        catch (Exception ex)
-        {
-            throw;
-        }
-    }
-
     public async Task FetchDataFromServerDb()
     {
         try
