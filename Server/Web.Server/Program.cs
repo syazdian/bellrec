@@ -20,17 +20,17 @@ public class Program
 
         builder.Services.AddTransient<ServerDbRepository>();
 
-        //builder.Services.AddDbContext<Web.Server.Data.sqlite.BellRecContext>(options =>
-        //        options.UseSqlite(builder.Configuration.GetSection("constring").Get<string>()));
+        builder.Services.AddDbContext<Web.Server.Data.sqlite.BellRecContext>(options =>
+                options.UseSqlite(builder.Configuration.GetSection("constring").Get<string>()));
 
         var executingAssembly = Assembly.GetExecutingAssembly();
         var config = new ConfigurationBuilder()
                    .SetBasePath(Path.GetDirectoryName(executingAssembly.Location))
                    .AddJsonFile($"appsettings.json")
                    .Build();
-        builder.Configuration.AddConfiguration(config);
-        var constring = builder.Configuration.GetConnectionString("SqlServer");
-        builder.Services.AddDbContext<Web.Server.Data.Sqlserver.BellRecContext>(options => options.UseSqlServer(constring));
+        //builder.Configuration.AddConfiguration(config);
+        //var constring = builder.Configuration.GetConnectionString("SqlServer");
+        //builder.Services.AddDbContext<Web.Server.Data.Sqlserver.BellRecContext>(options => options.UseSqlServer(constring));
 
         builder.Services.AddTransient<DatabaseGenerator>();
         var app = builder.Build();
