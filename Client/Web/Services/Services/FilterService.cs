@@ -21,7 +21,8 @@ public class FilterService : IFilterService
         try
         {
             //var response = await new HttpClient().GetStringAsync("https://localhost:7131/api/FilterValue/GetFilterItems");
-            var response = await _httpClient.GetFromJsonAsync<FilterItems>($"/api/FilterValue/GetFilterItems");
+            //var response = await _httpClient.GetFromJsonAsync<FilterItems>($"/api/FilterValue/GetFilterItems");
+            var response = await _httpClient.GetFromJsonAsync<FilterItems>($"https://dev.tools.staples.ca/BellServices/Reconciliation/api/FilterValue/GetFilterItems");
 
             return response;
         }
