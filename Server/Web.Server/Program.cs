@@ -25,15 +25,16 @@ public class Program
                    .SetBasePath(Path.GetDirectoryName(executingAssembly.Location))
                    .AddJsonFile($"appsettings.json")
                    .Build();
-        // var constring = builder.Configuration.GetConnectionString("Sqlite");
-        //builder.Services.AddDbContext<Web.Server.Data.sqlite.BellRecContext>(options =>
-        //        options.UseSqlite(constring));
+
+        var constring = builder.Configuration.GetConnectionString("Sqlite");
+        builder.Services.AddDbContext<Web.Server.Data.sqlite.BellRecContext>(options =>
+                options.UseSqlite(constring));
+
+        //var constring = builder.Configuration.GetConnectionString("SqlServer");
+        //builder.Services.AddDbContext<Web.Server.Data.Sqlserver.BellRecContext>(options =>
+        //    options.UseSqlServer(constring));
+
         builder.Configuration.AddConfiguration(config);
-
-        var constring = builder.Configuration.GetConnectionString("SqlServer");
-        builder.Services.AddDbContext<Web.Server.Data.Sqlserver.BellRecContext>(options =>
-            options.UseSqlServer(constring));
-
         builder.Services.AddTransient<DatabaseGenerator>();
         var app = builder.Build();
 
