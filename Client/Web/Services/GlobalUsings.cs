@@ -1,7 +1,7 @@
 ﻿global using Bell.Reconciliation.Common.Models;
 global using Bell.Reconciliation.Frontend.Web.Database;
 global using Microsoft.EntityFrameworkCore;
-global using SqliteWasmHelper;
+//global using SqliteWasmHelper;
 global using Bell.Reconciliation.Frontend.Shared.ServiceInterfaces;
 global using System;
 global using System.Collections.Generic;
@@ -20,7 +20,7 @@ global using Microsoft.EntityFrameworkCore;
 
 global using Microsoft.EntityFrameworkCore.Internal;
 
-global using SqliteWasmHelper;
+//global using SqliteWasmHelper;
 global using System.Collections.Generic;
 
 global using System.Net.Http.Json;
