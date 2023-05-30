@@ -1,9 +1,0 @@
-﻿global using Microsoft.AspNetCore.Components.Web;
-global using Bell.Reconciliation.Frontend.Shared.Pages.Shared;
-global using Bell.Reconciliation.Frontend.Shared.Pages;
-global using Bell.Reconciliation.Frontend.Desktop.Data;
-global using Bell.Reconciliation.Frontend.Desktop.Services;
-global using Bell.Reconciliation.Frontend.Shared.ServiceInterfaces;
-global using Microsoft.EntityFrameworkCore;
-global using Microsoft.Extensions.Logging;
-global using System;
