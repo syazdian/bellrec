@@ -13,9 +13,12 @@
 {
     @if (!localDbExist)
     {
-        <RadzenButton ButtonStyle="ButtonStyle.Dark" Text="Fetch Data from Server" Click="FetchData"></RadzenButton>
+        <RadzenButton ButtonStyle="ButtonStyle.Dark" Size="ButtonSize.Large" Text="Fetch Data from Server" Click="FetchData" ></RadzenButton>
     }
-    <LocalDbLoader message="Loading Data ...."></LocalDbLoader>
+    else
+    {
+        <LocalDbLoader message="Loading Data ...."></LocalDbLoader>
+    }
 
 }
 @*if ()
