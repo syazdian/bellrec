@@ -1,4 +1,4 @@
-﻿using Bell.Reconciliation.Web.Server.Data.sqlite;
+﻿using Bell.Reconciliation.Web.Server.Data.Sqlserver;
 using Mapster;
 
 namespace Bell.Reconciliation.Web.Server.Services
@@ -376,7 +376,7 @@ namespace Bell.Reconciliation.Web.Server.Services
                     bellSource.SubLob = WirelessSubLOBs[0];
                     bellSource.RebateType = RebateTypes[0];
                     bellSource.Phone = rand.NextInt64(11234567890, 99999999999);
-                    bellSource.Imei = rand.NextInt64(1234567890, 9876543210).ToString();
+                    bellSource.Imei = rand.NextInt64(1234567890, 9876543210);
                     bellSource.Amount = rand.Next(100, 1500);
                 }
             }
@@ -428,7 +428,7 @@ namespace Bell.Reconciliation.Web.Server.Services
                     staplesSource.SubLob = WirelessSubLOBs[0];
                     staplesSource.RebateType = RebateTypes[0];
                     staplesSource.Phone = rand.NextInt64(11234567890, 99999999999);
-                    staplesSource.Imei = rand.NextInt64(1234567890, 9876543210).ToString();
+                    staplesSource.Imei = rand.NextInt64(1234567890, 9876543210);
                     staplesSource.Amount = rand.Next(100, 1500);
                 }
             }
@@ -456,7 +456,7 @@ namespace Bell.Reconciliation.Web.Server.Services
             if (bell.Imei != null )
             {
                 if (rnd < 30)
-                    bell.Imei = rand.NextInt64(1234567890, 9876543210).ToString();
+                    bell.Imei = rand.NextInt64(1234567890, 9876543210);
                 else if (rnd > 80)
                     bell.Phone = rand.NextInt64(11234567890, 99999999999);
             }

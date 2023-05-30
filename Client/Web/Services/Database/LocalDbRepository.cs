@@ -209,7 +209,7 @@ public class LocalDbRepository : ILocalDbRepository
         try
         {
             using var ctx = await _dbContextFactory.CreateDbContextAsync();
-            if (ctx.BellSources.Count() > 1)
+            if (ctx.BellSources.Count() > 1 && ctx.StaplesSources.Count() > 1)
             {
                 return true; ;
             }
