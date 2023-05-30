@@ -21,6 +21,12 @@ jobs:
         with:
           dotnet-version: '7.x'
           include-prerelease: true
+          
+      - name: Install WASM Tools Workload
+        run: dotnet workload install wasm-tools
+        
+      - name: workload restore
+        run: dotnet workload restore 
 
       - name: Build with dotnet
         run: dotnet build --configuration Release
