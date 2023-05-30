@@ -2,96 +2,90 @@
 using Bell.Reconciliation.Common.Models.Enums;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 
 namespace Bell.Reconciliation.Frontend.Web.Services.Database;
 
 public class LocalDbRepository : ILocalDbRepository
 {
-    static List<BellSourceDto> bellSourceDb= new List<BellSourceDto>(); 
-    static List<StaplesSourceDto> staplesSourceDb = new List<StaplesSourceDto>(); 
-    //private readonly ISqliteWasmDbContextFactory<StapleSourceContext> _dbContextFactory;
+    private readonly ISqliteWasmDbContextFactory<StapleSourceContext> _dbContextFactory;
 
-    public LocalDbRepository()
+    public LocalDbRepository(ISqliteWasmDbContextFactory<StapleSourceContext> dbContextFactory)
     {
-        //_dbContextFactory = dbContextFactory;
+        _dbContextFactory = dbContextFactory;
     }
 
     public async Task InsertBellSourceToLocalDbAsync(List<BellSourceDto> bellSourceDtos)
     {
-        bellSourceDb.AddRange(bellSourceDtos);
-        //try
-        //{
-        //    using var ctx = await _dbContextFactory.CreateDbContextAsync();
+        try
+        {
+            using var ctx = await _dbContextFactory.CreateDbContextAsync();
 
-        //    await ctx.BellSources.AddRangeAsync(bellSourceDtos);
-        //    await ctx.SaveChangesAsync();
-        //}
-        //catch (Exception ex)
-        //{
-        //    throw;
-        //}
+            await ctx.BellSources.AddRangeAsync(bellSourceDtos);
+            await ctx.SaveChangesAsync();
+        }
+        catch (Exception ex)
+        {
+            throw;
+        }
     }
 
     public async Task InsertStaplesToLocalDbAsync(List<StaplesSourceDto> staplesSourceDtos)
     {
-        staplesSourceDb.AddRange(staplesSourceDtos);
-        //try
-        //{
-        //    using var ctx = await _dbContextFactory.CreateDbContextAsync();
+        try
+        {
+            using var ctx = await _dbContextFactory.CreateDbContextAsync();
 
-        //    await ctx.StaplesSources.AddRangeAsync(staplesSourceDtos);
-        //    await ctx.SaveChangesAsync();
-        //}
-        //catch (Exception ex)
-        //{
-        //    throw;
-        //}
+            await ctx.StaplesSources.AddRangeAsync(staplesSourceDtos);
+            await ctx.SaveChangesAsync();
+        }
+        catch (Exception ex)
+        {
+            throw;
+        }
     }
 
     public async Task<int> InsertDataToLocalDbAsync(BellStaplesSourceDto bellStaplesSources)
     {
-        return 10;
-        //try
-        //{
-        //    using var ctx = await _dbContextFactory.CreateDbContextAsync();
+        try
+        {
+            using var ctx = await _dbContextFactory.CreateDbContextAsync();
 
-        //    await ctx.BellSources.AddRangeAsync(bellStaplesSources.BellSources.ToList());
-        //    await ctx.StaplesSources.AddRangeAsync(bellStaplesSources.StaplesSources.ToList());
-        //    await ctx.SaveChangesAsync();
-        //    return bellStaplesSources.BellSources.Max(x => x.Id);
-        //}
-        //catch (Exception ex)
-        //{
-        //    throw;
-        //}
+            await ctx.BellSources.AddRangeAsync(bellStaplesSources.BellSources.ToList());
+            await ctx.StaplesSources.AddRangeAsync(bellStaplesSources.StaplesSources.ToList());
+            await ctx.SaveChangesAsync();
+            return bellStaplesSources.BellSources.Max(x => x.Id);
+        }
+        catch (Exception ex)
+        {
+            throw;
+        }
     }
 
     public async Task<List<BellSourceDto>> GetBellSourceCellPhoneFromLocalDb()
     {
-        //using var ctx = await _dbContextFactory.CreateDbContextAsync();
+        using var ctx = await _dbContextFactory.CreateDbContextAsync();
 
-        var query = bellSourceDb.Where(b => b.SubLob == "Wireless" && !staplesSourceDb.Any(s => s.Phone == b.Phone || s.Imei == b.Imei));
+        var query = ctx.BellSources.Where(b => b.SubLob == "Wireless" && !ctx.StaplesSources.Any(s => s.Phone == b.Phone || s.Imei == b.Imei));
 
-        List<BellSourceDto> bellSources =  query.ToList();
+        List<BellSourceDto> bellSources = await query.ToListAsync();
         return bellSources;
     }
 
     public async Task<List<StaplesSourceDto>> GetStapleSourceCellPhoneFromLocalDb()
     {
-        //using var ctx = await _dbContextFactory.CreateDbContextAsync();
-        var query = staplesSourceDb.Where(s => s.SubLob == "Wireless" && !bellSourceDb.Any(b => b.Phone == s.Phone || b.Imei == s.Imei));
+        using var ctx = await _dbContextFactory.CreateDbContextAsync();
+        var query = ctx.StaplesSources.Where(s => s.SubLob == "Wireless" && !ctx.BellSources.Any(b => b.Phone == s.Phone || b.Imei == s.Imei));
 
-        List<StaplesSourceDto> staplesSources =  query.ToList();
+        List<StaplesSourceDto> staplesSources = await query.ToListAsync();
         return staplesSources;
     }
 
     public async Task<List<CompareBellStapleCellPhone>> GetBellStapleCompareCellPhoneFromLocalDb()
     {
-        //using var ctx = await _dbContextFactory.CreateDbContextAsync();
+        using var ctx = await _dbContextFactory.CreateDbContextAsync();
 
-        var queryJoinByPhone = from b in bellSourceDb
-                               join s in staplesSourceDb on b.Phone equals s.Phone
+        var queryJoinByPhone = from b in ctx.BellSources
+                               join s in ctx.StaplesSources on b.Phone equals s.Phone
                                where s.SubLob == "Wireless" && b.SubLob == "Wireless"
                                && s.RebateType == b.RebateType
                                select new CompareBellStapleCellPhone
@@ -121,8 +115,8 @@ public class LocalDbRepository : ILocalDbRepository
                                };
         var listJoinByPhone = queryJoinByPhone.ToList();
 
-        var queryJoinByImei = from b in bellSourceDb
-                              join s in staplesSourceDb on b.Imei equals s.Imei
+        var queryJoinByImei = from b in ctx.BellSources
+                              join s in ctx.StaplesSources on b.Imei equals s.Imei
                               where s.SubLob == "Wireless" && b.SubLob == "Wireless"
                               && s.Phone != b.Phone
                               && s.RebateType == b.RebateType
@@ -160,28 +154,28 @@ public class LocalDbRepository : ILocalDbRepository
 
     public async Task<List<BellSourceDto>> GetBellSourceNonCellPhoneFromLocalDb()
     {
-        //using var ctx = await _dbContextFactory.CreateDbContextAsync();
-        var query = bellSourceDb.Where(b => b.SubLob != "Wireless" && !staplesSourceDb.Any(s => s.OrderNumber == b.OrderNumber && s.RebateType == b.RebateType));
+        using var ctx = await _dbContextFactory.CreateDbContextAsync();
+        var query = ctx.BellSources.Where(b => b.SubLob != "Wireless" && !ctx.StaplesSources.Any(s => s.OrderNumber == b.OrderNumber && s.RebateType == b.RebateType));
 
-        List<BellSourceDto> bellSources = query.ToList();
+        List<BellSourceDto> bellSources = await query.ToListAsync();
         return bellSources;
     }
 
     public async Task<List<StaplesSourceDto>> GetStapleSourceNonCellPhoneFromLocalDb()
     {
-        //using var ctx = await _dbContextFactory.CreateDbContextAsync();
-        var query = staplesSourceDb.Where(s => s.SubLob != "Wireless" && !bellSourceDb.Any(b => s.OrderNumber == b.OrderNumber && s.RebateType == b.RebateType));
+        using var ctx = await _dbContextFactory.CreateDbContextAsync();
+        var query = ctx.StaplesSources.Where(s => s.SubLob != "Wireless" && !ctx.BellSources.Any(b => s.OrderNumber == b.OrderNumber && s.RebateType == b.RebateType));
 
-        List<StaplesSourceDto> staplesSources = query.ToList();
+        List<StaplesSourceDto> staplesSources = await query.ToListAsync();
         return staplesSources;
     }
 
     public async Task<List<CompareBellStapleNonCellPhone>> GetBellStapleCompareNonCellPhoneFromLocalDb()
     {
-        //using var ctx = await _dbContextFactory.CreateDbContextAsync();
+        using var ctx = await _dbContextFactory.CreateDbContextAsync();
 
-        var query = from b in bellSourceDb
-                    join s in staplesSourceDb on b.OrderNumber equals s.OrderNumber
+        var query = from b in ctx.BellSources
+                    join s in ctx.StaplesSources on b.OrderNumber equals s.OrderNumber
                     where s.SubLob != "Wireless" && b.SubLob != "Wireless"
                     && s.SubLob == b.SubLob
                     select new CompareBellStapleNonCellPhone
@@ -212,36 +206,34 @@ public class LocalDbRepository : ILocalDbRepository
 
     public async Task<bool> LocalDbExist()
     {
-        return false;
-        //try
-        //{
-        //    using var ctx = await _dbContextFactory.CreateDbContextAsync();
-        //    if (ctx.BellSources.Count() > 1 && ctx.StaplesSources.Count() > 1)
-        //    {
-        //        return true; ;
-        //    }
-        //    return false;
-        //}
-        //catch (Exception)
-        //{
-        //    return false;
-        //}
+        try
+        {
+            using var ctx = await _dbContextFactory.CreateDbContextAsync();
+            if (ctx.BellSources.Count() > 1 && ctx.StaplesSources.Count() > 1)
+            {
+                return true; ;
+            }
+            return false;
+        }
+        catch (Exception)
+        {
+            return false;
+        }
     }
 
     public async Task<bool> PurgeTables()
     {
-        return true;
-        //try
-        //{
-        //    using var ctx = await _dbContextFactory.CreateDbContextAsync();
-        //    await ctx.BellSources.ExecuteDeleteAsync();
-        //    await ctx.StaplesSources.ExecuteDeleteAsync();
-        //    await ctx.SaveChangesAsync();
-        //    return true;
-        //}
-        //catch (Exception)
-        //{
-        //    throw;
-        //}
+        try
+        {
+            using var ctx = await _dbContextFactory.CreateDbContextAsync();
+            await ctx.BellSources.ExecuteDeleteAsync();
+            await ctx.StaplesSources.ExecuteDeleteAsync();
+            await ctx.SaveChangesAsync();
+            return true;
+        }
+        catch (Exception)
+        {
+            throw;
+        }
     }
 }
