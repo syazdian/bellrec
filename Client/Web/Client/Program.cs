@@ -11,11 +11,12 @@ public class Program
         builder.RootComponents.Add<App>("#app");
         builder.RootComponents.Add<HeadOutlet>("head::after");
 
-        builder.Services.AddScoped<DialogService>();
-        var baseAddress = builder.HostEnvironment.BaseAddress + "/BellServices/Reconciliation/";
+        // builder.Services.AddScoped<DialogService>();
+        //var baseAddress = builder.HostEnvironment.BaseAddress;
         //var baseAddress = "https://dev.tools.staples.ca/BellServices/Reconciliation/";
 
-        builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(baseAddress) });
+        //builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(baseAddress) });
+        builder.Services.AddScoped(sp => new HttpClient { });
         builder.Services.AddSqliteWasmDbContextFactory<StapleSourceContext>(opts => opts.UseSqlite("Data Source=StapleSource.sqlite3"));
 
         builder.Services.AddTransient<IFilterService, FilterService>();
