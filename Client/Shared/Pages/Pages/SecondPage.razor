@@ -1,0 +1,15 @@
+﻿@using Bell.Reconciliation.Frontend.Shared.ServiceInterfaces;
+@inject IFilterService filterService
+@page "/second"
+
+
+<button onclick=@CallApi>CLICK ME</button>
+<h1>@FromServer</h1>
+@code {
+    public string FromServer { get; set; }
+
+    public async Task CallApi()
+    {
+        FromServer =await filterService.GetHello();
+    }
+}

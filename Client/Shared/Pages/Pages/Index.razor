@@ -9,23 +9,18 @@
 
 <PageTitle>Bell Compare Page</PageTitle>
 
-@if (!uiDbExist)
+@if (!localDbExist && !uiDbExist)
 {
-    @if (!localDbExist)
-    {
-        <RadzenButton ButtonStyle="ButtonStyle.Dark" Text="Fetch Data from Server" Click="FetchData"></RadzenButton>
-    }
-    <LocalDbLoader message="Loading Data ...."></LocalDbLoader>
+    <RadzenButton ButtonStyle="ButtonStyle.Dark" Text="Fetch Data from Server" Click="FetchData"></RadzenButton>
+}
+@if (localDbExist && !uiDbExist)
+{
+   
+    <LocalDbLoader message="Loading local Data ...."></LocalDbLoader>
 
 }
-@*if ()
-{
-    if (showloader)
-    {
-        <LocalDbLoader message="Loading Data from localDb to Ui"></LocalDbLoader>
-    }
-}*@
-else
+
+@if (localDbExist && uiDbExist)
 {
 
     <div class="container marketing">
@@ -65,10 +60,7 @@ else
         {
             await LoadDatabaseInUi();
         }
-        //else
-        //{
-        //    await FetchData();
-        //}
+      
         StateHasChanged();
     }
     public async void SwitchBetweenSubLob(string subLob)
