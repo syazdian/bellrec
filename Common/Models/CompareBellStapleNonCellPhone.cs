@@ -2,6 +2,7 @@
     public class CompareBellStapleNonCellPhone
     {
         public MatchStatus MatchStatus {get; set;}
+        public long SId { get; set;}
         public decimal SAmount { get; set; }
         public string SComment { get; set; }
         public string SOrderNumber { get; set; }
@@ -10,6 +11,7 @@
         public string SRebateType { get; set; }
         public bool SReconciled { get; set; }
 
+        public int BId { get; set; }
         public decimal BAmount { get; set; }
         public string BComment { get; set; }
         public string BOrderNumber { get; set; }

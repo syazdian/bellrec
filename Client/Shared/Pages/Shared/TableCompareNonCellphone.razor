@@ -50,7 +50,7 @@
 
             <RadzenDataGrid @ref="Grid" AllowRowSelectOnRowClick="@allowRowSelectOnRowClick" AllowFiltering="true" CellRender="@CellRender" CellDoubleClick="OnCellDoubleClick"
                             FilterPopupRenderMode="PopupRenderMode.OnDemand" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
-                            AllowPaging="true" PageSize="10"
+                            AllowPaging="true" PageSize="10" RowUpdate="@OnCompareUpdateRow"
                             AllowSorting="true" Data="@CompareBellStaple" TItem="CompareBellStapleNonCellPhone" ColumnWidth="200px"
                             SelectionMode="DataGridSelectionMode.Multiple" @bind-Value=@selectedProducts class="m-4">
                 <Columns>
@@ -79,8 +79,10 @@
                     <RadzenDataGridColumn TItem="CompareBellStapleNonCellPhone" Width="100px" Filterable="false" Sortable="false" Property="SAmount" Title="S.Amount" TextAlign="TextAlign.Right" />
                     <RadzenDataGridColumn TItem="CompareBellStapleNonCellPhone" Property="SComment" Title="S.Comment " >
                         <EditTemplate Context="record">
-                            <EditComponent></EditComponent>
-                           @* <RadzenTextArea @bind-Value="record.SComment" Style="width:100%; display: block" Name="SComment" />*@
+                            @*<EditComponent></EditComponent>*@
+                            <RadzenTextArea @bind-Value="record.SComment" Style="width:100%; display: block" Name="SComment" />
+                            <RadzenCheckBox TValue="bool" Name="CheckBox2" />
+                            <RadzenLabel Text="Copy to Bell" Component="CheckBox2" Style="margin-left: 8px; vertical-align: middle;" />
                         </EditTemplate>
                     </RadzenDataGridColumn>
                     <RadzenDataGridColumn TItem="CompareBellStapleNonCellPhone" Property="STransactionDate" Title="S.TransactionDate " />
@@ -226,6 +228,14 @@
     {
         stapleRecordToUpdate = record;
         await StapleGrid.EditRow(record);
+    }
+
+    void OnCompareUpdateRow(CompareBellStapleNonCellPhone record)
+    {
+        bellRecordToUpdate = null;
+
+        Localdb.UpdateBellSource(record.BId, record.BComment);
+        Localdb.UpdateStapleSource(record.SId, record.SComment);
     }
 
     void OnBellUpdateRow(BellSourceDto record)

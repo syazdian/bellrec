@@ -27,6 +27,10 @@ public interface ILocalDbRepository
     Task<bool> UpdateStapleSource(StaplesSourceDto staplesSourceDto);
 
     Task<EntityEntry<BellSourceDto>> GetBellSourceEntry(BellSourceDto record);
+    
+    Task<bool> UpdateBellSource(long Id, string Comment);
+
+    Task<bool> UpdateStapleSource(long Id, string Comment);
 
     Task<EntityEntry<StaplesSourceDto>> GetStapleSourceEntry(StaplesSourceDto record);
 

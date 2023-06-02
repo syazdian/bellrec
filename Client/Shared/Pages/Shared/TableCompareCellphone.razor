@@ -47,7 +47,7 @@
         </RadzenTabsItem>
         <RadzenTabsItem Text="In both">
             <RadzenDataGrid @ref="CompareGrid" ColumnWidth="150px" SelectionMode="DataGridSelectionMode.Single" AllowFiltering="true"
-                            AllowPaging="true" PageSize="8" AllowSorting="true" Data="@CompareBellStaple"
+                            AllowPaging="true" PageSize="8" AllowSorting="true" Data="@CompareBellStaple" RowUpdate="@OnCompareUpdateRow"
                             TItem="CompareBellStapleCellPhone" CellRender="@CellRender" CellClick="OnCellDoubleClick" >
                 <Columns>
                     <RadzenDataGridColumn Width="75px" Title="Edit"
@@ -236,6 +236,14 @@
     {
         stapleRecordToUpdate = record;
         await StapleGrid.EditRow(record);
+    }
+
+     void OnCompareUpdateRow(CompareBellStapleCellPhone record)
+    {
+        bellRecordToUpdate = null;
+
+        Localdb.UpdateBellSource(record.BId, record.BComment);
+        Localdb.UpdateStapleSource(record.SId, record.SComment);
     }
 
     void OnBellUpdateRow(BellSourceDto record)

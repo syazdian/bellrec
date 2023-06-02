@@ -92,6 +92,7 @@ public class LocalDbRepository : ILocalDbRepository
                                && s.RebateType == b.RebateType
                                select new CompareBellStapleCellPhone
                                {
+                                   BId = b.Id,
                                    BPhone = b.Phone.ToString(),
                                    BIMEI = b.Imei.ToString(),
                                    BOrderNumber = b.OrderNumber.ToString(),
@@ -102,6 +103,7 @@ public class LocalDbRepository : ILocalDbRepository
                                    BRebateType = b.RebateType.ToString(),
                                    BReconciled = b.Reconciled,
 
+                                   SId = s.Id,
                                    SPhone = s.Phone.ToString(),
                                    SIMEI = s.Imei.ToString(),
                                    SOrderNumber = s.OrderNumber.ToString(),
@@ -124,6 +126,7 @@ public class LocalDbRepository : ILocalDbRepository
                               && s.RebateType == b.RebateType
                               select new CompareBellStapleCellPhone
                               {
+                                  BId = b.Id,
                                   BPhone = b.Phone.ToString(),
                                   BIMEI = b.Imei.ToString(),
                                   BOrderNumber = b.OrderNumber.ToString(),
@@ -134,6 +137,7 @@ public class LocalDbRepository : ILocalDbRepository
                                   BRebateType = b.RebateType.ToString(),
                                   BReconciled = b.Reconciled,
 
+                                  SId = s.Id,
                                   SPhone = s.Phone.ToString(),
                                   SIMEI = s.Imei.ToString(),
                                   SOrderNumber = s.OrderNumber.ToString(),
@@ -182,6 +186,7 @@ public class LocalDbRepository : ILocalDbRepository
                     && s.SubLob == b.SubLob
                     select new CompareBellStapleNonCellPhone
                     {
+                        BId = b.Id,
                         BOrderNumber = b.OrderNumber.ToString(),
                         BAmount = b.Amount,
                         BComment = b.Comment.ToString(),
@@ -190,6 +195,7 @@ public class LocalDbRepository : ILocalDbRepository
                         BRebateType = b.RebateType.ToString(),
                         BReconciled = b.Reconciled,
 
+                        SId = s.Id,
                         SOrderNumber = s.OrderNumber.ToString(),
                         SAmount = s.Amount,
                         SComment = s.Comment.ToString(),
@@ -222,12 +228,48 @@ public class LocalDbRepository : ILocalDbRepository
         }
     }
 
+    public async Task<bool> UpdateBellSource(long Id, string Comment)
+    {
+        try
+        {
+            using var ctx = await _dbContextFactory.CreateDbContextAsync();
+            var bell = ctx.BellSources.Single(c => c.Id == Id);
+            bell.Comment = Comment;
+            ctx.Update(bell);
+            ctx.SaveChanges();
+
+            return true;
+        }
+        catch (Exception)
+        {
+            return false;
+        }
+    }
+
     public async Task<bool> UpdateStapleSource(StaplesSourceDto staplesSourceDto)
     {
         try
         {
             using var ctx = await _dbContextFactory.CreateDbContextAsync();
             ctx.Update(staplesSourceDto);
+            ctx.SaveChanges();
+
+            return true;
+        }
+        catch (Exception)
+        {
+            return false;
+        }
+    }
+
+    public async Task<bool> UpdateStapleSource(long Id, string Comment)
+    {
+        try
+        {
+            using var ctx = await _dbContextFactory.CreateDbContextAsync();
+            var staple = ctx.StaplesSources.Single(c => c.Id == Id);
+            staple.Comment = Comment;
+            ctx.Update(staple);
             ctx.SaveChanges();
 
             return true;
