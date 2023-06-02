@@ -72,8 +72,7 @@
                     <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="SPhone" Title="S.Phone" />
                     <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="SIMEI" Title="S.IMEI" />
                     <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="SOrderNumber" Title="S.Order" />
-                    <RadzenDataGridColumn Width="75px" Filterable="false" Sortable="false"
-                        TItem="CompareBellStapleCellPhone" Property="SAmount" Title="S.Amount" TextAlign="TextAlign.Right" />
+                    <RadzenDataGridColumn Width="75px" TItem="CompareBellStapleCellPhone" Property="SAmount" Title="S.Amount" TextAlign="TextAlign.Right" />
                     <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="SComment" Title="S.Comment " >
                         <EditTemplate Context="record">
                             <div class=" rz-text-align-left">
@@ -91,7 +90,7 @@
                     <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="BPhone" Title="B.Phone" />
                     <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="BIMEI" Title="B.IMEI" />
                     <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="BOrderNumber" Title="B.Order" />
-                    <RadzenDataGridColumn Width="75px" Filterable="false" Sortable="false" TItem="CompareBellStapleCellPhone" Property="BAmount" Title="B.Amount" TextAlign="TextAlign.Right" />
+                    <RadzenDataGridColumn Width="75px" TItem="CompareBellStapleCellPhone" Property="BAmount" Title="B.Amount" TextAlign="TextAlign.Right" />
                     <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="BComment" Title="B.Comment " >
                         <EditTemplate Context="record">
                             <RadzenTextArea @bind-Value="record.BComment" Style="width:100%; display: block" Name="BComment" />

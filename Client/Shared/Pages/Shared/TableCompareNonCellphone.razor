@@ -76,7 +76,7 @@
                         </EditTemplate>
                     </RadzenDataGridColumn>
                     <RadzenDataGridColumn TItem="CompareBellStapleNonCellPhone" Property="SOrderNumber" Title="S.Order" />
-                    <RadzenDataGridColumn TItem="CompareBellStapleNonCellPhone" Width="100px" Filterable="false" Sortable="false" Property="SAmount" Title="S.Amount" TextAlign="TextAlign.Right" />
+                    <RadzenDataGridColumn TItem="CompareBellStapleNonCellPhone" Width="100px" Property="SAmount" Title="S.Amount" TextAlign="TextAlign.Right" />
                     <RadzenDataGridColumn TItem="CompareBellStapleNonCellPhone" Property="SComment" Title="S.Comment " >
                         <EditTemplate Context="record">
                             @*<EditComponent></EditComponent>*@
@@ -89,7 +89,7 @@
                     <RadzenDataGridColumn TItem="CompareBellStapleNonCellPhone" Property="SCustomerName" Title="S.CustomerName " />
 
                     <RadzenDataGridColumn TItem="CompareBellStapleNonCellPhone" Property="BOrderNumber" Title="B.Order" />
-                    <RadzenDataGridColumn TItem="CompareBellStapleNonCellPhone"  Width="100px" Filterable="false" Sortable="false" Property="BAmount" Title="B.Amount" TextAlign="TextAlign.Right" />
+                    <RadzenDataGridColumn TItem="CompareBellStapleNonCellPhone"  Width="100px" Property="BAmount" Title="B.Amount" TextAlign="TextAlign.Right" />
                     <RadzenDataGridColumn TItem="CompareBellStapleNonCellPhone" Property="BComment" Title="B.Comment " >
                         <EditTemplate Context="record">
                             <RadzenTextArea @bind-Value="record.BComment" Style="width:100%; display: block" Name="BComment" />
