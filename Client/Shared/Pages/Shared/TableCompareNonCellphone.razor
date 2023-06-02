@@ -2,6 +2,7 @@
 @using Bell.Reconciliation.Common.Models.Enums;
 @using Bell.Reconciliation.Frontend.Shared.Pages.Components
 @using Bell.Reconciliation.Frontend.Shared.ServiceInterfaces;
+@using Microsoft.EntityFrameworkCore;
 @inject ISyncData SyncData
 @inject ILocalDbRepository Localdb
 @*@inject DialogService dialogService*@
@@ -14,18 +15,19 @@
 <RadzenTabs  RenderMode="Radzen.TabRenderMode.Client" @bind-SelectedIndex=@selectedIndex>
     <Tabs>
         <RadzenTabsItem Text="Only in Staples">
-            <RadzenDataGrid @ref="StapleGrid" AllowFiltering="true" AllowPaging="true" PageSize="8" AllowSorting="true" Data="@StaplesSources" TItem="StaplesSourceDto">
+            <RadzenDataGrid @ref="StapleGrid" AllowFiltering="true" AllowPaging="true" PageSize="8" AllowSorting="true"
+                            Data="@StaplesSources" TItem="StaplesSourceDto" RowUpdate="@OnStapleUpdateRow">
                 <Columns>
                     <RadzenDataGridColumn Width="75px" Title="Edit"
                                           TItem="StaplesSourceDto" Context="record" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
-                        <Template Context="BellRecord">
-                            <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Medium" Click="@(args => EditStapleRow(BellRecord))" @onclick:stopPropagation="true">
+                        <Template Context="StapleRecord">
+                            <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Medium" Click="@(args => EditStapleRow(StapleRecord))" @onclick:stopPropagation="true">
                             </RadzenButton>
                         </Template>
-                        <EditTemplate Context="BellRecord">
-                            <RadzenButton Icon="check" ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Size="ButtonSize.Small" Click="@((args) => SaveStapleRow(BellRecord))">
+                        <EditTemplate Context="StapleRecord">
+                            <RadzenButton Icon="check" ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Size="ButtonSize.Small" Click="@((args) => SaveStapleRow(StapleRecord))">
                             </RadzenButton>
-                            <RadzenButton Icon="close" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Small" class="my-1 ms-1" Click="@((args) => CancelStapleEdit(BellRecord))">
+                            <RadzenButton Icon="close" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Small" class="my-1 ms-1" Click="@((args) => CancelStapleEdit(StapleRecord))">
                             </RadzenButton>
                         </EditTemplate>
                     </RadzenDataGridColumn>
@@ -98,7 +100,7 @@
         </RadzenTabsItem>
         <RadzenTabsItem Text="Only in Bell">
             <RadzenDataGrid AllowVirtualization="true"  ColumnWidth="150px" AllowFiltering="true" AllowPaging="true" PageSize="8" AllowSorting="true"
-                            Data="@BellSources" @ref="BellGrid" TItem="BellSourceDto">
+                            Data="@BellSources" @ref="BellGrid" TItem="BellSourceDto" RowUpdate="@OnBellUpdateRow">
                 <Columns>
                     <RadzenDataGridColumn Width="75px" Title="Edit"
                                           TItem="BellSourceDto" Context="record" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
@@ -148,7 +150,7 @@
     [Parameter]
     public string TitleSubLob { get; set; }
 
-    
+
     RadzenDataGrid<CompareBellStapleNonCellPhone> Grid = new RadzenDataGrid<CompareBellStapleNonCellPhone>();
     RadzenDataGrid<BellSourceDto> BellGrid = new RadzenDataGrid<BellSourceDto>();
     RadzenDataGrid<StaplesSourceDto> StapleGrid = new RadzenDataGrid<StaplesSourceDto>();
@@ -226,6 +228,20 @@
         await StapleGrid.EditRow(record);
     }
 
+    void OnBellUpdateRow(BellSourceDto record)
+    {
+        bellRecordToUpdate = null;
+
+        var result = Localdb.UpdateBellSource(record);
+    }
+
+    void OnStapleUpdateRow(StaplesSourceDto record)
+    {
+        bellRecordToUpdate = null;
+
+        var result = Localdb.UpdateStapleSource(record);
+    }
+
     async Task SaveRow(CompareBellStapleNonCellPhone record)
     {
         Console.WriteLine(record.MatchStatus);
@@ -256,6 +272,13 @@
         bellRecordToUpdate = null;
 
         BellGrid.CancelEditRow(record);
+
+        var recordEntry = Localdb.GetBellSourceEntry(record);
+        if (recordEntry.Result.State == EntityState.Modified)
+        {
+            recordEntry.Result.CurrentValues.SetValues(recordEntry.Result.OriginalValues);
+            recordEntry.Result.State = EntityState.Unchanged;
+        }
     }
 
     void CancelStapleEdit(StaplesSourceDto record)
@@ -263,6 +286,13 @@
         stapleRecordToUpdate = null;
 
         StapleGrid.CancelEditRow(record);
+
+        var recordEntry = Localdb.GetStapleSourceEntry(record);
+        if (recordEntry.Result.State == EntityState.Modified)
+        {
+            recordEntry.Result.CurrentValues.SetValues(recordEntry.Result.OriginalValues);
+            recordEntry.Result.State = EntityState.Unchanged;
+        }
     }
 
     //private async Task FetchData()
