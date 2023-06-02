@@ -14,11 +14,30 @@
 <RadzenTabs  RenderMode="Radzen.TabRenderMode.Client" @bind-SelectedIndex=@selectedIndex>
     <Tabs>
         <RadzenTabsItem Text="Only in Staples">
-            <RadzenDataGrid  AllowFiltering="true" AllowPaging="true" PageSize="8" AllowSorting="true" Data="@StaplesSources" TItem="StaplesSourceDto">
+            <RadzenDataGrid @ref="StapleGrid" AllowFiltering="true" AllowPaging="true" PageSize="8" AllowSorting="true" Data="@StaplesSources" TItem="StaplesSourceDto">
                 <Columns>
+                    <RadzenDataGridColumn Width="75px" Title="Edit"
+                                          TItem="StaplesSourceDto" Context="record" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
+                        <Template Context="BellRecord">
+                            <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Medium" Click="@(args => EditStapleRow(BellRecord))" @onclick:stopPropagation="true">
+                            </RadzenButton>
+                        </Template>
+                        <EditTemplate Context="BellRecord">
+                            <RadzenButton Icon="check" ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Size="ButtonSize.Small" Click="@((args) => SaveStapleRow(BellRecord))">
+                            </RadzenButton>
+                            <RadzenButton Icon="close" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Small" class="my-1 ms-1" Click="@((args) => CancelStapleEdit(BellRecord))">
+                            </RadzenButton>
+                        </EditTemplate>
+                    </RadzenDataGridColumn>
                    <RadzenDataGridColumn TItem="StaplesSourceDto" Property="OrderNumber" Title="OrderNumber" />
                     <RadzenDataGridColumn Width="100px" TItem="StaplesSourceDto" Property="Amount" Title="Amount" TextAlign="TextAlign.Right" />
-                    <RadzenDataGridColumn TItem="StaplesSourceDto" Property="Comment" Title="Comment" />
+                    <RadzenDataGridColumn TItem="StaplesSourceDto" Property="Comment" Title="Comment">
+                        <EditTemplate Context="record">
+                            <div class=" rz-text-align-left">
+                                <RadzenTextArea @bind-Value="record.Comment" Style="width:100%; display: block" Name="SComment" />
+                            </div>
+                        </EditTemplate>
+                    </RadzenDataGridColumn>
                     <RadzenDataGridColumn TItem="StaplesSourceDto" Property="TransactionDate" Title="TransactionDate" />
                     <RadzenDataGridColumn TItem="StaplesSourceDto" Property="CustomerName" Title="CustomerName" />
                 </Columns>
@@ -79,11 +98,31 @@
         </RadzenTabsItem>
         <RadzenTabsItem Text="Only in Bell">
             <RadzenDataGrid AllowVirtualization="true"  ColumnWidth="150px" AllowFiltering="true" AllowPaging="true" PageSize="8" AllowSorting="true"
-                            Data="@BellSources" @ref="GridBS" TItem="BellSourceDto">
+                            Data="@BellSources" @ref="BellGrid" TItem="BellSourceDto">
                 <Columns>
+                    <RadzenDataGridColumn Width="75px" Title="Edit"
+                                          TItem="BellSourceDto" Context="record" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
+                        <Template Context="BellRecord">
+                            <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Medium" Click="@(args => EditBellRow(BellRecord))" @onclick:stopPropagation="true">
+                            </RadzenButton>
+                        </Template>
+                        <EditTemplate Context="BellRecord">
+                            <RadzenButton Icon="check" ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Size="ButtonSize.Small" Click="@((args) => SaveBellRow(BellRecord))">
+                            </RadzenButton>
+                            <RadzenButton Icon="close" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Small" class="my-1 ms-1" Click="@((args) => CancelBellEdit(BellRecord))">
+                            </RadzenButton>
+                        </EditTemplate>
+                    </RadzenDataGridColumn>
                     <RadzenDataGridColumn TItem="BellSourceDto" Property="OrderNumber" Title="OrderNumber#" />
                     <RadzenDataGridColumn Width="100px" TItem="BellSourceDto" Property="Amount" Title="Amount" TextAlign="TextAlign.Right" />
-                    <RadzenDataGridColumn TItem="BellSourceDto" Property="Comment" Title="Comment" />
+                    <RadzenDataGridColumn Width="100px" TItem="BellSourceDto" Property="Amount" Title="Amount" TextAlign="TextAlign.Right" />
+                    <RadzenDataGridColumn TItem="BellSourceDto" Property="Comment" Title="Comment">
+                        <EditTemplate Context="record">
+                            <div class=" rz-text-align-left">
+                                <RadzenTextArea @bind-Value="record.Comment" Style="width:100%; display: block" Name="SComment" />
+                            </div>
+                        </EditTemplate>
+                    </RadzenDataGridColumn>
                     <RadzenDataGridColumn TItem="BellSourceDto" Property="TransactionDate" Title="TransactionDate" />
                     <RadzenDataGridColumn TItem="BellSourceDto" Property="CustomerName" Title="CustomerName" />
                 </Columns>
@@ -111,13 +150,16 @@
 
     
     RadzenDataGrid<CompareBellStapleNonCellPhone> Grid = new RadzenDataGrid<CompareBellStapleNonCellPhone>();
-    RadzenDataGrid<BellSourceDto> GridBS = new RadzenDataGrid<BellSourceDto>();
+    RadzenDataGrid<BellSourceDto> BellGrid = new RadzenDataGrid<BellSourceDto>();
+    RadzenDataGrid<StaplesSourceDto> StapleGrid = new RadzenDataGrid<StaplesSourceDto>();
 
 
-    CompareBellStapleNonCellPhone recordToUpdate;
 
 
     Dictionary<MatchStatus, MatchStatus> matchStatus;
+    CompareBellStapleNonCellPhone recordToUpdate;
+    BellSourceDto bellRecordToUpdate;
+    StaplesSourceDto stapleRecordToUpdate;
 
 
     IList<CompareBellStapleNonCellPhone> selectedProducts;
@@ -172,10 +214,34 @@
         await Grid.EditRow(record);
     }
 
+    async Task EditBellRow(BellSourceDto record)
+    {
+        bellRecordToUpdate = record;
+        await BellGrid.EditRow(record);
+    }
+
+    async Task EditStapleRow(StaplesSourceDto record)
+    {
+        stapleRecordToUpdate = record;
+        await StapleGrid.EditRow(record);
+    }
+
     async Task SaveRow(CompareBellStapleNonCellPhone record)
     {
         Console.WriteLine(record.MatchStatus);
         await Grid.UpdateRow(record);
+    }
+
+    async Task SaveBellRow(BellSourceDto record)
+    {
+        Console.WriteLine(record.MatchStatus);
+        await BellGrid.UpdateRow(record);
+    }
+
+    async Task SaveStapleRow(StaplesSourceDto record)
+    {
+        Console.WriteLine(record.MatchStatus);
+        await StapleGrid.UpdateRow(record);
     }
 
     void CancelEdit(CompareBellStapleNonCellPhone record)
@@ -183,6 +249,20 @@
         recordToUpdate = null;
 
         Grid.CancelEditRow(record);
+    }
+
+    void CancelBellEdit(BellSourceDto record)
+    {
+        bellRecordToUpdate = null;
+
+        BellGrid.CancelEditRow(record);
+    }
+
+    void CancelStapleEdit(StaplesSourceDto record)
+    {
+        stapleRecordToUpdate = null;
+
+        StapleGrid.CancelEditRow(record);
     }
 
     //private async Task FetchData()
