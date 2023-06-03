@@ -33,7 +33,7 @@ else
 {
 
     <div class="container marketing">
-        <TopFilters SubLobFilterChanged="(e)=>SwitchBetweenSubLob(e)"></TopFilters>
+        <TopFilters FilterChanged="(e)=>AllpyFilters(e)"></TopFilters>
 
         @if (WirelessSubLob == "Wireless")
         {
@@ -59,15 +59,17 @@ else
     List<StaplesSourceDto> staplesSourcesNonCellPhone = new();
     List<CompareBellStapleNonCellPhone> compreBellStapleNonCellPhone = new();
 
+    FilterItemDto filterItemDto = new();
     string WirelessSubLob;
     bool localDbExist = true;
     bool uiDbExist = false;
     bool showloader = false;
     protected override async Task OnInitializedAsync()
     {
+
         if (await CheckDbExist())
         {
-            await LoadDatabaseInUi();
+            await LoadDatabaseInUi(filterItemDto);
         }
         //else
         //{
@@ -75,9 +77,11 @@ else
         //}
         StateHasChanged();
     }
-    public async void SwitchBetweenSubLob(string subLob)
+    public async void AllpyFilters(FilterItemDto _filterItemDto)
     {
-        WirelessSubLob = subLob;
+        filterItemDto = _filterItemDto;
+        WirelessSubLob = filterItemDto.SubLob;
+        LoadDatabaseInUi(filterItemDto);
     }
 
     public async Task<bool> CheckDbExist()
@@ -103,21 +107,21 @@ else
         localDbExist = false;
         await SyncData.FetchDataFromServerDb();
         localDbExist = true;
-        await LoadDatabaseInUi();
+        await LoadDatabaseInUi(filterItemDto);
 
         StateHasChanged();
     }
-    private async Task LoadDatabaseInUi()
+    private async Task LoadDatabaseInUi(FilterItemDto filterItemDto)
     {
         showloader = true;
         uiDbExist = false;
-        bellSourcesCellPhone = await _localdb.GetBellSourceCellPhoneFromLocalDb();
-        staplesSourcesCellPhone = await _localdb.GetStapleSourceCellPhoneFromLocalDb();
-        compareBellStapleCellPhone = await _localdb.GetBellStapleCompareCellPhoneFromLocalDb();
+        bellSourcesCellPhone = await _localdb.GetBellSourceCellPhoneFromLocalDb(filterItemDto);
+        staplesSourcesCellPhone = await _localdb.GetStapleSourceCellPhoneFromLocalDb(filterItemDto);
+        compareBellStapleCellPhone = await _localdb.GetBellStapleCompareCellPhoneFromLocalDb(filterItemDto);
 
-        bellSourcesNonCellPhone = await _localdb.GetBellSourceNonCellPhoneFromLocalDb();
-        staplesSourcesNonCellPhone = await _localdb.GetStapleSourceNonCellPhoneFromLocalDb();
-        compreBellStapleNonCellPhone = await _localdb.GetBellStapleCompareNonCellPhoneFromLocalDb();
+        bellSourcesNonCellPhone = await _localdb.GetBellSourceNonCellPhoneFromLocalDb(filterItemDto);
+        staplesSourcesNonCellPhone = await _localdb.GetStapleSourceNonCellPhoneFromLocalDb(filterItemDto);
+        compreBellStapleNonCellPhone = await _localdb.GetBellStapleCompareNonCellPhoneFromLocalDb(filterItemDto);
 
         uiDbExist = true;
         showloader = false;

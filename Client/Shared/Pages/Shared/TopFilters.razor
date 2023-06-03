@@ -44,6 +44,8 @@
     Variant variantStyle = Variant.Flat;
     DateTime? StartDate = DateTime.Now.AddMonths(-1);
     DateTime? EndDate = DateTime.Now;
+
+    FilterItemDto filterItemDto = new();
     string lobValue  ;
     List<string> loBs = new();
     string subLobValue ;
@@ -54,10 +56,11 @@
     List<string> rebateType = new();
     string locationValue = string.Empty;
     List<string> locations = new();
+
     FilterItems filterItems = new();
 
     [Parameter]
-    public EventCallback<string> SubLobFilterChanged { get; set; }
+    public EventCallback<FilterItemDto> FilterChanged { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -67,6 +70,8 @@
         brands = filterItems.Brands;
         rebateType = filterItems.RebateTypes;
         locations = filterItems.Locations;
+
+        ApplyFilter();
         StateHasChanged();
     }
 
@@ -77,9 +82,17 @@
         StateHasChanged();
     }
 
-    protected async void ApplyFilter(MouseEventArgs e)
+    protected async void ApplyFilter()
     {
-        await SubLobFilterChanged.InvokeAsync(subLobValue);
+        filterItemDto.Lob = lobValue;
+        filterItemDto.SubLob = subLobValue;
+        filterItemDto.RebateValue = rebateValue;
+        filterItemDto.Brand = brandValue;
+        filterItemDto.Location = locationValue;
+        filterItemDto.TransactionDateFrom = StartDate;
+        filterItemDto.TransactionDateTo = EndDate;
+
+        await FilterChanged.InvokeAsync(filterItemDto);
 
     }
 
