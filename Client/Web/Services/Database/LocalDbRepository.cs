@@ -3,6 +3,7 @@ using Bell.Reconciliation.Common.Models.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Bell.Reconciliation.Frontend.Web.Services.Database;
 
@@ -62,27 +63,46 @@ public class LocalDbRepository : ILocalDbRepository
         }
     }
 
-    public async Task<List<BellSourceDto>> GetBellSourceCellPhoneFromLocalDb()
+    public async Task<List<BellSourceDto>> GetBellSourceCellPhoneFromLocalDb(FilterItemDto filterItemDto)
     {
-        using var ctx = await _dbContextFactory.CreateDbContextAsync();
+        try
+        {
+            using var ctx = await _dbContextFactory.CreateDbContextAsync();
 
-        var query = ctx.BellSources.Where(b => b.SubLob == "Wireless" && !ctx.StaplesSources.Any(s => s.Phone == b.Phone || s.Imei == b.Imei));
+            var query = ctx.BellSources.Where(b => b.SubLob == "Wireless" && !ctx.StaplesSources.Any(s => s.Phone == b.Phone || s.Imei == b.Imei));
+            query = query.Where(c =>
+                (string.IsNullOrEmpty(filterItemDto.RebateValue) || c.RebateType == filterItemDto.RebateValue) &&
+                (string.IsNullOrEmpty(filterItemDto.Lob) || c.Lob == filterItemDto.Lob) &&
+                (string.IsNullOrEmpty(filterItemDto.SubLob) || c.Lob == filterItemDto.SubLob)
+            );
 
-        List<BellSourceDto> bellSources = await query.ToListAsync();
-        return bellSources;
+            List<BellSourceDto> bellSources = await query.ToListAsync();
+            return bellSources;
+        }
+        catch (Exception ex)
+        {
+            var f = ex.Message;
+            return null;
+        }
     }
 
-
-    public async Task<List<StaplesSourceDto>> GetStapleSourceCellPhoneFromLocalDb()
+    public async Task<List<StaplesSourceDto>> GetStapleSourceCellPhoneFromLocalDb(FilterItemDto filterItemDto)
     {
         using var ctx = await _dbContextFactory.CreateDbContextAsync();
         var query = ctx.StaplesSources.Where(s => s.SubLob == "Wireless" && !ctx.BellSources.Any(b => b.Phone == s.Phone || b.Imei == s.Imei));
+        query = query.Where(c =>
+         (string.IsNullOrEmpty(filterItemDto.RebateValue) || c.RebateType == filterItemDto.RebateValue) &&
+         (string.IsNullOrEmpty(filterItemDto.Lob) || c.Lob == filterItemDto.Lob) &&
+         (string.IsNullOrEmpty(filterItemDto.SubLob) || c.SubLob == filterItemDto.SubLob) &&
+         (string.IsNullOrEmpty(filterItemDto.Location) || c.Location == filterItemDto.Location) &&
+         (string.IsNullOrEmpty(filterItemDto.Brand) || c.Brand == filterItemDto.Brand)
+       );
 
         List<StaplesSourceDto> staplesSources = await query.ToListAsync();
         return staplesSources;
     }
 
-    public async Task<List<CompareBellStapleCellPhone>> GetBellStapleCompareCellPhoneFromLocalDb()
+    public async Task<List<CompareBellStapleCellPhone>> GetBellStapleCompareCellPhoneFromLocalDb(FilterItemDto filterItemDto)
     {
         using var ctx = await _dbContextFactory.CreateDbContextAsync();
 
@@ -92,8 +112,9 @@ public class LocalDbRepository : ILocalDbRepository
                                && s.RebateType == b.RebateType
                                select new CompareBellStapleCellPhone
                                {
-                                   BId = b.Id,
                                    BPhone = b.Phone.ToString(),
+                                   BLob = b.Lob,
+                                   BSublob = b.SubLob,
                                    BIMEI = b.Imei.ToString(),
                                    BOrderNumber = b.OrderNumber.ToString(),
                                    BAmount = b.Amount,
@@ -103,8 +124,9 @@ public class LocalDbRepository : ILocalDbRepository
                                    BRebateType = b.RebateType.ToString(),
                                    BReconciled = b.Reconciled,
 
-                                   SId = s.Id,
                                    SPhone = s.Phone.ToString(),
+                                   SLob = s.Lob,
+                                   SSublob =s.SubLob,
                                    SIMEI = s.Imei.ToString(),
                                    SOrderNumber = s.OrderNumber.ToString(),
                                    SAmount = s.Amount,
@@ -117,6 +139,17 @@ public class LocalDbRepository : ILocalDbRepository
                                    ((s.Amount == b.Amount && s.OrderNumber == b.OrderNumber &&
                                    s.TransactionDate == b.TransactionDate && s.CustomerName == b.CustomerName && s.Imei == b.Imei && s.Phone == s.Phone) ? MatchStatus.Match : MatchStatus.Missmatch)
                                };
+       // queryJoinByPhone = queryJoinByPhone.Where(c =>
+       //    (string.IsNullOrEmpty(filterItemDto.RebateValue) || c.SRebateType == filterItemDto.RebateValue) &&
+       //    (string.IsNullOrEmpty(filterItemDto.Lob) || c.SLob == filterItemDto.Lob) &&
+       //    (string.IsNullOrEmpty(filterItemDto.Lob) || c.BLob == filterItemDto.Lob) &&
+       //    (string.IsNullOrEmpty(filterItemDto.SubLob) || c.SSublob == filterItemDto.SubLob) &&
+       //    (string.IsNullOrEmpty(filterItemDto.SubLob) || c.BSublob == filterItemDto.SubLob) &&
+       //   (string.IsNullOrEmpty(filterItemDto.Location) || c.SLocation == filterItemDto.Location) &&
+       //   (string.IsNullOrEmpty(filterItemDto.Brand) || c.SBrand == filterItemDto.Brand) && 
+       //   (string.IsNullOrEmpty(filterItemDto.RebateValue) || c.SRebateType == filterItemDto.RebateValue) && 
+       //   (string.IsNullOrEmpty(filterItemDto.RebateValue) || c.BRebateType == filterItemDto.RebateValue) 
+       //);
         var listJoinByPhone = queryJoinByPhone.ToList();
 
         var queryJoinByImei = from b in ctx.BellSources
@@ -126,8 +159,9 @@ public class LocalDbRepository : ILocalDbRepository
                               && s.RebateType == b.RebateType
                               select new CompareBellStapleCellPhone
                               {
-                                  BId = b.Id,
                                   BPhone = b.Phone.ToString(),
+                                  BLob = b.Lob,
+                                  BSublob = b.SubLob,
                                   BIMEI = b.Imei.ToString(),
                                   BOrderNumber = b.OrderNumber.ToString(),
                                   BAmount = b.Amount,
@@ -137,8 +171,9 @@ public class LocalDbRepository : ILocalDbRepository
                                   BRebateType = b.RebateType.ToString(),
                                   BReconciled = b.Reconciled,
 
-                                  SId = s.Id,
                                   SPhone = s.Phone.ToString(),
+                                  SLob = s.Lob,
+                                  SSublob = s.SubLob,
                                   SIMEI = s.Imei.ToString(),
                                   SOrderNumber = s.OrderNumber.ToString(),
                                   SAmount = s.Amount,
@@ -147,10 +182,26 @@ public class LocalDbRepository : ILocalDbRepository
                                   SCustomerName = s.CustomerName.ToString(),
                                   SRebateType = b.RebateType.ToString(),
                                   SReconciled = b.Reconciled,
+                                  SBrand = s.Brand,
+                                  SLocation = s.Location,
+
                                   MatchStatus = (s.Reconciled == true && b.Reconciled == true) ? MatchStatus.Reconciled :
                                   ((s.Amount == b.Amount && s.OrderNumber == b.OrderNumber &&
                                   s.TransactionDate == b.TransactionDate && s.CustomerName == b.CustomerName && s.Imei == b.Imei && s.Phone == s.Phone) ? MatchStatus.Match : MatchStatus.Missmatch)
                               };
+       // queryJoinByImei = queryJoinByImei.Where(c =>
+       //    (string.IsNullOrEmpty(filterItemDto.RebateValue) || c.SRebateType == filterItemDto.RebateValue) &&
+       //    (string.IsNullOrEmpty(filterItemDto.Lob) || c.SLob == filterItemDto.Lob) &&
+       //    (string.IsNullOrEmpty(filterItemDto.Lob) || c.BLob == filterItemDto.Lob) &&
+       //    (string.IsNullOrEmpty(filterItemDto.SubLob) || c.SSublob == filterItemDto.SubLob) &&
+       //    (string.IsNullOrEmpty(filterItemDto.SubLob) || c.BSublob == filterItemDto.SubLob) &&
+       //   (string.IsNullOrEmpty(filterItemDto.Location) || c.SLocation == filterItemDto.Location) &&
+       //   (string.IsNullOrEmpty(filterItemDto.Brand) || c.SBrand == filterItemDto.Brand) &&
+       //   (string.IsNullOrEmpty(filterItemDto.RebateValue) || c.SRebateType == filterItemDto.RebateValue) &&
+       //   (string.IsNullOrEmpty(filterItemDto.RebateValue) || c.BRebateType == filterItemDto.RebateValue)
+       //);
+
+
         var listJoinByImei = queryJoinByImei.ToList();
 
         var bellStaplesCompres = listJoinByPhone.Concat(listJoinByImei).ToList();
@@ -158,25 +209,37 @@ public class LocalDbRepository : ILocalDbRepository
         return bellStaplesCompres;
     }
 
-    public async Task<List<BellSourceDto>> GetBellSourceNonCellPhoneFromLocalDb()
+    public async Task<List<BellSourceDto>> GetBellSourceNonCellPhoneFromLocalDb(FilterItemDto filterItemDto)
     {
         using var ctx = await _dbContextFactory.CreateDbContextAsync();
         var query = ctx.BellSources.Where(b => b.SubLob != "Wireless" && !ctx.StaplesSources.Any(s => s.OrderNumber == b.OrderNumber && s.RebateType == b.RebateType));
+        query = query.Where(c =>
+          (string.IsNullOrEmpty(filterItemDto.RebateValue) || c.RebateType == filterItemDto.RebateValue) &&
+          (string.IsNullOrEmpty(filterItemDto.Lob) || c.Lob == filterItemDto.Lob) &&
+          (string.IsNullOrEmpty(filterItemDto.SubLob) || c.SubLob == filterItemDto.SubLob)
+      );
 
         List<BellSourceDto> bellSources = await query.ToListAsync();
         return bellSources;
     }
 
-    public async Task<List<StaplesSourceDto>> GetStapleSourceNonCellPhoneFromLocalDb()
+    public async Task<List<StaplesSourceDto>> GetStapleSourceNonCellPhoneFromLocalDb(FilterItemDto filterItemDto)
     {
         using var ctx = await _dbContextFactory.CreateDbContextAsync();
         var query = ctx.StaplesSources.Where(s => s.SubLob != "Wireless" && !ctx.BellSources.Any(b => s.OrderNumber == b.OrderNumber && s.RebateType == b.RebateType));
+        query = query.Where(c =>
+          (string.IsNullOrEmpty(filterItemDto.RebateValue) || c.RebateType == filterItemDto.RebateValue) &&
+          (string.IsNullOrEmpty(filterItemDto.Lob) || c.Lob == filterItemDto.Lob) &&
+          (string.IsNullOrEmpty(filterItemDto.SubLob) || c.SubLob == filterItemDto.SubLob) &&
+          (string.IsNullOrEmpty(filterItemDto.Location) || c.Location == filterItemDto.Location) &&
+          (string.IsNullOrEmpty(filterItemDto.Brand) || c.Brand == filterItemDto.Brand)
+        );
 
         List<StaplesSourceDto> staplesSources = await query.ToListAsync();
         return staplesSources;
     }
 
-    public async Task<List<CompareBellStapleNonCellPhone>> GetBellStapleCompareNonCellPhoneFromLocalDb()
+    public async Task<List<CompareBellStapleNonCellPhone>> GetBellStapleCompareNonCellPhoneFromLocalDb(FilterItemDto filterItemDto)
     {
         using var ctx = await _dbContextFactory.CreateDbContextAsync();
 
@@ -186,7 +249,6 @@ public class LocalDbRepository : ILocalDbRepository
                     && s.SubLob == b.SubLob
                     select new CompareBellStapleNonCellPhone
                     {
-                        BId = b.Id,
                         BOrderNumber = b.OrderNumber.ToString(),
                         BAmount = b.Amount,
                         BComment = b.Comment.ToString(),
@@ -194,8 +256,9 @@ public class LocalDbRepository : ILocalDbRepository
                         BCustomerName = b.CustomerName.ToString(),
                         BRebateType = b.RebateType.ToString(),
                         BReconciled = b.Reconciled,
+                        BLob = b.Lob,
+                        BSublob = b.SubLob,
 
-                        SId = s.Id,
                         SOrderNumber = s.OrderNumber.ToString(),
                         SAmount = s.Amount,
                         SComment = s.Comment.ToString(),
@@ -203,12 +266,27 @@ public class LocalDbRepository : ILocalDbRepository
                         SCustomerName = s.CustomerName.ToString(),
                         SRebateType = s.RebateType.ToString(),
                         SReconciled = s.Reconciled,
+                        SLob = s.Lob,
+                        SSublob = s.SubLob,
+                        SBrand = s.Brand,
+                        SLocation =s.Location,
+
                         MatchStatus = (s.Reconciled == true && b.Reconciled == true) ? MatchStatus.Reconciled :
                         ((s.Amount == b.Amount && s.OrderNumber == b.OrderNumber &&
                         s.TransactionDate == b.TransactionDate && s.CustomerName == b.CustomerName && s.Imei == b.Imei && s.Phone == s.Phone) ? MatchStatus.Match : MatchStatus.Missmatch)
                     };
-        var bellStaplesCompres = query.ToList();
+        // query = query.Where(c =>
+        //  (string.IsNullOrEmpty(filterItemDto.RebateValue) || c.SRebateType == filterItemDto.RebateValue) &&
+        //  (string.IsNullOrEmpty(filterItemDto.RebateValue) || c.BRebateType == filterItemDto.RebateValue) &&
+        //  (string.IsNullOrEmpty(filterItemDto.Lob) || c.SLob == filterItemDto.Lob) &&
+        //  (string.IsNullOrEmpty(filterItemDto.Lob) || c.BLob == filterItemDto.Lob) &&
+        //  (string.IsNullOrEmpty(filterItemDto.SubLob) || c.SSublob == filterItemDto.SubLob) &&
+        //  (string.IsNullOrEmpty(filterItemDto.SubLob) || c.BSublob == filterItemDto.SubLob) &&
+        //  (string.IsNullOrEmpty(filterItemDto.Location) || c.SLocation == filterItemDto.Location) &&
+        //  (string.IsNullOrEmpty(filterItemDto.Brand) || c.SBrand == filterItemDto.Brand)
+        //);
 
+        var bellStaplesCompres = query.ToList();
         return bellStaplesCompres;
     }
 
@@ -217,12 +295,13 @@ public class LocalDbRepository : ILocalDbRepository
         try
         {
             using var ctx = await _dbContextFactory.CreateDbContextAsync();
+
             ctx.Update(bellSourceDto);
             ctx.SaveChanges();
 
             return true;
         }
-        catch(Exception)
+        catch (Exception)
         {
             return false;
         }
@@ -233,6 +312,7 @@ public class LocalDbRepository : ILocalDbRepository
         try
         {
             using var ctx = await _dbContextFactory.CreateDbContextAsync();
+
             var bell = ctx.BellSources.Single(c => c.Id == Id);
             bell.Comment = Comment;
             ctx.Update(bell);
@@ -251,6 +331,7 @@ public class LocalDbRepository : ILocalDbRepository
         try
         {
             using var ctx = await _dbContextFactory.CreateDbContextAsync();
+
             ctx.Update(staplesSourceDto);
             ctx.SaveChanges();
 
@@ -267,6 +348,7 @@ public class LocalDbRepository : ILocalDbRepository
         try
         {
             using var ctx = await _dbContextFactory.CreateDbContextAsync();
+
             var staple = ctx.StaplesSources.Single(c => c.Id == Id);
             staple.Comment = Comment;
             ctx.Update(staple);
@@ -283,6 +365,7 @@ public class LocalDbRepository : ILocalDbRepository
     public async Task<EntityEntry<BellSourceDto>> GetBellSourceEntry(BellSourceDto record)
     {
         using var ctx = await _dbContextFactory.CreateDbContextAsync();
+
         var entityEntry = ctx.Entry(record);
 
         return entityEntry;
@@ -291,6 +374,7 @@ public class LocalDbRepository : ILocalDbRepository
     public async Task<EntityEntry<StaplesSourceDto>> GetStapleSourceEntry(StaplesSourceDto record)
     {
         using var ctx = await _dbContextFactory.CreateDbContextAsync();
+
         var entityEntry = ctx.Entry(record);
 
         return entityEntry;
