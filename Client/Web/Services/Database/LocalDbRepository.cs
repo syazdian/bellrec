@@ -104,109 +104,115 @@ public class LocalDbRepository : ILocalDbRepository
 
     public async Task<List<CompareBellStapleCellPhone>> GetBellStapleCompareCellPhoneFromLocalDb(FilterItemDto filterItemDto)
     {
-        using var ctx = await _dbContextFactory.CreateDbContextAsync();
+        try
+        {
 
-        var queryJoinByPhone = from b in ctx.BellSources
-                               join s in ctx.StaplesSources on b.Phone equals s.Phone
-                               where s.SubLob == "Wireless" && b.SubLob == "Wireless"
-                               && s.RebateType == b.RebateType
-                               select new CompareBellStapleCellPhone
-                               {
-                                   BPhone = b.Phone.ToString(),
-                                   BLob = b.Lob,
-                                   BSublob = b.SubLob,
-                                   BIMEI = b.Imei.ToString(),
-                                   BOrderNumber = b.OrderNumber.ToString(),
-                                   BAmount = b.Amount,
-                                   BComment = b.Comment.ToString(),
-                                   BTransactionDate = b.TransactionDate.ToString(),
-                                   BCustomerName = b.CustomerName.ToString(),
-                                   BRebateType = b.RebateType.ToString(),
-                                   BReconciled = b.Reconciled,
+            using var ctx = await _dbContextFactory.CreateDbContextAsync();
 
-                                   SPhone = s.Phone.ToString(),
-                                   SLob = s.Lob,
-                                   SSublob =s.SubLob,
-                                   SIMEI = s.Imei.ToString(),
-                                   SOrderNumber = s.OrderNumber.ToString(),
-                                   SAmount = s.Amount,
-                                   SComment = s.Comment.ToString(),
-                                   STransactionDate = s.TransactionDate.ToString(),
-                                   SCustomerName = s.CustomerName.ToString(),
-                                   SRebateType = b.RebateType.ToString(),
-                                   SReconciled = b.Reconciled,
-                                   MatchStatus = (s.Reconciled == true && b.Reconciled == true) ? MatchStatus.Reconciled :
-                                   ((s.Amount == b.Amount && s.OrderNumber == b.OrderNumber &&
-                                   s.TransactionDate == b.TransactionDate && s.CustomerName == b.CustomerName && s.Imei == b.Imei && s.Phone == s.Phone) ? MatchStatus.Match : MatchStatus.Missmatch)
-                               };
-       // queryJoinByPhone = queryJoinByPhone.Where(c =>
-       //    (string.IsNullOrEmpty(filterItemDto.RebateValue) || c.SRebateType == filterItemDto.RebateValue) &&
-       //    (string.IsNullOrEmpty(filterItemDto.Lob) || c.SLob == filterItemDto.Lob) &&
-       //    (string.IsNullOrEmpty(filterItemDto.Lob) || c.BLob == filterItemDto.Lob) &&
-       //    (string.IsNullOrEmpty(filterItemDto.SubLob) || c.SSublob == filterItemDto.SubLob) &&
-       //    (string.IsNullOrEmpty(filterItemDto.SubLob) || c.BSublob == filterItemDto.SubLob) &&
-       //   (string.IsNullOrEmpty(filterItemDto.Location) || c.SLocation == filterItemDto.Location) &&
-       //   (string.IsNullOrEmpty(filterItemDto.Brand) || c.SBrand == filterItemDto.Brand) && 
-       //   (string.IsNullOrEmpty(filterItemDto.RebateValue) || c.SRebateType == filterItemDto.RebateValue) && 
-       //   (string.IsNullOrEmpty(filterItemDto.RebateValue) || c.BRebateType == filterItemDto.RebateValue) 
-       //);
-        var listJoinByPhone = queryJoinByPhone.ToList();
+            var queryJoinByPhone = from b in ctx.BellSources
+                                   join s in ctx.StaplesSources on b.Phone equals s.Phone
+                                   where s.SubLob == "Wireless" && b.SubLob == "Wireless"
+                                   && s.RebateType == b.RebateType &&
+                                   (string.IsNullOrEmpty(filterItemDto.RebateValue) || s.RebateType == filterItemDto.RebateValue) &&
+                                   (string.IsNullOrEmpty(filterItemDto.Lob) || s.Lob == filterItemDto.Lob) &&
+                                   (string.IsNullOrEmpty(filterItemDto.Lob) || b.Lob == filterItemDto.Lob) &&
+                                   (string.IsNullOrEmpty(filterItemDto.SubLob) || s.SubLob == filterItemDto.SubLob) &&
+                                   (string.IsNullOrEmpty(filterItemDto.SubLob) || b.SubLob == filterItemDto.SubLob) &&
+                                  (string.IsNullOrEmpty(filterItemDto.Location) || s.Location == filterItemDto.Location) &&
+                                  (string.IsNullOrEmpty(filterItemDto.Brand) || s.Brand == filterItemDto.Brand) &&
+                                  (string.IsNullOrEmpty(filterItemDto.RebateValue) || s.RebateType == filterItemDto.RebateValue) &&
+                                  (string.IsNullOrEmpty(filterItemDto.RebateValue) || b.RebateType == filterItemDto.RebateValue)
+                                   select new CompareBellStapleCellPhone
+                                   {
+                                       BPhone = b.Phone.ToString(),
+                                       BLob = b.Lob,
+                                       BSublob = b.SubLob,
+                                       BIMEI = b.Imei.ToString(),
+                                       BOrderNumber = b.OrderNumber.ToString(),
+                                       BAmount = b.Amount,
+                                       BComment = b.Comment.ToString(),
+                                       BTransactionDate = b.TransactionDate.ToString(),
+                                       BCustomerName = b.CustomerName.ToString(),
+                                       BRebateType = b.RebateType.ToString(),
+                                       BReconciled = b.Reconciled,
 
-        var queryJoinByImei = from b in ctx.BellSources
-                              join s in ctx.StaplesSources on b.Imei equals s.Imei
-                              where s.SubLob == "Wireless" && b.SubLob == "Wireless"
-                              && s.Phone != b.Phone
-                              && s.RebateType == b.RebateType
-                              select new CompareBellStapleCellPhone
-                              {
-                                  BPhone = b.Phone.ToString(),
-                                  BLob = b.Lob,
-                                  BSublob = b.SubLob,
-                                  BIMEI = b.Imei.ToString(),
-                                  BOrderNumber = b.OrderNumber.ToString(),
-                                  BAmount = b.Amount,
-                                  BComment = b.Comment.ToString(),
-                                  BTransactionDate = b.TransactionDate.ToString(),
-                                  BCustomerName = b.CustomerName.ToString(),
-                                  BRebateType = b.RebateType.ToString(),
-                                  BReconciled = b.Reconciled,
+                                       SPhone = s.Phone.ToString(),
+                                       SLob = s.Lob,
+                                       SSublob = s.SubLob,
+                                       SIMEI = s.Imei.ToString(),
+                                       SOrderNumber = s.OrderNumber.ToString(),
+                                       SAmount = s.Amount,
+                                       SComment = s.Comment.ToString(),
+                                       STransactionDate = s.TransactionDate.ToString(),
+                                       SCustomerName = s.CustomerName.ToString(),
+                                       SRebateType = b.RebateType.ToString(),
+                                       SReconciled = b.Reconciled,
+                                       MatchStatus = (s.Reconciled == true && b.Reconciled == true) ? MatchStatus.Reconciled :
+                                       ((s.Amount == b.Amount && s.OrderNumber == b.OrderNumber &&
+                                       s.TransactionDate == b.TransactionDate && s.CustomerName == b.CustomerName && s.Imei == b.Imei && s.Phone == s.Phone) ? MatchStatus.Match : MatchStatus.Missmatch)
+                                   };
+           //);
+            var listJoinByPhone = queryJoinByPhone.ToList();
 
-                                  SPhone = s.Phone.ToString(),
-                                  SLob = s.Lob,
-                                  SSublob = s.SubLob,
-                                  SIMEI = s.Imei.ToString(),
-                                  SOrderNumber = s.OrderNumber.ToString(),
-                                  SAmount = s.Amount,
-                                  SComment = s.Comment.ToString(),
-                                  STransactionDate = s.TransactionDate.ToString(),
-                                  SCustomerName = s.CustomerName.ToString(),
-                                  SRebateType = b.RebateType.ToString(),
-                                  SReconciled = b.Reconciled,
-                                  SBrand = s.Brand,
-                                  SLocation = s.Location,
+            var queryJoinByImei = from b in ctx.BellSources
+                                  join s in ctx.StaplesSources on b.Imei equals s.Imei
+                                  where s.SubLob == "Wireless" && b.SubLob == "Wireless"
+                                  && s.Phone != b.Phone
+                                  && s.RebateType == b.RebateType &&
+                                  (string.IsNullOrEmpty(filterItemDto.RebateValue) || s.RebateType == filterItemDto.RebateValue) &&
+                                   (string.IsNullOrEmpty(filterItemDto.Lob) || s.Lob == filterItemDto.Lob) &&
+                                   (string.IsNullOrEmpty(filterItemDto.Lob) || b.Lob == filterItemDto.Lob) &&
+                                   (string.IsNullOrEmpty(filterItemDto.SubLob) || s.SubLob == filterItemDto.SubLob) &&
+                                   (string.IsNullOrEmpty(filterItemDto.SubLob) || b.SubLob == filterItemDto.SubLob) &&
+                                  (string.IsNullOrEmpty(filterItemDto.Location) || s.Location == filterItemDto.Location) &&
+                                  (string.IsNullOrEmpty(filterItemDto.Brand) || s.Brand == filterItemDto.Brand) &&
+                                  (string.IsNullOrEmpty(filterItemDto.RebateValue) || s.RebateType == filterItemDto.RebateValue) &&
+                                  (string.IsNullOrEmpty(filterItemDto.RebateValue) || b.RebateType == filterItemDto.RebateValue)
+                                  select new CompareBellStapleCellPhone
+                                  {
+                                      BPhone = b.Phone.ToString(),
+                                      BLob = b.Lob,
+                                      BSublob = b.SubLob,
+                                      BIMEI = b.Imei.ToString(),
+                                      BOrderNumber = b.OrderNumber.ToString(),
+                                      BAmount = b.Amount,
+                                      BComment = b.Comment.ToString(),
+                                      BTransactionDate = b.TransactionDate.ToString(),
+                                      BCustomerName = b.CustomerName.ToString(),
+                                      BRebateType = b.RebateType.ToString(),
+                                      BReconciled = b.Reconciled,
 
-                                  MatchStatus = (s.Reconciled == true && b.Reconciled == true) ? MatchStatus.Reconciled :
-                                  ((s.Amount == b.Amount && s.OrderNumber == b.OrderNumber &&
-                                  s.TransactionDate == b.TransactionDate && s.CustomerName == b.CustomerName && s.Imei == b.Imei && s.Phone == s.Phone) ? MatchStatus.Match : MatchStatus.Missmatch)
-                              };
-       // queryJoinByImei = queryJoinByImei.Where(c =>
-       //    (string.IsNullOrEmpty(filterItemDto.RebateValue) || c.SRebateType == filterItemDto.RebateValue) &&
-       //    (string.IsNullOrEmpty(filterItemDto.Lob) || c.SLob == filterItemDto.Lob) &&
-       //    (string.IsNullOrEmpty(filterItemDto.Lob) || c.BLob == filterItemDto.Lob) &&
-       //    (string.IsNullOrEmpty(filterItemDto.SubLob) || c.SSublob == filterItemDto.SubLob) &&
-       //    (string.IsNullOrEmpty(filterItemDto.SubLob) || c.BSublob == filterItemDto.SubLob) &&
-       //   (string.IsNullOrEmpty(filterItemDto.Location) || c.SLocation == filterItemDto.Location) &&
-       //   (string.IsNullOrEmpty(filterItemDto.Brand) || c.SBrand == filterItemDto.Brand) &&
-       //   (string.IsNullOrEmpty(filterItemDto.RebateValue) || c.SRebateType == filterItemDto.RebateValue) &&
-       //   (string.IsNullOrEmpty(filterItemDto.RebateValue) || c.BRebateType == filterItemDto.RebateValue)
-       //);
+                                      SPhone = s.Phone.ToString(),
+                                      SLob = s.Lob,
+                                      SSublob = s.SubLob,
+                                      SIMEI = s.Imei.ToString(),
+                                      SOrderNumber = s.OrderNumber.ToString(),
+                                      SAmount = s.Amount,
+                                      SComment = s.Comment.ToString(),
+                                      STransactionDate = s.TransactionDate.ToString(),
+                                      SCustomerName = s.CustomerName.ToString(),
+                                      SRebateType = b.RebateType.ToString(),
+                                      SReconciled = b.Reconciled,
+                                      SBrand = s.Brand,
+                                      SLocation = s.Location,
+
+                                      MatchStatus = (s.Reconciled == true && b.Reconciled == true) ? MatchStatus.Reconciled :
+                                      ((s.Amount == b.Amount && s.OrderNumber == b.OrderNumber &&
+                                      s.TransactionDate == b.TransactionDate && s.CustomerName == b.CustomerName && s.Imei == b.Imei && s.Phone == s.Phone) ? MatchStatus.Match : MatchStatus.Missmatch)
+                                  };
 
 
-        var listJoinByImei = queryJoinByImei.ToList();
+            var listJoinByImei = queryJoinByImei.ToList();
 
-        var bellStaplesCompres = listJoinByPhone.Concat(listJoinByImei).ToList();
+            var bellStaplesCompres = listJoinByPhone.Concat(listJoinByImei).ToList();
 
-        return bellStaplesCompres;
+            return bellStaplesCompres;
+        }
+        catch (Exception ex)
+        {
+            return null;
+
+        }
     }
 
     public async Task<List<BellSourceDto>> GetBellSourceNonCellPhoneFromLocalDb(FilterItemDto filterItemDto)
@@ -241,53 +247,59 @@ public class LocalDbRepository : ILocalDbRepository
 
     public async Task<List<CompareBellStapleNonCellPhone>> GetBellStapleCompareNonCellPhoneFromLocalDb(FilterItemDto filterItemDto)
     {
-        using var ctx = await _dbContextFactory.CreateDbContextAsync();
+        try
+        {
+            using var ctx = await _dbContextFactory.CreateDbContextAsync();
 
-        var query = from b in ctx.BellSources
-                    join s in ctx.StaplesSources on b.OrderNumber equals s.OrderNumber
-                    where s.SubLob != "Wireless" && b.SubLob != "Wireless"
-                    && s.SubLob == b.SubLob
-                    select new CompareBellStapleNonCellPhone
-                    {
-                        BOrderNumber = b.OrderNumber.ToString(),
-                        BAmount = b.Amount,
-                        BComment = b.Comment.ToString(),
-                        BTransactionDate = b.TransactionDate.ToString(),
-                        BCustomerName = b.CustomerName.ToString(),
-                        BRebateType = b.RebateType.ToString(),
-                        BReconciled = b.Reconciled,
-                        BLob = b.Lob,
-                        BSublob = b.SubLob,
+            var query = from b in ctx.BellSources
+                        join s in ctx.StaplesSources on b.OrderNumber equals s.OrderNumber
+                        where s.SubLob != "Wireless" && b.SubLob != "Wireless"
+                        && s.SubLob == b.SubLob &&
+                         (string.IsNullOrEmpty(filterItemDto.RebateValue) || s.RebateType == filterItemDto.RebateValue) &&
+                         (string.IsNullOrEmpty(filterItemDto.RebateValue) || b.RebateType == filterItemDto.RebateValue) &&
+                         (string.IsNullOrEmpty(filterItemDto.Lob) || s.Lob == filterItemDto.Lob) &&
+                         (string.IsNullOrEmpty(filterItemDto.Lob) || b.Lob == filterItemDto.Lob) &&
+                         (string.IsNullOrEmpty(filterItemDto.SubLob) || s.SubLob == filterItemDto.SubLob) &&
+                         (string.IsNullOrEmpty(filterItemDto.SubLob) || b.SubLob == filterItemDto.SubLob) &&
+                         (string.IsNullOrEmpty(filterItemDto.Location) || s.Location == filterItemDto.Location) &&
+                         (string.IsNullOrEmpty(filterItemDto.Brand) || s.Brand == filterItemDto.Brand)
+                        select new CompareBellStapleNonCellPhone
+                        {
+                            BOrderNumber = b.OrderNumber.ToString(),
+                            BAmount = b.Amount,
+                            BComment = b.Comment.ToString(),
+                            BTransactionDate = b.TransactionDate.ToString(),
+                            BCustomerName = b.CustomerName.ToString(),
+                            BRebateType = b.RebateType.ToString(),
+                            BReconciled = b.Reconciled,
+                            BLob = b.Lob,
+                            BSublob = b.SubLob,
 
-                        SOrderNumber = s.OrderNumber.ToString(),
-                        SAmount = s.Amount,
-                        SComment = s.Comment.ToString(),
-                        STransactionDate = s.TransactionDate.ToString(),
-                        SCustomerName = s.CustomerName.ToString(),
-                        SRebateType = s.RebateType.ToString(),
-                        SReconciled = s.Reconciled,
-                        SLob = s.Lob,
-                        SSublob = s.SubLob,
-                        SBrand = s.Brand,
-                        SLocation =s.Location,
+                            SOrderNumber = s.OrderNumber.ToString(),
+                            SAmount = s.Amount,
+                            SComment = s.Comment.ToString(),
+                            STransactionDate = s.TransactionDate.ToString(),
+                            SCustomerName = s.CustomerName.ToString(),
+                            SRebateType = s.RebateType.ToString(),
+                            SReconciled = s.Reconciled,
+                            SLob = s.Lob,
+                            SSublob = s.SubLob,
+                            SBrand = s.Brand,
+                            SLocation = s.Location,
 
-                        MatchStatus = (s.Reconciled == true && b.Reconciled == true) ? MatchStatus.Reconciled :
-                        ((s.Amount == b.Amount && s.OrderNumber == b.OrderNumber &&
-                        s.TransactionDate == b.TransactionDate && s.CustomerName == b.CustomerName && s.Imei == b.Imei && s.Phone == s.Phone) ? MatchStatus.Match : MatchStatus.Missmatch)
-                    };
-        // query = query.Where(c =>
-        //  (string.IsNullOrEmpty(filterItemDto.RebateValue) || c.SRebateType == filterItemDto.RebateValue) &&
-        //  (string.IsNullOrEmpty(filterItemDto.RebateValue) || c.BRebateType == filterItemDto.RebateValue) &&
-        //  (string.IsNullOrEmpty(filterItemDto.Lob) || c.SLob == filterItemDto.Lob) &&
-        //  (string.IsNullOrEmpty(filterItemDto.Lob) || c.BLob == filterItemDto.Lob) &&
-        //  (string.IsNullOrEmpty(filterItemDto.SubLob) || c.SSublob == filterItemDto.SubLob) &&
-        //  (string.IsNullOrEmpty(filterItemDto.SubLob) || c.BSublob == filterItemDto.SubLob) &&
-        //  (string.IsNullOrEmpty(filterItemDto.Location) || c.SLocation == filterItemDto.Location) &&
-        //  (string.IsNullOrEmpty(filterItemDto.Brand) || c.SBrand == filterItemDto.Brand)
-        //);
+                            MatchStatus = (s.Reconciled == true && b.Reconciled == true) ? MatchStatus.Reconciled :
+                            ((s.Amount == b.Amount && s.OrderNumber == b.OrderNumber &&
+                            s.TransactionDate == b.TransactionDate && s.CustomerName == b.CustomerName && s.Imei == b.Imei && s.Phone == s.Phone) ? MatchStatus.Match : MatchStatus.Missmatch)
+                        };
 
-        var bellStaplesCompres = query.ToList();
-        return bellStaplesCompres;
+            var bellStaplesCompres = query.ToList();
+            return bellStaplesCompres;
+        }
+        catch(Exception ex)
+        {
+            return null;
+
+        }
     }
 
     public async Task<bool> UpdateBellSource(BellSourceDto bellSourceDto)
