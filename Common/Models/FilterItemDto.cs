@@ -7,6 +7,6 @@ public class FilterItemDto
     public string? Brand { get; set; }
     public string? Location { get; set; }
     public string? RebateValue { get; set; }
-    public DateTime? TransactionDateFrom { get; set; }
-    public DateTime? TransactionDateTo { get; set; }
+    public DateOnly? TransactionDateFrom { get; set; }
+    public DateOnly? TransactionDateTo { get; set; }
 }

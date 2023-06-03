@@ -73,7 +73,9 @@ public class LocalDbRepository : ILocalDbRepository
             query = query.Where(c =>
                 (string.IsNullOrEmpty(filterItemDto.RebateValue) || c.RebateType == filterItemDto.RebateValue) &&
                 (string.IsNullOrEmpty(filterItemDto.Lob) || c.Lob == filterItemDto.Lob) &&
-                (string.IsNullOrEmpty(filterItemDto.SubLob) || c.Lob == filterItemDto.SubLob)
+                (string.IsNullOrEmpty(filterItemDto.SubLob) || c.Lob == filterItemDto.SubLob) &&
+                (!filterItemDto.TransactionDateFrom.HasValue || c.TransactionDate >= filterItemDto.TransactionDateFrom) &&
+                (!filterItemDto.TransactionDateTo.HasValue || c.TransactionDate <= filterItemDto.TransactionDateTo) 
             );
 
             List<BellSourceDto> bellSources = await query.ToListAsync();
@@ -95,7 +97,9 @@ public class LocalDbRepository : ILocalDbRepository
          (string.IsNullOrEmpty(filterItemDto.Lob) || c.Lob == filterItemDto.Lob) &&
          (string.IsNullOrEmpty(filterItemDto.SubLob) || c.SubLob == filterItemDto.SubLob) &&
          (string.IsNullOrEmpty(filterItemDto.Location) || c.Location == filterItemDto.Location) &&
-         (string.IsNullOrEmpty(filterItemDto.Brand) || c.Brand == filterItemDto.Brand)
+         (string.IsNullOrEmpty(filterItemDto.Brand) || c.Brand == filterItemDto.Brand) &&
+         (!filterItemDto.TransactionDateFrom.HasValue || c.TransactionDate >=  filterItemDto.TransactionDateFrom) &&
+         (!filterItemDto.TransactionDateTo.HasValue || c.TransactionDate <= filterItemDto.TransactionDateTo)
        );
 
         List<StaplesSourceDto> staplesSources = await query.ToListAsync();
@@ -118,10 +122,14 @@ public class LocalDbRepository : ILocalDbRepository
                                    (string.IsNullOrEmpty(filterItemDto.Lob) || b.Lob == filterItemDto.Lob) &&
                                    (string.IsNullOrEmpty(filterItemDto.SubLob) || s.SubLob == filterItemDto.SubLob) &&
                                    (string.IsNullOrEmpty(filterItemDto.SubLob) || b.SubLob == filterItemDto.SubLob) &&
-                                  (string.IsNullOrEmpty(filterItemDto.Location) || s.Location == filterItemDto.Location) &&
-                                  (string.IsNullOrEmpty(filterItemDto.Brand) || s.Brand == filterItemDto.Brand) &&
-                                  (string.IsNullOrEmpty(filterItemDto.RebateValue) || s.RebateType == filterItemDto.RebateValue) &&
-                                  (string.IsNullOrEmpty(filterItemDto.RebateValue) || b.RebateType == filterItemDto.RebateValue)
+                                   (string.IsNullOrEmpty(filterItemDto.Location) || s.Location == filterItemDto.Location) &&
+                                   (string.IsNullOrEmpty(filterItemDto.Brand) || s.Brand == filterItemDto.Brand) &&
+                                   (string.IsNullOrEmpty(filterItemDto.RebateValue) || s.RebateType == filterItemDto.RebateValue) &&
+                                   (string.IsNullOrEmpty(filterItemDto.RebateValue) || b.RebateType == filterItemDto.RebateValue) &&
+                                   (!filterItemDto.TransactionDateFrom.HasValue || s.TransactionDate >= filterItemDto.TransactionDateFrom) &&
+                                   (!filterItemDto.TransactionDateFrom.HasValue || b.TransactionDate >= filterItemDto.TransactionDateFrom) &&
+                                   (!filterItemDto.TransactionDateTo.HasValue || s.TransactionDate <= filterItemDto.TransactionDateTo) &&
+                                   (!filterItemDto.TransactionDateTo.HasValue || b.TransactionDate <= filterItemDto.TransactionDateTo)
                                    select new CompareBellStapleCellPhone
                                    {
                                        BPhone = b.Phone.ToString(),
@@ -131,7 +139,7 @@ public class LocalDbRepository : ILocalDbRepository
                                        BOrderNumber = b.OrderNumber.ToString(),
                                        BAmount = b.Amount,
                                        BComment = b.Comment.ToString(),
-                                       BTransactionDate = b.TransactionDate.ToString(),
+                                       BTransactionDate = b.TransactionDate,
                                        BCustomerName = b.CustomerName.ToString(),
                                        BRebateType = b.RebateType.ToString(),
                                        BReconciled = b.Reconciled,
@@ -143,7 +151,7 @@ public class LocalDbRepository : ILocalDbRepository
                                        SOrderNumber = s.OrderNumber.ToString(),
                                        SAmount = s.Amount,
                                        SComment = s.Comment.ToString(),
-                                       STransactionDate = s.TransactionDate.ToString(),
+                                       STransactionDate = s.TransactionDate,
                                        SCustomerName = s.CustomerName.ToString(),
                                        SRebateType = b.RebateType.ToString(),
                                        SReconciled = b.Reconciled,
@@ -160,14 +168,18 @@ public class LocalDbRepository : ILocalDbRepository
                                   && s.Phone != b.Phone
                                   && s.RebateType == b.RebateType &&
                                   (string.IsNullOrEmpty(filterItemDto.RebateValue) || s.RebateType == filterItemDto.RebateValue) &&
-                                   (string.IsNullOrEmpty(filterItemDto.Lob) || s.Lob == filterItemDto.Lob) &&
-                                   (string.IsNullOrEmpty(filterItemDto.Lob) || b.Lob == filterItemDto.Lob) &&
-                                   (string.IsNullOrEmpty(filterItemDto.SubLob) || s.SubLob == filterItemDto.SubLob) &&
-                                   (string.IsNullOrEmpty(filterItemDto.SubLob) || b.SubLob == filterItemDto.SubLob) &&
+                                  (string.IsNullOrEmpty(filterItemDto.Lob) || s.Lob == filterItemDto.Lob) &&
+                                  (string.IsNullOrEmpty(filterItemDto.Lob) || b.Lob == filterItemDto.Lob) &&
+                                  (string.IsNullOrEmpty(filterItemDto.SubLob) || s.SubLob == filterItemDto.SubLob) &&
+                                  (string.IsNullOrEmpty(filterItemDto.SubLob) || b.SubLob == filterItemDto.SubLob) &&
                                   (string.IsNullOrEmpty(filterItemDto.Location) || s.Location == filterItemDto.Location) &&
                                   (string.IsNullOrEmpty(filterItemDto.Brand) || s.Brand == filterItemDto.Brand) &&
                                   (string.IsNullOrEmpty(filterItemDto.RebateValue) || s.RebateType == filterItemDto.RebateValue) &&
-                                  (string.IsNullOrEmpty(filterItemDto.RebateValue) || b.RebateType == filterItemDto.RebateValue)
+                                  (string.IsNullOrEmpty(filterItemDto.RebateValue) || b.RebateType == filterItemDto.RebateValue) &&
+                                  (!filterItemDto.TransactionDateFrom.HasValue || s.TransactionDate >= filterItemDto.TransactionDateFrom) &&
+                                  (!filterItemDto.TransactionDateFrom.HasValue || b.TransactionDate >= filterItemDto.TransactionDateFrom) &&
+                                  (!filterItemDto.TransactionDateTo.HasValue || s.TransactionDate <= filterItemDto.TransactionDateTo) &&
+                                  (!filterItemDto.TransactionDateTo.HasValue || b.TransactionDate <= filterItemDto.TransactionDateTo)
                                   select new CompareBellStapleCellPhone
                                   {
                                       BPhone = b.Phone.ToString(),
@@ -177,7 +189,7 @@ public class LocalDbRepository : ILocalDbRepository
                                       BOrderNumber = b.OrderNumber.ToString(),
                                       BAmount = b.Amount,
                                       BComment = b.Comment.ToString(),
-                                      BTransactionDate = b.TransactionDate.ToString(),
+                                      BTransactionDate = b.TransactionDate,
                                       BCustomerName = b.CustomerName.ToString(),
                                       BRebateType = b.RebateType.ToString(),
                                       BReconciled = b.Reconciled,
@@ -189,7 +201,7 @@ public class LocalDbRepository : ILocalDbRepository
                                       SOrderNumber = s.OrderNumber.ToString(),
                                       SAmount = s.Amount,
                                       SComment = s.Comment.ToString(),
-                                      STransactionDate = s.TransactionDate.ToString(),
+                                      STransactionDate = s.TransactionDate,
                                       SCustomerName = s.CustomerName.ToString(),
                                       SRebateType = b.RebateType.ToString(),
                                       SReconciled = b.Reconciled,
@@ -222,7 +234,9 @@ public class LocalDbRepository : ILocalDbRepository
         query = query.Where(c =>
           (string.IsNullOrEmpty(filterItemDto.RebateValue) || c.RebateType == filterItemDto.RebateValue) &&
           (string.IsNullOrEmpty(filterItemDto.Lob) || c.Lob == filterItemDto.Lob) &&
-          (string.IsNullOrEmpty(filterItemDto.SubLob) || c.SubLob == filterItemDto.SubLob)
+          (string.IsNullOrEmpty(filterItemDto.SubLob) || c.SubLob == filterItemDto.SubLob) &&
+          (!filterItemDto.TransactionDateFrom.HasValue || c.TransactionDate >= filterItemDto.TransactionDateFrom) &&
+         (!filterItemDto.TransactionDateTo.HasValue || c.TransactionDate <= filterItemDto.TransactionDateTo)
       );
 
         List<BellSourceDto> bellSources = await query.ToListAsync();
@@ -238,7 +252,9 @@ public class LocalDbRepository : ILocalDbRepository
           (string.IsNullOrEmpty(filterItemDto.Lob) || c.Lob == filterItemDto.Lob) &&
           (string.IsNullOrEmpty(filterItemDto.SubLob) || c.SubLob == filterItemDto.SubLob) &&
           (string.IsNullOrEmpty(filterItemDto.Location) || c.Location == filterItemDto.Location) &&
-          (string.IsNullOrEmpty(filterItemDto.Brand) || c.Brand == filterItemDto.Brand)
+          (string.IsNullOrEmpty(filterItemDto.Brand) || c.Brand == filterItemDto.Brand) &&
+          (!filterItemDto.TransactionDateFrom.HasValue || c.TransactionDate >= filterItemDto.TransactionDateFrom) &&
+          (!filterItemDto.TransactionDateTo.HasValue || c.TransactionDate <= filterItemDto.TransactionDateTo)
         );
 
         List<StaplesSourceDto> staplesSources = await query.ToListAsync();
@@ -262,13 +278,17 @@ public class LocalDbRepository : ILocalDbRepository
                          (string.IsNullOrEmpty(filterItemDto.SubLob) || s.SubLob == filterItemDto.SubLob) &&
                          (string.IsNullOrEmpty(filterItemDto.SubLob) || b.SubLob == filterItemDto.SubLob) &&
                          (string.IsNullOrEmpty(filterItemDto.Location) || s.Location == filterItemDto.Location) &&
-                         (string.IsNullOrEmpty(filterItemDto.Brand) || s.Brand == filterItemDto.Brand)
+                         (string.IsNullOrEmpty(filterItemDto.Brand) || s.Brand == filterItemDto.Brand) &&
+                         (!filterItemDto.TransactionDateFrom.HasValue || s.TransactionDate >= filterItemDto.TransactionDateFrom) &&
+                         (!filterItemDto.TransactionDateFrom.HasValue || b.TransactionDate >= filterItemDto.TransactionDateFrom) &&
+                         (!filterItemDto.TransactionDateTo.HasValue || s.TransactionDate <= filterItemDto.TransactionDateTo) &&
+                         (!filterItemDto.TransactionDateTo.HasValue || b.TransactionDate <= filterItemDto.TransactionDateTo)
                         select new CompareBellStapleNonCellPhone
                         {
                             BOrderNumber = b.OrderNumber.ToString(),
                             BAmount = b.Amount,
                             BComment = b.Comment.ToString(),
-                            BTransactionDate = b.TransactionDate.ToString(),
+                            BTransactionDate = b.TransactionDate,
                             BCustomerName = b.CustomerName.ToString(),
                             BRebateType = b.RebateType.ToString(),
                             BReconciled = b.Reconciled,
@@ -278,7 +298,7 @@ public class LocalDbRepository : ILocalDbRepository
                             SOrderNumber = s.OrderNumber.ToString(),
                             SAmount = s.Amount,
                             SComment = s.Comment.ToString(),
-                            STransactionDate = s.TransactionDate.ToString(),
+                            STransactionDate = s.TransactionDate,
                             SCustomerName = s.CustomerName.ToString(),
                             SRebateType = s.RebateType.ToString(),
                             SReconciled = s.Reconciled,

@@ -354,7 +354,7 @@ namespace Bell.Reconciliation.Web.Server.Services
             // bellSource.CommissionDetails = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 8);
             bellSource.CustomerName = GetSampleName(db, rand);
             bellSource.OrderNumber = rand.NextInt64(11234567890, 99999999999);
-            bellSource.TransactionDate = DateTime.Now.AddDays(new Random().Next(-1000, 0)).ToShortDateString();
+            bellSource.TransactionDate = DateOnly.FromDateTime(DateTime.Now.AddDays(new Random().Next(-1000, 0)));
             bellSource.Reconciled = "False";
 
             if (wirelessLob == false)
@@ -400,7 +400,7 @@ namespace Bell.Reconciliation.Web.Server.Services
             staplesSource.Rec = "FALSE";
             staplesSource.SalesPerson = salesPersons[rand.Next(0, salesPersons.Count - 1)];
             staplesSource.TaxCode = rand.NextInt64(11234567890, 99999999999);
-            staplesSource.TransactionDate = DateTime.Now.AddDays(rand.Next(-1000, 0)).ToShortDateString();
+            staplesSource.TransactionDate = DateOnly.FromDateTime(DateTime.Now.AddDays(rand.Next(-1000, 0)));
             staplesSource.CustomerName = GetSampleName(db, rand);
             staplesSource.Amount = rand.Next(-500, 1500);
             staplesSource.OrderNumber = rand.NextInt64(11234567890, 99999999999);

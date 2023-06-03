@@ -83,6 +83,7 @@ public class Program
         filterItems.LoBs.Add(loBWireline);
         filterItems.Brands = builder.Configuration.GetSection("FilterItems:Brand").Get<List<string>>();
         filterItems.RebateTypes = builder.Configuration.GetSection("FilterItems:RebateType").Get<List<string>>();
+        filterItems.Locations = builder.Configuration.GetSection("FilterItems:Location").Get<List<string>>();
 
         return filterItems;
     }

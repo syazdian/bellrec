@@ -42,8 +42,8 @@
 
 @code {
     Variant variantStyle = Variant.Flat;
-    DateTime? StartDate = DateTime.Now.AddMonths(-1);
-    DateTime? EndDate = DateTime.Now;
+    DateTime? StartDate ;//= DateTime.Now.AddMonths(-1);
+    DateTime? EndDate ;//= DateTime.Now;
 
     FilterItemDto filterItemDto = new();
     string lobValue  ;
@@ -89,8 +89,8 @@
         filterItemDto.RebateValue = rebateValue;
         filterItemDto.Brand = brandValue;
         filterItemDto.Location = locationValue;
-        filterItemDto.TransactionDateFrom = StartDate;
-        filterItemDto.TransactionDateTo = EndDate;
+        filterItemDto.TransactionDateFrom = StartDate.HasValue ? DateOnly.FromDateTime(StartDate.Value) : null;
+        filterItemDto.TransactionDateTo = EndDate.HasValue ? DateOnly.FromDateTime(EndDate.Value) : null;
 
         await FilterChanged.InvokeAsync(filterItemDto);
 
