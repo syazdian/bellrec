@@ -1,6 +1,7 @@
 ﻿using Bell.Reconciliation.Common.Models;
 using Bell.Reconciliation.Common.Models.Enums;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 
 namespace Bell.Reconciliation.Frontend.Web.Services.Database;
@@ -202,6 +203,96 @@ public class LocalDbRepository : ILocalDbRepository
         var bellStaplesCompres = query.ToList();
 
         return bellStaplesCompres;
+    }
+
+    public async Task<bool> UpdateBellSource(BellSourceDto bellSourceDto)
+    {
+        try
+        {
+            using var ctx = await _dbContextFactory.CreateDbContextAsync();
+
+            ctx.Update(bellSourceDto);
+            ctx.SaveChanges();
+
+            return true;
+        }
+        catch (Exception)
+        {
+            return false;
+        }
+    }
+
+    public async Task<bool> UpdateBellSource(long Id, string Comment)
+    {
+        try
+        {
+            using var ctx = await _dbContextFactory.CreateDbContextAsync();
+
+            var bell = ctx.BellSources.Single(c => c.Id == Id);
+            bell.Comment = Comment;
+            ctx.Update(bell);
+            ctx.SaveChanges();
+
+            return true;
+        }
+        catch (Exception)
+        {
+            return false;
+        }
+    }
+
+    public async Task<bool> UpdateStapleSource(StaplesSourceDto staplesSourceDto)
+    {
+        try
+        {
+            using var ctx = await _dbContextFactory.CreateDbContextAsync();
+
+            ctx.Update(staplesSourceDto);
+            ctx.SaveChanges();
+
+            return true;
+        }
+        catch (Exception)
+        {
+            return false;
+        }
+    }
+
+    public async Task<bool> UpdateStapleSource(long Id, string Comment)
+    {
+        try
+        {
+            using var ctx = await _dbContextFactory.CreateDbContextAsync();
+
+            var staple = ctx.StaplesSources.Single(c => c.Id == Id);
+            staple.Comment = Comment;
+            ctx.Update(staple);
+            ctx.SaveChanges();
+
+            return true;
+        }
+        catch (Exception)
+        {
+            return false;
+        }
+    }
+
+    public async Task<EntityEntry<BellSourceDto>> GetBellSourceEntry(BellSourceDto record)
+    {
+        using var ctx = await _dbContextFactory.CreateDbContextAsync();
+
+        var entityEntry = ctx.Entry(record);
+
+        return entityEntry;
+    }
+
+    public async Task<EntityEntry<StaplesSourceDto>> GetStapleSourceEntry(StaplesSourceDto record)
+    {
+        using var ctx = await _dbContextFactory.CreateDbContextAsync();
+
+        var entityEntry = ctx.Entry(record);
+
+        return entityEntry;
     }
 
     public async Task<bool> LocalDbExist()

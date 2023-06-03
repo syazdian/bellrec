@@ -3,6 +3,8 @@ using Bell.Reconciliation.Common.Models.Enums;
 using Bell.Reconciliation.Frontend.Desktop.Data;
 using Bell.Reconciliation.Frontend.Shared.ServiceInterfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Internal;
 using System;
 
 namespace Bell.Reconciliation.Frontend.Desktop.Services.Database;
@@ -159,6 +161,84 @@ public class LocalDbRepository : ILocalDbRepository
         var bellStaplesCompres = query.ToList();
 
         return bellStaplesCompres;
+    }
+
+    public async Task<bool> UpdateBellSource(BellSourceDto bellSourceDto)
+    {
+        try
+        {
+            ctx.Update(bellSourceDto);
+            ctx.SaveChanges();
+
+            return true;
+        }
+        catch (Exception)
+        {
+            return false;
+        }
+    }
+
+    public async Task<bool> UpdateBellSource(long Id, string Comment)
+    {
+        try
+        {
+            var bell = ctx.BellSources.Single(c => c.Id == Id);
+            bell.Comment = Comment;
+            ctx.Update(bell);
+            ctx.SaveChanges();
+
+            return true;
+        }
+        catch (Exception)
+        {
+            return false;
+        }
+    }
+
+    public async Task<bool> UpdateStapleSource(StaplesSourceDto staplesSourceDto)
+    {
+        try
+        {
+            ctx.Update(staplesSourceDto);
+            ctx.SaveChanges();
+
+            return true;
+        }
+        catch (Exception)
+        {
+            return false;
+        }
+    }
+
+    public async Task<bool> UpdateStapleSource(long Id, string Comment)
+    {
+        try
+        {
+            var staple = ctx.StaplesSources.Single(c => c.Id == Id);
+            staple.Comment = Comment;
+            ctx.Update(staple);
+            ctx.SaveChanges();
+
+            return true;
+        }
+        catch (Exception)
+        {
+            return false;
+        }
+    }
+
+    public async Task<EntityEntry<BellSourceDto>> GetBellSourceEntry(BellSourceDto record)
+    {
+        var entityEntry = ctx.Entry(record);
+
+        return entityEntry;
+    }
+
+    public async Task<EntityEntry<StaplesSourceDto>> GetStapleSourceEntry(StaplesSourceDto record)
+    {
+        var entityEntry = ctx.Entry(record);
+
+        return entityEntry;
     }
 
     public async Task<bool> LocalDbExist()
