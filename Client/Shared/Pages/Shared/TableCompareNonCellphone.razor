@@ -5,7 +5,7 @@
 @using Microsoft.EntityFrameworkCore;
 @inject ISyncData SyncData
 @inject ILocalDbRepository Localdb
-@*@inject DialogService dialogService*@
+@inject DialogService dialogService
 
 
 <h2>
@@ -190,7 +190,7 @@
     {
         if (args.Column.Title == "S.Order" || args.Column.Title == "B.Order")
         {
-            //dialogService.Open<DialogComparePage>(args.Column.Title + " CLicked");
+            dialogService.Open<DialogComparePage>(args.Column.Title + " CLicked");
         }
     }
 
