@@ -35,6 +35,7 @@ public class StaplesSourceDto
     public string? Location { get; set; }
 
     public string? Brand { get; set; }
+    public string? Lob { get; set; }
 
     public string? SubLob { get; set; }
     public bool Reconciled { get; }

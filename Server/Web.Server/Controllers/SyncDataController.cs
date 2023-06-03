@@ -18,6 +18,12 @@ public class SyncDataController : Controller
         _dbGenerator = dbGenerator;
     }
 
+    [HttpGet("ReturnHello")]
+    public async Task<IActionResult> ReturnHello()
+    {
+        return Ok("HELLO");
+    }
+
     [HttpGet("FetchCountServerDatabase")]
     public async Task<IActionResult> FetchCountServerDatabase()
     {
