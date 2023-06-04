@@ -81,8 +81,10 @@
                         <EditTemplate Context="record">
                             @*<EditComponent></EditComponent>*@
                             <RadzenTextArea @bind-Value="record.SComment" Style="width:100%; display: block" Name="SComment" />
-                            <RadzenCheckBox TValue="bool" Name="CheckBox2" />
-                            <RadzenLabel Text="Copy to Bell" Component="CheckBox2" Style="margin-left: 8px; vertical-align: middle;" />
+                            <RadzenButton Icon="content_copy" Text="copy to bell" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Medium" Click="@(args => CopyToBellButtonClicked(record))" @onclick:stopPropagation="true">
+                            </RadzenButton>
+                            @*<RadzenCheckBox TValue="bool" Name="CheckBox2" />
+                            <RadzenLabel Text="Copy to Bell" Component="CheckBox2" Style="margin-left: 8px; vertical-align: middle;" />*@
                         </EditTemplate>
                     </RadzenDataGridColumn>
                     <RadzenDataGridColumn TItem="CompareBellStapleNonCellPhone" Property="STransactionDate" Title="S.TransactionDate " />
@@ -184,6 +186,11 @@
 
         StateHasChanged();
 
+    }
+
+    void CopyToBellButtonClicked(CompareBellStapleNonCellPhone record)
+    {
+        record.BComment = record.SComment;
     }
 
     void OnCellDoubleClick(DataGridCellMouseEventArgs<CompareBellStapleNonCellPhone> args)
