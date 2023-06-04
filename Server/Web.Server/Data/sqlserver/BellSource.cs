@@ -17,7 +17,7 @@ public partial class BellSource
 
     public long? Imei { get; set; }
 
-    public DateOnly? TransactionDate { get; set; }
+    public DateTime? TransactionDate { get; set; }
 
     public string? CustomerName { get; set; }
 

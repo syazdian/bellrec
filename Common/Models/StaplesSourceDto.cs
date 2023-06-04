@@ -20,7 +20,7 @@ public class StaplesSourceDto
 
     public string? Imei { get; set; }
 
-    public DateOnly? TransactionDate { get; set; }
+    public DateTime? TransactionDate { get; set; }
 
     public string? SalesPerson { get; set; }
 
@@ -40,6 +40,6 @@ public class StaplesSourceDto
     public string? SubLob { get; set; }
     public bool Reconciled { get; }
     public string? ReconciledBy { get; set; }
-    public DateOnly? ReconciledDate { get; }
+    public DateTime? ReconciledDate { get; }
     public MatchStatus MatchStatus { get; set; }
 }

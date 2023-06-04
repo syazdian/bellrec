@@ -29,7 +29,7 @@ public class StaplesSeeder
             blsc.Product = Convert.ToString(values[6]);
             blsc.Rec = Convert.ToString(values[7]);
             blsc.Imei = Convert.ToString(values[8]);
-            blsc.TransactionDate = DateOnly.FromDateTime(Convert.ToDateTime(values[9]));
+            blsc.TransactionDate = Convert.ToDateTime(values[9]);
             blsc.SalesPerson = Convert.ToString(values[10]);
             blsc.CustomerName = Convert.ToString(values[11]);
             blsc.TaxCode = Convert.ToInt64(values[12]);
