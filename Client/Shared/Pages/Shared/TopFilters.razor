@@ -89,8 +89,8 @@
         filterItemDto.RebateValue = rebateValue;
         filterItemDto.Brand = brandValue;
         filterItemDto.Location = locationValue;
-        filterItemDto.TransactionDateFrom = StartDate.HasValue ? DateOnly.FromDateTime(StartDate.Value) : null;
-        filterItemDto.TransactionDateTo = EndDate.HasValue ? DateOnly.FromDateTime(EndDate.Value) : null;
+        filterItemDto.TransactionDateFrom = StartDate;
+        filterItemDto.TransactionDateTo = EndDate;
 
         await FilterChanged.InvokeAsync(filterItemDto);
 

@@ -9,7 +9,7 @@ public class BellSourceDto
     public string? Imei { get; set; } = string.Empty;
     public long? OrderNumber { get; set; }
     public long? Phone { get; set; }
-    public DateOnly? TransactionDate { get; set; }
+    public DateTime? TransactionDate { get; set; }
     public string? Lob { get; set; }
 
     public string? SubLob { get; set; }
