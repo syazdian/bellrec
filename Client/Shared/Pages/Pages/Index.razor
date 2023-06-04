@@ -11,14 +11,13 @@
 
 @if (!uiDbExist)
 {
-    @if (!localDbExist)
+    @if (localDbExist || fetchButtonClicked)
     {
-
-        <RadzenButton ButtonStyle="ButtonStyle.Dark" Size="ButtonSize.Large" Text="Fetch Data from Server" Click="FetchData"></RadzenButton>
+        <LocalDbLoader message="Loading Data ...."></LocalDbLoader>
     }
     else
     {
-        <LocalDbLoader message="Loading Data ...."></LocalDbLoader>
+        <RadzenButton ButtonStyle="ButtonStyle.Dark" Size="ButtonSize.Large" Text="Fetch Data from Server" Click="FetchData"></RadzenButton>
     }
 
 }
@@ -63,6 +62,7 @@ else
     string WirelessSubLob;
     bool localDbExist = true;
     bool uiDbExist = false;
+    bool fetchButtonClicked = false;
     bool showloader = false;
     protected override async Task OnInitializedAsync()
     {
@@ -103,6 +103,7 @@ else
     }
     private async Task FetchData()
     {
+        fetchButtonClicked = true;
         showloader = true;
         localDbExist = false;
         await SyncData.FetchDataFromServerDb();
