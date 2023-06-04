@@ -77,8 +77,10 @@
                         <EditTemplate Context="record">
                             <div class=" rz-text-align-left">
                                 <RadzenTextArea @bind-Value="record.SComment" Style="width:100%; display: block" Name="SComment" />
-                                <RadzenCheckBox TValue="bool" Value=@copyToBell Name="CheckBox2" />
-                                <RadzenLabel Text="Copy to Bell" Component="CheckBox2" Style="margin-left: 8px; vertical-align: middle;" />
+                                <RadzenButton Icon="content_copy" Text="copy to bell" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Medium" Click="@(args => CopyToBellButtonClicked(record))" @onclick:stopPropagation="true">
+                                </RadzenButton>
+                                @*<RadzenCheckBox TValue="bool" Value=@copyToBell Name="CheckBox2" onclick="gfgd" />
+                                <RadzenLabel Text="Copy to Bell" Component="CheckBox2" Style="margin-left: 8px; vertical-align: middle;" />*@
                             </div>
                             @*                            <RadzenTextArea @bind-Value="record.SComment" Style="width:100%; display: block" Name="SComment" />
                             *@
@@ -182,7 +184,10 @@
 
     }
 
-
+    void CopyToBellButtonClicked(CompareBellStapleCellPhone record)
+    {
+        record.BComment = record.SComment;
+    }
 
     void OnCellDoubleClick(DataGridCellMouseEventArgs<CompareBellStapleCellPhone> args)
     {
