@@ -52,8 +52,8 @@ public partial class BellRecContext : DbContext
             entity.Property(e => e.ReconciledBy).HasColumnType("text");
             entity.Property(e => e.ReconciledDate).HasColumnType("text");
             entity.Property(e => e.SubLob).HasColumnType("text");
-            entity.Property(e => e.TransactionDate).HasColumnType("text");
-        });
+            entity.Property(e => e.TransactionDate).HasColumnType("date");
+        }); 
 
         modelBuilder.Entity<SampleName>(entity =>
         {
@@ -132,7 +132,7 @@ public partial class BellRecContext : DbContext
             entity.Property(e => e.ReconciledDate).HasColumnType("text");
             entity.Property(e => e.SalesPerson).HasColumnType("text");
             entity.Property(e => e.SubLob).HasColumnType("text");
-            entity.Property(e => e.TransactionDate).HasColumnType("text");
+            entity.Property(e => e.TransactionDate).HasColumnType("date");
         });
 
         // OnModelCreatingPartial(modelBuilder);

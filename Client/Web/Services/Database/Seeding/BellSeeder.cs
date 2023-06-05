@@ -42,7 +42,7 @@ public class BellSeeder
             blsc.Comment = Convert.ToString(values[3]);
             blsc.OrderNumber = Convert.ToInt64(values[4]);
             blsc.Imei = Convert.ToString(values[5]);
-            blsc.TransactionDate = Convert.ToString(values[6]);
+            blsc.TransactionDate = Convert.ToDateTime(values[6]);
             blsc.CustomerName = Convert.ToString(values[7]);
             blsc.Lob = Convert.ToString(values[8]);
             blsc.SubLob = Convert.ToString(values[9]);

@@ -26,13 +26,13 @@ public class Program
                    .AddJsonFile($"appsettings.json")
                    .Build();
 
-        var constring = builder.Configuration.GetConnectionString("Sqlite");
-        builder.Services.AddDbContext<Web.Server.Data.sqlite.BellRecContext>(options =>
-                options.UseSqlite(constring));
+        //var constring = builder.Configuration.GetConnectionString("Sqlite");
+        //builder.Services.AddDbContext<Web.Server.Data.sqlite.BellRecContext>(options =>
+        //        options.UseSqlite(constring));
 
-        //var constring = builder.Configuration.GetConnectionString("SqlServer");
-        //builder.Services.AddDbContext<Web.Server.Data.Sqlserver.BellRecContext>(options =>
-        //    options.UseSqlServer(constring));
+        var constring = builder.Configuration.GetConnectionString("SqlServer");
+        builder.Services.AddDbContext<Web.Server.Data.Sqlserver.BellRecContext>(options =>
+            options.UseSqlServer(constring));
 
         builder.Configuration.AddConfiguration(config);
         builder.Services.AddTransient<DatabaseGenerator>();
@@ -83,6 +83,7 @@ public class Program
         filterItems.LoBs.Add(loBWireline);
         filterItems.Brands = builder.Configuration.GetSection("FilterItems:Brand").Get<List<string>>();
         filterItems.RebateTypes = builder.Configuration.GetSection("FilterItems:RebateType").Get<List<string>>();
+        filterItems.Locations = builder.Configuration.GetSection("FilterItems:Location").Get<List<string>>();
 
         return filterItems;
     }

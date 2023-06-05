@@ -4,27 +4,35 @@
 @inject ILocalDbRepository _localdb
 @inject ISyncData SyncData
 
-@*<RadzenDialog></RadzenDialog>*@
+<RadzenDialog></RadzenDialog>
 
 
 <PageTitle>Bell Compare Page</PageTitle>
 
-@if (!localDbExist && !uiDbExist)
+@if (!uiDbExist)
 {
-    <RadzenButton ButtonStyle="ButtonStyle.Dark" Text="Fetch Data from Server" Click="FetchData"></RadzenButton>
-}
-@if (localDbExist && !uiDbExist)
-{
-   
-    <LocalDbLoader message="Loading local Data ...."></LocalDbLoader>
+    @if (localDbExist || fetchButtonClicked)
+    {
+        <LocalDbLoader message="Loading Data ...."></LocalDbLoader>
+    }
+    else
+    {
+        <RadzenButton ButtonStyle="ButtonStyle.Dark" Size="ButtonSize.Large" Text="Fetch Data from Server" Click="FetchData"></RadzenButton>
+    }
 
 }
-
-@if (localDbExist && uiDbExist)
+@*if ()
+{
+    if (showloader)
+    {
+        <LocalDbLoader message="Loading Data from localDb to Ui"></LocalDbLoader>
+    }
+}*@
+else
 {
 
     <div class="container marketing">
-        <TopFilters SubLobFilterChanged="(e)=>SwitchBetweenSubLob(e)"></TopFilters>
+        <TopFilters FilterChanged="(e)=>ApplyFilters(e)"></TopFilters>
 
         @if (WirelessSubLob == "Wireless")
         {
@@ -50,22 +58,27 @@
     List<StaplesSourceDto> staplesSourcesNonCellPhone = new();
     List<CompareBellStapleNonCellPhone> compreBellStapleNonCellPhone = new();
 
+    FilterItemDto filterItemDto = new();
     string WirelessSubLob;
     bool localDbExist = true;
     bool uiDbExist = false;
+    bool fetchButtonClicked = false;
     bool showloader = false;
     protected override async Task OnInitializedAsync()
     {
+
         if (await CheckDbExist())
         {
-            await LoadDatabaseInUi();
+            await LoadDatabaseInUi(filterItemDto);
         }
       
         StateHasChanged();
     }
-    public async void SwitchBetweenSubLob(string subLob)
+    public async void ApplyFilters(FilterItemDto _filterItemDto)
     {
-        WirelessSubLob = subLob;
+        filterItemDto = _filterItemDto;
+        WirelessSubLob = filterItemDto.SubLob;
+        await LoadDatabaseInUi(filterItemDto);
     }
 
     public async Task<bool> CheckDbExist()
@@ -87,25 +100,26 @@
     }
     private async Task FetchData()
     {
+        fetchButtonClicked = true;
         showloader = true;
         localDbExist = false;
         await SyncData.FetchDataFromServerDb();
         localDbExist = true;
-        await LoadDatabaseInUi();
+        await LoadDatabaseInUi(filterItemDto);
 
         StateHasChanged();
     }
-    private async Task LoadDatabaseInUi()
+    private async Task LoadDatabaseInUi(FilterItemDto filterItemDto)
     {
         showloader = true;
         uiDbExist = false;
-        bellSourcesCellPhone = await _localdb.GetBellSourceCellPhoneFromLocalDb();
-        staplesSourcesCellPhone = await _localdb.GetStapleSourceCellPhoneFromLocalDb();
-        compareBellStapleCellPhone = await _localdb.GetBellStapleCompareCellPhoneFromLocalDb();
+        bellSourcesCellPhone = await _localdb.GetBellSourceCellPhoneFromLocalDb(filterItemDto);
+        staplesSourcesCellPhone = await _localdb.GetStapleSourceCellPhoneFromLocalDb(filterItemDto);
+        compareBellStapleCellPhone = await _localdb.GetBellStapleCompareCellPhoneFromLocalDb(filterItemDto);
 
-        bellSourcesNonCellPhone = await _localdb.GetBellSourceNonCellPhoneFromLocalDb();
-        staplesSourcesNonCellPhone = await _localdb.GetStapleSourceNonCellPhoneFromLocalDb();
-        compreBellStapleNonCellPhone = await _localdb.GetBellStapleCompareNonCellPhoneFromLocalDb();
+        bellSourcesNonCellPhone = await _localdb.GetBellSourceNonCellPhoneFromLocalDb(filterItemDto);
+        staplesSourcesNonCellPhone = await _localdb.GetStapleSourceNonCellPhoneFromLocalDb(filterItemDto);
+        compreBellStapleNonCellPhone = await _localdb.GetBellStapleCompareNonCellPhoneFromLocalDb(filterItemDto);
 
         uiDbExist = true;
         showloader = false;

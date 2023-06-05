@@ -28,9 +28,9 @@
        
            
         <RadzenLabel Text="Transaction Date" />
-        <RadzenDatePicker @bind-Value=@StartDate ShowTime="true" ShowSeconds="true" HoursStep="1.5" MinutesStep="5" SecondsStep="10" DateFormat="MM/dd/yyyy HH:mm" />
+        <RadzenDatePicker @bind-Value=@StartDate  DateFormat="MM/dd/yyyy" />
         to
-        <RadzenDatePicker @bind-Value=@EndDate ShowTime="true" ShowSeconds="true" HoursStep="1.5" MinutesStep="5" SecondsStep="10" DateFormat="MM/dd/yyyy HH:mm" />
+        <RadzenDatePicker @bind-Value=@EndDate  DateFormat="MM/dd/yyyy" />
     </RadzenStack>
   
     <div class="rz-text-align-right">
@@ -42,8 +42,10 @@
 
 @code {
     Variant variantStyle = Variant.Flat;
-    DateTime? StartDate = DateTime.Now.AddMonths(-1);
-    DateTime? EndDate = DateTime.Now;
+    DateTime? StartDate ;//= DateTime.Now.AddMonths(-1);
+    DateTime? EndDate ;//= DateTime.Now;
+
+    FilterItemDto filterItemDto = new();
     string lobValue  ;
     List<string> loBs = new();
     string subLobValue ;
@@ -54,10 +56,11 @@
     List<string> rebateType = new();
     string locationValue = string.Empty;
     List<string> locations = new();
+
     FilterItems filterItems = new();
 
     [Parameter]
-    public EventCallback<string> SubLobFilterChanged { get; set; }
+    public EventCallback<FilterItemDto> FilterChanged { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -67,6 +70,8 @@
         brands = filterItems.Brands;
         rebateType = filterItems.RebateTypes;
         locations = filterItems.Locations;
+
+        ApplyFilter();
         StateHasChanged();
     }
 
@@ -77,15 +82,25 @@
         StateHasChanged();
     }
 
-    protected async void ApplyFilter(MouseEventArgs e)
+    protected async void ApplyFilter()
     {
-        await SubLobFilterChanged.InvokeAsync(subLobValue);
+        filterItemDto.Lob = lobValue;
+        filterItemDto.SubLob = subLobValue;
+        filterItemDto.RebateValue = rebateValue;
+        filterItemDto.Brand = brandValue;
+        filterItemDto.Location = locationValue;
+        filterItemDto.TransactionDateFrom = StartDate;
+        filterItemDto.TransactionDateTo = EndDate;
+
+        await FilterChanged.InvokeAsync(filterItemDto);
 
     }
 
     protected void ResetFilter()
     {
         lobValue = subLobValue = brandValue = rebateValue = locationValue = string.Empty;
+        StartDate = new();
+        EndDate = Convert.ToDateTime("2050/01/01");
 
     }
 
