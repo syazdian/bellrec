@@ -9,7 +9,7 @@
 
 <PageTitle>Bell Compare Page</PageTitle>
 
-@if (!localDbExist && !uiDbExist)
+@if (!uiDbExist)
 {
     @if (localDbExist || fetchButtonClicked)
     {
@@ -21,8 +21,14 @@
     }
 
 }
-
-@if (localDbExist && uiDbExist)
+@*if ()
+{
+    if (showloader)
+    {
+        <LocalDbLoader message="Loading Data from localDb to Ui"></LocalDbLoader>
+    }
+}*@
+else
 {
 
     <div class="container marketing">
