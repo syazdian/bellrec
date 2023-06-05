@@ -29,9 +29,13 @@
                             </RadzenButton>
                         </EditTemplate>
                     </RadzenDataGridColumn>
+
+                    <RadzenDataGridColumn TItem="StaplesSourceDto" Property="RebateType" Title="RebateType" />
+
                     <RadzenDataGridColumn TItem="StaplesSourceDto" Property="OrderNumber" Title="OrderNumber" />
                     <RadzenDataGridColumn TItem="StaplesSourceDto" Property="Phone" Title="Phone" />
                     <RadzenDataGridColumn TItem="StaplesSourceDto" Property="Imei" Title="IMEI" />
+                    <RadzenDataGridColumn TItem="StaplesSourceDto" Property="Product" Title="Product" />
                     <RadzenDataGridColumn Width="100px" TItem="StaplesSourceDto" Property="Amount" Title="Amount" TextAlign="TextAlign.Right" />
                     <RadzenDataGridColumn TItem="StaplesSourceDto" Property="Comment" Title="Comment">
                         <EditTemplate Context="record">
@@ -40,8 +44,12 @@
                             </div>
                         </EditTemplate>
                     </RadzenDataGridColumn>
-                    <RadzenDataGridColumn TItem="StaplesSourceDto" Property="TransactionDate" Title="TransactionDate" />
-                    <RadzenDataGridColumn TItem="StaplesSourceDto" Property="CustomerName" Title="CustomerName" />
+                    <RadzenDataGridColumn TItem="StaplesSourceDto" Property="TransactionDate" Title="TransactionDate" FormatString="{0:d}" />
+                    <RadzenDataGridColumn TItem="StaplesSourceDto" Property="CustomerName" Title="CustomerName"  />
+                    <RadzenDataGridColumn TItem="StaplesSourceDto" Property="Brand" Title="Brand" />
+                    <RadzenDataGridColumn TItem="StaplesSourceDto" Property="Location" Title="Location" />
+                    <RadzenDataGridColumn TItem="StaplesSourceDto" Property="Lob" Title="Lob" />
+                    <RadzenDataGridColumn TItem="StaplesSourceDto" Property="SubLob" Title="SubLob" />
                 </Columns>
             </RadzenDataGrid>
         </RadzenTabsItem>
@@ -71,8 +79,9 @@
                     </RadzenDataGridColumn>
                     <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="SPhone" Title="S.Phone" />
                     <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="SIMEI" Title="S.IMEI" />
+                    <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="SProduct" Title="S.Product" />
                     <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="SOrderNumber" Title="S.Order" />
-                    <RadzenDataGridColumn Width="75px" TItem="CompareBellStapleCellPhone" Property="SAmount" Title="S.Amount" TextAlign="TextAlign.Right" />
+                    <RadzenDataGridColumn Width="100px" TItem="CompareBellStapleCellPhone" Property="SAmount" Title="S.Amount" TextAlign="TextAlign.Right" />
                     <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="SComment" Title="S.Comment ">
                         <EditTemplate Context="record">
                             <div class=" rz-text-align-left">
@@ -86,22 +95,22 @@
                             *@
                         </EditTemplate>
                     </RadzenDataGridColumn>
-                    <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="STransactionDate" Title="S.TransactionDate " />
+                    <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="STransactionDate" Title="S.TransactionDate" FormatString="{0:d}" />
                     <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="SCustomerName" Title="S.CustomerName " />
 
 
                     <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="BPhone" Title="B.Phone" />
                     <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="BIMEI" Title="B.IMEI" />
+                    <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="BProduct" Title="B.Product" />
                     <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="BOrderNumber" Title="B.Order" />
-                    <RadzenDataGridColumn Width="75px" TItem="CompareBellStapleCellPhone" Property="BAmount" Title="B.Amount" TextAlign="TextAlign.Right" />
+                    <RadzenDataGridColumn Width="100px" TItem="CompareBellStapleCellPhone" Property="BAmount" Title="B.Amount" TextAlign="TextAlign.Right" />
                     <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="BComment" Title="B.Comment ">
                         <EditTemplate Context="record">
                             <RadzenTextArea @bind-Value="record.BComment" Style="width:100%; display: block" Name="BComment" />
                         </EditTemplate>
                     </RadzenDataGridColumn>
-                    <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="BTransactionDate" Title="B.TransactionDate " />
+                    <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="BTransactionDate" Title="B.TransactionDate" FormatString="{0:d}" />
                     <RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="BCustomerName" Title="B.CustomerName " />
-                    @*<RadzenDataGridColumn TItem="CompareBellStapleCellPhone" Property="BRebateType" Title="B.RebateType " />*@
                 </Columns>
             </RadzenDataGrid>
         </RadzenTabsItem>
@@ -125,6 +134,7 @@
                     <RadzenDataGridColumn TItem="BellSourceDto" Property="OrderNumber" Title="OrderNumber" />
                     <RadzenDataGridColumn TItem="BellSourceDto" Property="Phone" Title="Phone" />
                     <RadzenDataGridColumn TItem="BellSourceDto" Property="Imei" Title="IMEI" />
+                    <RadzenDataGridColumn TItem="BellSourceDto" Property="Product" Title="Product" />
                     <RadzenDataGridColumn Width="100px" TItem="BellSourceDto" Property="Amount" Title="Amount" TextAlign="TextAlign.Right" />
                     <RadzenDataGridColumn TItem="BellSourceDto" Property="Comment" Title="Comment">
                         <EditTemplate Context="record">
@@ -133,8 +143,10 @@
                             </div>
                         </EditTemplate>
                     </RadzenDataGridColumn>
-                    <RadzenDataGridColumn TItem="BellSourceDto" Property="TransactionDate" Title="TransactionDate" />
+                    <RadzenDataGridColumn TItem="BellSourceDto" Property="TransactionDate" Title="TransactionDate" FormatString="{0:d}" />
                     <RadzenDataGridColumn TItem="BellSourceDto" Property="CustomerName" Title="CustomerName" />
+                    <RadzenDataGridColumn TItem="BellSourceDto" Property="Lob" Title="Lob" />
+                    <RadzenDataGridColumn TItem="BellSourceDto" Property="SubLob" Title="SubLob" />
                 </Columns>
             </RadzenDataGrid>
         </RadzenTabsItem>
@@ -222,6 +234,10 @@
         if (args.Column.Property == "BPhone" || args.Column.Property == "SPhone")
         {
             args.Attributes.Add("style", $"background-color: {(args.Data.BPhone != args.Data.SPhone ? "var(--rz-warning)" : "var(--rz-base-background-color)")};");
+        }
+        if (args.Column.Property == "BProduct" || args.Column.Property == "SProduct")
+        {
+            args.Attributes.Add("style", $"background-color: {(args.Data.BProduct != args.Data.SProduct ? "var(--rz-warning)" : "var(--rz-base-background-color)")};");
         }
     }
 
