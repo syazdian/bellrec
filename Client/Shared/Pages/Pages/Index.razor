@@ -9,7 +9,7 @@
 
 <PageTitle>Bell Compare Page</PageTitle>
 
-@if (!uiDbExist)
+@if (!localDbExist && !uiDbExist)
 {
     @if (localDbExist || fetchButtonClicked)
     {
@@ -21,14 +21,8 @@
     }
 
 }
-@*if ()
-{
-    if (showloader)
-    {
-        <LocalDbLoader message="Loading Data from localDb to Ui"></LocalDbLoader>
-    }
-}*@
-else
+
+@if (localDbExist && uiDbExist)
 {
 
     <div class="container marketing">
@@ -71,10 +65,7 @@ else
         {
             await LoadDatabaseInUi(filterItemDto);
         }
-        //else
-        //{
-        //    await FetchData();
-        //}
+      
         StateHasChanged();
     }
     public async void ApplyFilters(FilterItemDto _filterItemDto)
