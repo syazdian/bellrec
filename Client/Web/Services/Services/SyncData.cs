@@ -34,18 +34,8 @@ public class SyncData : ISyncData
             //    await _localDb.InsertBellSourceToLocalDbAsync(bellSourceDtos);
 
             var dbcount = await _httpClient.GetFromJsonAsync<BellStapleCountDto>($"/api/SyncData/FetchCountServerDatabase");
-            if (dbcount is null || dbcount.StaplesCount == 0 || dbcount.BellCount == 0) throw new ArgumentNullException(nameof(dbcount));
-            int startBellCount = 1;
-            int lastBellCount = packageSize;
-            do
-            {
-                var bellList = await _httpClient.GetFromJsonAsync<List<BellSourceDto>>($"/api/SyncData/GetBellSourceitems/{startBellCount}/{lastBellCount}");
-                if (bellList is not null)
-                    await _localDb.InsertBellSourceToLocalDbAsync(bellList);
-                else throw new ArgumentNullException(nameof(bellList));
-                startBellCount = lastBellCount + 1;
-                lastBellCount = lastBellCount + packageSize;
-            } while (lastBellCount <= maximumDownload);// dbcount.BellCount);
+            if (dbcount is null || dbcount.StaplesCount == 0 || dbcount.BellCount == 0)
+                throw new ArgumentNullException(nameof(dbcount));
             int startStapleCount = 1;
             int lastStapleCount = packageSize;
             do
@@ -56,7 +46,19 @@ public class SyncData : ISyncData
                 else throw new ArgumentNullException(nameof(staplesList));
                 startStapleCount = lastStapleCount + 1;
                 lastStapleCount = lastStapleCount + packageSize;
-            } while (lastStapleCount <= maximumDownload);// dbcount.StaplesCount);
+            } while (lastStapleCount <= maximumDownload);
+
+            int startBellCount = 1;
+            int lastBellCount = packageSize;
+            do
+            {
+                var bellList = await _httpClient.GetFromJsonAsync<List<BellSourceDto>>($"/api/SyncData/GetBellSourceitems/{startBellCount}/{lastBellCount}");
+                if (bellList is not null)
+                    await _localDb.InsertBellSourceToLocalDbAsync(bellList);
+                else throw new ArgumentNullException(nameof(bellList));
+                startBellCount = lastBellCount + 1;
+                lastBellCount = lastBellCount + packageSize;
+            } while (lastBellCount <= maximumDownload);
         }
         catch (Exception ex)
         {

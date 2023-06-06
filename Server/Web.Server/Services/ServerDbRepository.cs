@@ -9,9 +9,9 @@ namespace Bell.Reconciliation.Web.Server.Services
     public class ServerDbRepository
     {
         private readonly IConfiguration _config;
-        private readonly BellRecContext _bellDbContext;
+        private readonly Bell.Reconciliation.Web.Server.Data.Sqlserver.StapleContext _bellDbContext;
 
-        public ServerDbRepository(BellRecContext bellContext)
+        public ServerDbRepository(StapleContext bellContext)
         {
             _bellDbContext = bellContext;
         }

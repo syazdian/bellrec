@@ -1,4 +1,5 @@
 ﻿using Bell.Reconciliation.Web.Server.Data.Sqlserver;
+
 using Mapster;
 
 namespace Bell.Reconciliation.Web.Server.Services
@@ -24,7 +25,7 @@ namespace Bell.Reconciliation.Web.Server.Services
 
         private List<string> salesPersons = new();
         private Random rand = new Random();
-        private BellRecContext db = new BellRecContext();
+        private Data.Sqlserver.StapleContext db = new StapleContext();
 
         public string DBGenerator(int recordNom, string deleteOldRecords, int differenceRate)
         {
@@ -331,7 +332,7 @@ namespace Bell.Reconciliation.Web.Server.Services
             }
         }
 
-        private string GetSampleName(BellRecContext db, Random rand)
+        private string GetSampleName(StapleContext db, Random rand)
         {
             var count = db.SampleNames.Count();
             var inx = rand.Next(0, count - 2);
@@ -354,7 +355,7 @@ namespace Bell.Reconciliation.Web.Server.Services
             // bellSource.CommissionDetails = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 8);
             bellSource.CustomerName = GetSampleName(db, rand);
             bellSource.OrderNumber = rand.NextInt64(11234567890, 99999999999);
-            bellSource.TransactionDate = DateTime.Now.AddDays(new Random().Next(-1000, 0));
+            // bellSource.TransactionDate = DateTime.Now.AddDays(new Random().Next(-1000, 0)).ToShortTimeString();
             bellSource.Reconciled = "False";
 
             if (wirelessLob == false)
@@ -400,7 +401,7 @@ namespace Bell.Reconciliation.Web.Server.Services
             staplesSource.Rec = "FALSE";
             staplesSource.SalesPerson = salesPersons[rand.Next(0, salesPersons.Count - 1)];
             staplesSource.TaxCode = rand.NextInt64(11234567890, 99999999999);
-            staplesSource.TransactionDate = DateTime.Now.AddDays(rand.Next(-1000, 0));
+            staplesSource.TransactionDate = DateTime.Now.AddDays(rand.Next(-1000, 0)).ToShortTimeString();
             staplesSource.CustomerName = GetSampleName(db, rand);
             staplesSource.Amount = rand.Next(-500, 1500);
             staplesSource.OrderNumber = rand.NextInt64(11234567890, 99999999999);
@@ -436,14 +437,14 @@ namespace Bell.Reconciliation.Web.Server.Services
             return staplesSource;
         }
 
-        private void MakeSameObjects(ref BellSource bell,ref StaplesSource staple)
+        private void MakeSameObjects(ref BellSource bell, ref StaplesSource staple)
         {
             var reservedId = bell.Id;
             bell = staple.Adapt<BellSource>();
             bell.Id = reservedId;
         }
 
-        private void MakeSameThenDifferentObjects(ref BellSource bell,ref StaplesSource staple)
+        private void MakeSameThenDifferentObjects(ref BellSource bell, ref StaplesSource staple)
         {
             var reservedId = bell.Id;
             bell = staple.Adapt<BellSource>();
@@ -453,14 +454,14 @@ namespace Bell.Reconciliation.Web.Server.Services
             if (rnd < 100)
                 bell.Amount = bell.Amount + rnd;
 
-            if (bell.Imei != null )
+            if (bell.Imei != null)
             {
                 if (rnd < 30)
                     bell.Imei = rand.NextInt64(1234567890, 9876543210);
                 else if (rnd > 80)
                     bell.Phone = rand.NextInt64(11234567890, 99999999999);
             }
-           
+
             if (rnd < 25)
                 bell.CustomerName = GetSampleName(db, rand);
         }

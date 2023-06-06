@@ -31,7 +31,7 @@ public class Program
         //        options.UseSqlite(constring));
 
         var constring = builder.Configuration.GetConnectionString("SqlServer");
-        builder.Services.AddDbContext<Web.Server.Data.Sqlserver.BellRecContext>(options =>
+        builder.Services.AddDbContext<Data.Sqlserver.StapleContext>(options =>
             options.UseSqlServer(constring));
 
         builder.Configuration.AddConfiguration(config);
