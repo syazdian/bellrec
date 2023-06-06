@@ -1,4 +1,5 @@
 ﻿using Bell.Reconciliation.Web.Server.Data.Sqlserver;
+
 using Mapster;
 
 namespace Bell.Reconciliation.Web.Server.Services
@@ -25,6 +26,7 @@ namespace Bell.Reconciliation.Web.Server.Services
         private List<string> salesPersons = new();
         private Random rand = new Random();
         private BellRecContext db = new BellRecContext();
+       // private Data.Sqlserver.StapleContext db = new StapleContext();
 
         public string DBGenerator(int recordNom, string deleteOldRecords, int differenceRate)
         {
@@ -332,6 +334,7 @@ namespace Bell.Reconciliation.Web.Server.Services
         }
 
         private string GetSampleName(BellRecContext db, Random rand)
+       // private string GetSampleName(StapleContext db, Random rand)
         {
             var count = db.SampleNames.Count();
             var inx = rand.Next(0, count - 2);
@@ -460,7 +463,7 @@ namespace Bell.Reconciliation.Web.Server.Services
                 else if (rnd > 80)
                     bell.Phone = rand.NextInt64(11234567890, 99999999999);
             }
-           
+
             if (rnd < 25)
                 bell.CustomerName = GetSampleName(db, rand);
         }

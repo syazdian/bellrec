@@ -40,8 +40,11 @@
                             </div>
                         </EditTemplate>
                     </RadzenDataGridColumn>
-                    <RadzenDataGridColumn TItem="StaplesSourceDto" Property="TransactionDate" Title="TransactionDate" />
                     <RadzenDataGridColumn TItem="StaplesSourceDto" Property="CustomerName" Title="CustomerName" />
+                    <RadzenDataGridColumn TItem="StaplesSourceDto" Property="Brand" Title="Brand" />
+                    <RadzenDataGridColumn TItem="StaplesSourceDto" Property="Location" Title="Location" />
+                    <RadzenDataGridColumn TItem="StaplesSourceDto" Property="Lob" Title="Lob" />
+                    <RadzenDataGridColumn TItem="StaplesSourceDto" Property="SubLob" Title="SubLob" />
                 </Columns>
             </RadzenDataGrid>
         </RadzenTabsItem>
@@ -87,7 +90,7 @@
                             <RadzenLabel Text="Copy to Bell" Component="CheckBox2" Style="margin-left: 8px; vertical-align: middle;" />*@
                         </EditTemplate>
                     </RadzenDataGridColumn>
-                    <RadzenDataGridColumn TItem="CompareBellStapleNonCellPhone" Property="STransactionDate" Title="S.TransactionDate " />
+                    <RadzenDataGridColumn TItem="CompareBellStapleNonCellPhone" Property="STransactionDate" Title="S.TransactionDate" FormatString="{0:d}" />
                     <RadzenDataGridColumn TItem="CompareBellStapleNonCellPhone" Property="SCustomerName" Title="S.CustomerName " />
 
                     <RadzenDataGridColumn TItem="CompareBellStapleNonCellPhone" Property="BOrderNumber" Title="B.Order" />
@@ -97,7 +100,7 @@
                             <RadzenTextArea @bind-Value="record.BComment" Style="width:100%; display: block" Name="BComment" />
                         </EditTemplate>
                     </RadzenDataGridColumn>
-                    <RadzenDataGridColumn TItem="CompareBellStapleNonCellPhone" Property="BTransactionDate" Title="B.TransactionDate " />
+                    <RadzenDataGridColumn TItem="CompareBellStapleNonCellPhone" Property="BTransactionDate" Title="B.TransactionDate " FormatString="{0:d}" />
                     <RadzenDataGridColumn TItem="CompareBellStapleNonCellPhone" Property="BCustomerName" Title="B.CustomerName " />
                 </Columns>
             </RadzenDataGrid>
@@ -129,8 +132,10 @@
                             </div>
                         </EditTemplate>
                     </RadzenDataGridColumn>
-                    <RadzenDataGridColumn TItem="BellSourceDto" Property="TransactionDate" Title="TransactionDate" />
+                    <RadzenDataGridColumn TItem="BellSourceDto" Property="TransactionDate" Title="TransactionDate" FormatString="{0:d}" />
                     <RadzenDataGridColumn TItem="BellSourceDto" Property="CustomerName" Title="CustomerName" />
+                    <RadzenDataGridColumn TItem="BellSourceDto" Property="Lob" Title="Lob" />
+                    <RadzenDataGridColumn TItem="BellSourceDto" Property="SubLob" Title="SubLob" />
                 </Columns>
             </RadzenDataGrid>
         </RadzenTabsItem>

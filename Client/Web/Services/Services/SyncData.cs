@@ -9,7 +9,7 @@ public class SyncData : ISyncData
     private const int packageSize = 1000;
 
     //TODO: THIS IS FOR DEV IT SHOULD BE BELL AND STAPLES COUNT
-    private const int maximumDownload = 10000;
+    private const int maximumDownload = 1000;
 
     public SyncData(HttpClient httpClient, ILocalDbRepository localDb)
     {

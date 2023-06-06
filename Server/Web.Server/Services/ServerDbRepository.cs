@@ -10,8 +10,10 @@ namespace Bell.Reconciliation.Web.Server.Services
     {
         private readonly IConfiguration _config;
         private readonly BellRecContext _bellDbContext;
+        //private readonly Bell.Reconciliation.Web.Server.Data.Sqlserver.StapleContext _bellDbContext;
 
         public ServerDbRepository(BellRecContext bellContext)
+        //  public ServerDbRepository(StapleContext bellContext)
         {
             _bellDbContext = bellContext;
         }
@@ -62,9 +64,16 @@ namespace Bell.Reconciliation.Web.Server.Services
 
         public async Task<List<StaplesSourceDto>> GetStaplesSource(int startCount = 1, int endCount = 1)
         {
-            var items = await _bellDbContext.StaplesSources.OrderBy(e => e.Id).Skip(startCount - 1).Take(endCount - startCount + 1).ToListAsync();
-            var adapted = items.Adapt<List<StaplesSourceDto>>();
-            return adapted;
+            try
+            {
+                var items = await _bellDbContext.StaplesSources.OrderBy(e => e.Id).Skip(startCount - 1).Take(endCount - startCount + 1).ToListAsync();
+                var adapted = items.Adapt<List<StaplesSourceDto>>();
+                return adapted;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
     }
 }

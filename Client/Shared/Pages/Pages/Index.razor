@@ -32,7 +32,7 @@ else
 {
 
     <div class="container marketing">
-        <TopFilters FilterChanged="(e)=>AllpyFilters(e)"></TopFilters>
+        <TopFilters FilterChanged="(e)=>ApplyFilters(e)"></TopFilters>
 
         @if (WirelessSubLob == "Wireless")
         {
@@ -71,17 +71,13 @@ else
         {
             await LoadDatabaseInUi(filterItemDto);
         }
-        //else
-        //{
-        //    await FetchData();
-        //}
+      
         StateHasChanged();
     }
-    public async void AllpyFilters(FilterItemDto _filterItemDto)
     {
         filterItemDto = _filterItemDto;
         WirelessSubLob = filterItemDto.SubLob;
-        LoadDatabaseInUi(filterItemDto);
+        await LoadDatabaseInUi(filterItemDto);
     }
 
     public async Task<bool> CheckDbExist()
