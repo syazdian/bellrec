@@ -1,0 +1,396 @@
+trigger:
+  branches:
+    include:
+      - dev
+
+variables:
+  #
+  # Variables for Development environment
+  #
+  siteHostDev: "dev.tools.staples.ca"
+  acrRepoNameDev: "enterprisenonpacr"
+  acrRepoDev: "enterprisenonpacr.azurecr.io/bell/reconciliation-web"
+
+  # Application environment
+
+  # K8S Environment
+  k8sNamespaceDev: "bell-dev"
+  k8sAppSecretDev: "reconciliation-dev-web-app-settings-secret"
+
+  # Azure Resource Manager connection
+  azureSubscriptionDev: "staples-canada-ulc-nonp"
+
+  #
+  # Variables for Staging environment
+  #
+  siteHostStg: "staging.tools.staples.ca"
+  acrRepoNameStg: "enterprisenonpacr"
+  acrRepoStg: "enterprisenonpacr.azurecr.io/bell/reconciliation-web"
+
+  # Application environment
+
+  # K8S environment
+  k8sNamespaceStg: "bell-stg"
+  k8sAppSecretStg: "reconciliation-stg-web-app-settings-secret"
+
+  # Azure Resource Manager connection
+  azureSubscriptionStg: "staples-canada-ulc-nonp"
+
+  #
+  # Variables for Production environment
+  #
+  siteHostProd: "tools.staples.ca"
+  acrRepoNameProd: "enterpriseprodacr"
+  acrRepoProd: "enterpriseprodacr.azurecr.io/bell/reconciliation-web"
+
+  # Application environment
+
+  # K8S environment
+  k8sNamespaceProd: "bell-prod"
+  k8sAppSecretProd: "reconciliation-prod-web-app-settings-secret"
+
+  # Azure Resource Manager connection
+  azureSubscriptionProd: "staples-canada-ulc-prod"
+
+stages:
+  # - stage: Test
+  #   displayName: Test stage
+  #   jobs:
+  #     - job: UnitTestJob
+  #       displayName: Unit Test
+  #       pool:
+  #         vmImage: "ubuntu-latest"
+  #       steps:
+  #         - task: NuGetAuthenticate@0
+  #         - task: NuGetCommand@2
+  #           inputs:
+  #             command: "restore"
+  #             restoreSolution: "**/*.sln"
+  #             feedsToUse: "select"
+  #             vstsFeed: "7805b39b-7ad4-4c28-afb1-028d8493cd92/48e2cd61-284c-4aa0-b28a-4c3b763ad562"
+  #         - task: DotNetCoreCLI@2
+  #           inputs:
+  #             command: test
+  #             publishTestResults: true
+  #             projects: "**/*UnitTest*.csproj"
+  #             arguments: "/p:CollectCoverage=true /p:CoverletOutputFormat=cobertura"
+  #             testRunTitle: "Receiver"
+  #         - task: reportgenerator@4
+  #           inputs:
+  #             reports: "$(Build.SourcesDirectory)/**/*.cobertura.xml"
+  #             targetdir: "$(Build.SourcesDirectory)/CoverageResults"
+  #         - task: PublishCodeCoverageResults@1
+  #           displayName: "Publish code coverage report"
+  #           inputs:
+  #             codeCoverageTool: "Cobertura"
+  #             summaryFileLocation: "$(Build.SourcesDirectory)/**/coverage.cobertura.xml"
+
+  - stage: Build
+    displayName: Build stage
+    # dependsOn: Test
+    # condition: succeeded()
+    jobs:
+      - job: BuildJob
+        displayName: Build
+        pool:
+          vmImage: "ubuntu-latest"
+        steps:
+          - script: |
+              echo "Code revision - $(Build.SourceVersion)"
+              SourceVersion=$(Build.SourceVersion)
+              ShortVersion=${SourceVersion:0:7}
+              AppVersion="$(date +'%Y%m%d').$ShortVersion"
+              echo "Build version - $ShortVersion"
+              echo "##vso[task.setvariable variable=Short;isOutput=true]$ShortVersion"
+              echo "##vso[task.setvariable variable=App;isOutput=true]$AppVersion"
+            displayName: "Set version"
+            name: Version
+          - task: AzureCLI@1
+            displayName: "ACR Login"
+            inputs:
+              azureSubscription: "$(azureSubscriptionDev)"
+              scriptLocation: inlineScript
+              inlineScript: |
+                az acr login --name $(acrRepoNameDev)
+          - script: |
+              echo "Building docker image..."
+              docker build --build-arg ARG_APM_VENDOR=datadog \
+                -t $(acrRepoDev):$(Build.SourceBranchName)-$(Version.Short) \
+                -f Dockerfile .
+            displayName: "Build docker image"
+          - script: |
+              echo "Publishing docker image to registry..."
+              docker push $(acrRepoDev):$(Build.SourceBranchName)-$(Version.Short)
+            displayName: "Publish docker image"
+          # - task: ArchiveFiles@2
+          #   displayName: "Archive appSettings template"
+          #   inputs:
+          #     rootFolderOrFile: "Server/Web.Server/appsettings.Production.json"
+          #     includeRootFolder: false
+          #     archiveFile: "$(Build.ArtifactStagingDirectory)/appsettings-$(Version.Short).zip"
+          - task: ArchiveFiles@2
+            displayName: "Archive K8S deployment template"
+            inputs:
+              rootFolderOrFile: reconciliation-template.yaml
+              includeRootFolder: false
+              archiveFile: "$(Build.ArtifactStagingDirectory)/deployment-$(Version.Short).zip"
+          - task: PublishBuildArtifacts@1
+            displayName: "Publish build artifacts to Azure Pipelines"
+            inputs:
+              PathtoPublish: "$(Build.ArtifactStagingDirectory)"
+
+  - stage: DeployToDevEnv
+    displayName: "Dev Deployment"
+    dependsOn: Build
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/dev'))
+    jobs:
+      - deployment: DeployToAKSR2Dev
+        displayName: "Deploy To AKS R2 Dev environment"
+        environment: "development"
+        pool:
+          name: "enterprise-nonp-aks-agents"
+        workspace:
+          clean: all
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - script: |
+                    echo "Code revision - $(Build.SourceVersion)"
+                    SourceVersion=$(Build.SourceVersion)
+                    ShortVersion=${SourceVersion:0:7}
+                    AppVersion="$(date +'%Y%m%d').$ShortVersion"
+                    echo "Build version - $ShortVersion"
+                    echo "##vso[task.setvariable variable=Short;isOutput=true]$ShortVersion"
+                    echo "##vso[task.setvariable variable=App;isOutput=true]$AppVersion"
+                  displayName: "Set version"
+                  name: Version
+                - task: ExtractFiles@1
+                  displayName: "Extract template files"
+                  inputs:
+                    archiveFilePatterns: "$(Pipeline.Workspace)/drop/*.zip"
+                    destinationFolder: "$(Pipeline.Workspace)/deploy"
+                - script: |
+                    envsubst < reconciliation-template.yaml > reconciliation.yaml
+                    cat reconciliation.yaml
+                    sed -i 's/#binary_remote_addr#/$binary_remote_addr/g' reconciliation.yaml
+                    sed -i 's/#2#/$2/g' reconciliation.yaml
+                    cat reconciliation.yaml
+                  displayName: "Configure reconciliation.yaml file"
+                  workingDirectory: "$(Pipeline.Workspace)/deploy"
+                  env:
+                    K8S_PROJECT: "bell"
+                    K8S_APP: "reconciliation-web"
+                    K8S_ENV: "dev"
+                    K8S_VERSION: "$(Version.App)"
+                    K8S_APP_REPLICAS: 2
+                    K8S_IMAGE_URI: "$(acrRepoDev)"
+                    K8S_IMAGE_TAG: "$(Build.SourceBranchName)-$(Version.Short)"
+                    K8S_APP_FQDN: "$(siteHostDev)"
+                # - script: |
+                #     envsubst < appsettings.Production.json > temp.json
+                #     rm appsettings.Production.json
+                #     mv temp.json appsettings.Production.json
+                #     cat appsettings.Production.json
+                #   displayName: "Configure appsettings.Production.json file"
+                #   workingDirectory: "$(Pipeline.Workspace)/deploy"
+                #   env:
+                #     REPLACE_ME: $(replaceMeDev)
+                # - script: |
+                #     kubectl delete secrets -n $(k8sNamespaceDev) $(k8sAppSecretDev) || true
+                #   displayName: Delete appsettings secret
+                #   workingDirectory: "$(Pipeline.Workspace)/deploy"
+                # - script: |
+                #     kubectl create secret -n $(k8sNamespaceDev) generic $(k8sAppSecretDev) --from-file=./appsettings.Production.json
+                #   displayName: Create appsettings secret
+                #   workingDirectory: "$(Pipeline.Workspace)/deploy"
+                - script: |
+                    kubectl apply -n $(k8sNamespaceDev) -f reconciliation.yaml
+                  displayName: Update K8S deployment
+                  workingDirectory: "$(Pipeline.Workspace)/deploy"
+
+  - stage: DeployToStgEnv
+    displayName: "Staging Deployment"
+    dependsOn: DeployToDevEnv
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/dev'))
+    jobs:
+      - deployment: DeployToAKSR2Stg
+        displayName: "Deploy To AKS R2 Staging environment"
+        environment: "staging"
+        pool:
+          name: "enterprise-nonp-aks-agents"
+        workspace:
+          clean: all
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - script: |
+                    echo "Code revision - $(Build.SourceVersion)"
+                    SourceVersion=$(Build.SourceVersion)
+                    ShortVersion=${SourceVersion:0:7}
+                    AppVersion="$(date +'%Y%m%d').$ShortVersion"
+                    echo "Build version - $ShortVersion"
+                    echo "##vso[task.setvariable variable=Short;isOutput=true]$ShortVersion"
+                    echo "##vso[task.setvariable variable=App;isOutput=true]$AppVersion"
+                  displayName: "Set version"
+                  name: Version
+                - task: ExtractFiles@1
+                  displayName: "Extract template files"
+                  inputs:
+                    archiveFilePatterns: "$(Pipeline.Workspace)/drop/*.zip"
+                    destinationFolder: "$(Pipeline.Workspace)/deploy"
+                - script: |
+                    envsubst < reconciliation-template.yaml > reconciliation.yaml
+                    cat reconciliation.yaml
+                    sed -i 's/#binary_remote_addr#/$binary_remote_addr/g' reconciliation.yaml
+                    sed -i 's/#2#/$2/g' reconciliation.yaml
+                    cat reconciliation.yaml
+                  displayName: "Configure reconciliation.yaml file"
+                  workingDirectory: "$(Pipeline.Workspace)/deploy"
+                  env:
+                    K8S_PROJECT: "bell"
+                    K8S_APP: "reconciliation-web"
+                    K8S_ENV: "stg"
+                    K8S_VERSION: "$(Version.App)"
+                    K8S_APP_REPLICAS: 2
+                    K8S_IMAGE_URI: "$(acrRepoStg)"
+                    K8S_IMAGE_TAG: "$(Build.SourceBranchName)-$(Version.Short)"
+                    K8S_APP_FQDN: "$(siteHostStg)"
+                - script: |
+                    cat appsettings.Production.json
+                    envsubst < appsettings.Production.json > temp.json
+                    rm appsettings.Production.json
+                    mv temp.json appsettings.Production.json
+                    cat appsettings.Production.json
+                  displayName: "Configure appsettings.Production.json file"
+                  workingDirectory: "$(Pipeline.Workspace)/deploy"
+                  env:
+                    REPLACE_ME: $(replaceMeStg)
+                - script: |
+                    kubectl delete secrets -n $(k8sNamespaceStg) $(k8sAppSecretStg) || true
+                  displayName: Delete appsettings secret
+                  workingDirectory: "$(Pipeline.Workspace)/deploy"
+                - script: |
+                    kubectl create secret -n $(k8sNamespaceStg) generic $(k8sAppSecretStg) --from-file=./appsettings.Production.json
+                  displayName: Create appsettings secret
+                  workingDirectory: "$(Pipeline.Workspace)/deploy"
+                - script: |
+                    kubectl apply -n $(k8sNamespaceStg) -f reconciliation.yaml
+                  displayName: Update K8S deployment
+                  workingDirectory: "$(Pipeline.Workspace)/deploy"
+
+  - stage: DeployToProdEnv
+    displayName: "Production Deployment"
+    dependsOn: DeployToStgEnv
+    condition: succeeded()
+    jobs:
+      - deployment: PublishToAzureProd
+        displayName: "Publish To Azure Production ACR"
+        environment: "production"
+        pool:
+          vmImage: "ubuntu-latest"
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - script: |
+                    echo "Code revision - $(Build.SourceVersion)"
+                    SourceVersion=$(Build.SourceVersion)
+                    ShortVersion=${SourceVersion:0:7}
+                    AppVersion="$(date +'%Y%m%d').$ShortVersion"
+                    echo "Build version - $ShortVersion"
+                    echo "##vso[task.setvariable variable=Short;isOutput=true]$ShortVersion"
+                    echo "##vso[task.setvariable variable=App;isOutput=true]$AppVersion"
+                  displayName: "Set version"
+                  name: Version
+                - task: AzureCLI@1
+                  displayName: "Dev ACR Login"
+                  inputs:
+                    azureSubscription: "$(azureSubscriptionDev)"
+                    scriptLocation: inlineScript
+                    inlineScript: |
+                      az acr login --name $(acrRepoNameDev)
+                - script: |
+                    echo "Pulling dev docker image..."
+                    docker pull $(acrRepoDev):$(Build.SourceBranchName)-$(Version.Short)
+                - task: AzureCLI@1
+                  displayName: "Production ACR Login"
+                  inputs:
+                    azureSubscription: "$(azureSubscriptionProd)"
+                    scriptLocation: inlineScript
+                    inlineScript: |
+                      az acr login --name $(acrRepoNameProd)
+                - script: |
+                    echo "Tagging docker image for production..."
+                    docker tag $(acrRepoDev):$(Build.SourceBranchName)-$(Version.Short) $(acrRepoProd):$(Build.SourceBranchName)-$(Version.Short)
+                    echo "Publishing docker image to registry..."
+                    docker push $(acrRepoProd):$(Build.SourceBranchName)-$(Version.Short)
+
+      - deployment: DeployToAKSR2Prod
+        displayName: "Deploy To Azure Production environment"
+        dependsOn: PublishToAzureProd
+        condition: succeeded()
+        environment: "production"
+        pool:
+          name: "enterprise-prod-aks-agents"
+        workspace:
+          clean: all
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - script: |
+                    echo "Code revision - $(Build.SourceVersion)"
+                    SourceVersion=$(Build.SourceVersion)
+                    ShortVersion=${SourceVersion:0:7}
+                    AppVersion="$(date +'%Y%m%d').$ShortVersion"
+                    echo "Build version - $ShortVersion"
+                    echo "##vso[task.setvariable variable=Short;isOutput=true]$ShortVersion"
+                    echo "##vso[task.setvariable variable=App;isOutput=true]$AppVersion"
+                  displayName: "Set version"
+                  name: Version
+                - task: ExtractFiles@1
+                  displayName: "Extract template files"
+                  inputs:
+                    archiveFilePatterns: "$(Pipeline.Workspace)/drop/*.zip"
+                    destinationFolder: "$(Pipeline.Workspace)/deploy"
+                - script: |
+                    envsubst < reconciliation-template.yaml > reconciliation.yaml
+                    cat reconciliation.yaml
+                    sed -i 's/#binary_remote_addr#/$binary_remote_addr/g' reconciliation.yaml
+                    sed -i 's/#2#/$2/g' reconciliation.yaml
+                    cat reconciliation.yaml
+                  displayName: "Configure reconciliation.yaml file"
+                  workingDirectory: "$(Pipeline.Workspace)/deploy"
+                  env:
+                    K8S_PROJECT: "bell"
+                    K8S_APP: "reconciliation-web"
+                    K8S_ENV: "prod"
+                    K8S_VERSION: "$(Version.App)"
+                    K8S_APP_REPLICAS: 2
+                    K8S_IMAGE_URI: "$(acrRepoProd)"
+                    K8S_IMAGE_TAG: "$(Build.SourceBranchName)-$(Version.Short)"
+                    K8S_APP_FQDN: "$(siteHostProd)"
+                - script: |
+                    cat appsettings.Production.json
+                    envsubst < appsettings.Production.json > temp.json
+                    rm appsettings.Production.json
+                    mv temp.json appsettings.Production.json
+                    cat appsettings.Production.json
+                  displayName: "Configure appsettings.Production.json file"
+                  workingDirectory: "$(Pipeline.Workspace)/deploy"
+                  env:
+                    REPLACE_ME: $(replaceMeProd)
+                - script: |
+                    kubectl delete secrets -n $(k8sNamespaceProd) $(k8sAppSecretProd) || true
+                  displayName: Delete appsettings secret
+                  workingDirectory: "$(Pipeline.Workspace)/deploy"
+                - script: |
+                    kubectl create secret -n $(k8sNamespaceProd) generic $(k8sAppSecretProd) --from-file=./appsettings.Production.json
+                  displayName: Create appsettings secret
+                  workingDirectory: "$(Pipeline.Workspace)/deploy"
+                - script: |
+                    kubectl apply -n $(k8sNamespaceProd) -f reconciliation.yaml
+                  displayName: Update K8S deployment
+                  workingDirectory: "$(Pipeline.Workspace)/deploy"

@@ -1,0 +1,133 @@
+﻿@page "/"
+@using Bell.Reconciliation.Frontend.Shared.Pages.Shared
+@using Bell.Reconciliation.Frontend.Shared.ServiceInterfaces;
+@inject ILocalDbRepository _localdb
+@inject ISyncData SyncData
+
+<RadzenDialog></RadzenDialog>
+
+
+<PageTitle>Bell Compare Page</PageTitle>
+
+@if (!uiDbExist)
+{
+    @if (localDbExist || fetchButtonClicked)
+    {
+        <LocalDbLoader message="Loading Data ...."></LocalDbLoader>
+    }
+    else
+    {
+        <RadzenButton ButtonStyle="ButtonStyle.Dark" Size="ButtonSize.Large" Text="Fetch Data from Server" Click="FetchData"></RadzenButton>
+    }
+
+}
+@*if ()
+{
+    if (showloader)
+    {
+        <LocalDbLoader message="Loading Data from localDb to Ui"></LocalDbLoader>
+    }
+}*@
+else
+{
+
+    <div class="container marketing">
+        <TopFilters FilterChanged="(e)=>AllpyFilters(e)"></TopFilters>
+
+        @if (WirelessSubLob == "Wireless")
+        {
+            <TableCompareCellphone BellSources="bellSourcesCellPhone" StaplesSources="staplesSourcesCellPhone" CompareBellStaple="compareBellStapleCellPhone"></TableCompareCellphone>
+        }
+        else
+        {
+            <TableCompareNonCellphone TitleSubLob=@WirelessSubLob BellSources="bellSourcesNonCellPhone" StaplesSources="staplesSourcesNonCellPhone" CompareBellStaple="compreBellStapleNonCellPhone"></TableCompareNonCellphone>
+
+        }
+
+
+    </div>
+}
+
+
+@code {
+    List<BellSourceDto> bellSourcesCellPhone = new();
+    List<StaplesSourceDto> staplesSourcesCellPhone = new();
+    List<CompareBellStapleCellPhone> compareBellStapleCellPhone = new();
+
+    List<BellSourceDto> bellSourcesNonCellPhone = new();
+    List<StaplesSourceDto> staplesSourcesNonCellPhone = new();
+    List<CompareBellStapleNonCellPhone> compreBellStapleNonCellPhone = new();
+
+    FilterItemDto filterItemDto = new();
+    string WirelessSubLob;
+    bool localDbExist = true;
+    bool uiDbExist = false;
+    bool fetchButtonClicked = false;
+    bool showloader = false;
+    protected override async Task OnInitializedAsync()
+    {
+
+        if (await CheckDbExist())
+        {
+            await LoadDatabaseInUi(filterItemDto);
+        }
+        //else
+        //{
+        //    await FetchData();
+        //}
+        StateHasChanged();
+    }
+    public async void AllpyFilters(FilterItemDto _filterItemDto)
+    {
+        filterItemDto = _filterItemDto;
+        WirelessSubLob = filterItemDto.SubLob;
+        LoadDatabaseInUi(filterItemDto);
+    }
+
+    public async Task<bool> CheckDbExist()
+    {
+        localDbExist = await _localdb.LocalDbExist();
+        StateHasChanged();
+        return localDbExist;
+    }
+
+    public async Task<bool> UiDbExist()
+    {
+        if (bellSourcesCellPhone.Count > 1)
+        {
+            uiDbExist = true;
+            return true;
+        }
+        uiDbExist = false;
+        return false;
+    }
+    private async Task FetchData()
+    {
+        fetchButtonClicked = true;
+        showloader = true;
+        localDbExist = false;
+        await SyncData.FetchDataFromServerDb();
+        localDbExist = true;
+        await LoadDatabaseInUi(filterItemDto);
+
+        StateHasChanged();
+    }
+    private async Task LoadDatabaseInUi(FilterItemDto filterItemDto)
+    {
+        showloader = true;
+        uiDbExist = false;
+        bellSourcesCellPhone = await _localdb.GetBellSourceCellPhoneFromLocalDb(filterItemDto);
+        staplesSourcesCellPhone = await _localdb.GetStapleSourceCellPhoneFromLocalDb(filterItemDto);
+        compareBellStapleCellPhone = await _localdb.GetBellStapleCompareCellPhoneFromLocalDb(filterItemDto);
+
+        bellSourcesNonCellPhone = await _localdb.GetBellSourceNonCellPhoneFromLocalDb(filterItemDto);
+        staplesSourcesNonCellPhone = await _localdb.GetStapleSourceNonCellPhoneFromLocalDb(filterItemDto);
+        compreBellStapleNonCellPhone = await _localdb.GetBellStapleCompareNonCellPhoneFromLocalDb(filterItemDto);
+
+        uiDbExist = true;
+        showloader = false;
+        StateHasChanged();
+
+    }
+
+}
