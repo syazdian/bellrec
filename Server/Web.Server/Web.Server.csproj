@@ -10,16 +10,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Data\sqlserver\**" />
     <Compile Remove="Domain\**" />
     <Compile Remove="Repository\**" />
-    <Content Remove="Data\sqlserver\**" />
     <Content Remove="Domain\**" />
     <Content Remove="Repository\**" />
-    <EmbeddedResource Remove="Data\sqlserver\**" />
     <EmbeddedResource Remove="Domain\**" />
     <EmbeddedResource Remove="Repository\**" />
-    <None Remove="Data\sqlserver\**" />
     <None Remove="Domain\**" />
     <None Remove="Repository\**" />
   </ItemGroup>

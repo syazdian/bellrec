@@ -62,9 +62,16 @@ namespace Bell.Reconciliation.Web.Server.Services
 
         public async Task<List<StaplesSourceDto>> GetStaplesSource(int startCount = 1, int endCount = 1)
         {
-            var items = await _bellDbContext.StaplesSources.OrderBy(e => e.Id).Skip(startCount - 1).Take(endCount - startCount + 1).ToListAsync();
-            var adapted = items.Adapt<List<StaplesSourceDto>>();
-            return adapted;
+            try
+            {
+                var items = await _bellDbContext.StaplesSources.OrderBy(e => e.Id).Skip(startCount - 1).Take(endCount - startCount + 1).ToListAsync();
+                var adapted = items.Adapt<List<StaplesSourceDto>>();
+                return adapted;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
     }
 }
