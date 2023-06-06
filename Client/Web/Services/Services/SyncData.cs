@@ -45,7 +45,10 @@ public class SyncData : ISyncData
                 else throw new ArgumentNullException(nameof(bellList));
                 startBellCount = lastBellCount + 1;
                 lastBellCount = lastBellCount + packageSize;
-            } while (lastBellCount <= maximumDownload);// dbcount.BellCount);
+                if(lastBellCount > dbcount.BellCount)
+                    lastBellCount = dbcount.BellCount;
+            } while (startBellCount <= dbcount.BellCount);
+
             int startStapleCount = 1;
             int lastStapleCount = packageSize;
             do
@@ -56,7 +59,9 @@ public class SyncData : ISyncData
                 else throw new ArgumentNullException(nameof(staplesList));
                 startStapleCount = lastStapleCount + 1;
                 lastStapleCount = lastStapleCount + packageSize;
-            } while (lastStapleCount <= maximumDownload);// dbcount.StaplesCount);
+                if (lastStapleCount > dbcount.StaplesCount)
+                    lastStapleCount = dbcount.StaplesCount;
+            } while (startStapleCount <= dbcount.StaplesCount);
         }
         catch (Exception ex)
         {
