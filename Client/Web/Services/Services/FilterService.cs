@@ -1,8 +1,5 @@
-﻿using Bell.Reconciliation.Common.Models.Domain;
-using Bell.Reconciliation.Common.Utilities;
-using Bell.Reconciliation.Frontend.Shared.ServiceInterfaces;
-using System.Net.Http.Json;
-using System.Reflection;
+﻿using Microsoft.Extensions.Configuration;
+using System.Net.Http;
 using System.Text.Json;
 
 namespace Bell.Reconciliation.Frontend.Web.Services;
@@ -10,11 +7,17 @@ namespace Bell.Reconciliation.Frontend.Web.Services;
 public class FilterService : IFilterService
 {
     private readonly HttpClient _httpClient;
-    private string baseurl;
+    // private readonly IHttpClientFactory _ClientFactory;
 
-    public FilterService(HttpClient httpClient)
+    private readonly string baseAddress;
+
+    public FilterService(HttpClient httpClient, IConfiguration configuration)
     {
         _httpClient = httpClient;
+
+        baseAddress = configuration["baseaddress"];
+
+        //_ClientFactory = ClientFactory;
     }
 
     public async Task<FilterItems> GetFilterItems()
@@ -25,7 +28,10 @@ public class FilterService : IFilterService
             //var response = File.ReadAllText(Path.Combine(dir, "Data", "filteritems.txt"));
 
             //var response = await new HttpClient().GetStringAsync("https://localhost:7131/api/FilterValue/GetFilterItems");
-            var response = await _httpClient.GetFromJsonAsync<FilterItems>($"/api/FilterValue/GetFilterItems");
+            //var baseaddress = _httpClient.BaseAddress;
+            //  var client = _ClientFactory.CreateClient();
+            var response = await _httpClient.GetFromJsonAsync<FilterItems>($"{baseAddress}/api/FilterValue/GetFilterItems");
+            // var response = await _httpClient.GetFromJsonAsync<FilterItems>($"/api/FilterValue/GetFilterItems");
             //var response = await _httpClient.GetFromJsonAsync<FilterItems>($"https://dev.tools.staples.ca/BellServices/Reconciliation/api/FilterValue/GetFilterItems");
             return response;
         }
@@ -39,8 +45,10 @@ public class FilterService : IFilterService
     {
         try
         {
+            //var client = _ClientFactory.CreateClient();
+            var url = $"{baseAddress}/api/FilterValue/GetFilterItems";
             //var response = await new HttpClient().GetStringAsync("https://localhost:7131/api/FilterValue/GetFilterItems");
-            var response = await _httpClient.GetFromJsonAsync<FilterItems>($"/api/FilterValue/GetFilterItems");
+            var response = await _httpClient.GetFromJsonAsync<FilterItems>(url);
             //var response = await _httpClient.GetFromJsonAsync<string>($"https://dev.tools.staples.ca/BellServices/Reconciliation/api/FilterValue/GetFilterItems");
             return JsonSerializer.Serialize(response);
         }
