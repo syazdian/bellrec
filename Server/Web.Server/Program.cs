@@ -53,28 +53,28 @@ public class Program
 
         app.UseHttpsRedirection();
 
-        //app.UseBlazorFrameworkFiles();
-        //app.UseStaticFiles();
-
-        //app.UseRouting();
-
-        //app.MapRazorPages();
-        //app.MapControllers();
-        //app.MapFallbackToFile("index.html");
-
-        app.UseBlazorFrameworkFiles("/BellServices/Reconciliation");
+        app.UseBlazorFrameworkFiles();
         app.UseStaticFiles();
-        app.UseStaticFiles("/BellServices/Reconciliation");
+
         app.UseRouting();
+
         app.MapRazorPages();
         app.MapControllers();
-        app.UseEndpoints(endpoints =>
-        {
-            endpoints.MapControllers();
-            endpoints.MapFallbackToFile
-            ("/BellServices/Reconciliation/{*path:nonfile}",
-            "/BellServices/Reconciliation/index.html");
-        });
+        app.MapFallbackToFile("index.html");
+
+        //app.UseBlazorFrameworkFiles("/BellServices/Reconciliation");
+        //app.UseStaticFiles();
+        //app.UseStaticFiles("/BellServices/Reconciliation");
+        //app.UseRouting();
+        //app.MapRazorPages();
+        //app.MapControllers();
+        //app.UseEndpoints(endpoints =>
+        //{
+        //    endpoints.MapControllers();
+        //    endpoints.MapFallbackToFile
+        //    ("/BellServices/Reconciliation/{*path:nonfile}",
+        //    "/BellServices/Reconciliation/index.html");
+        //});
 
         app.Run();
     }
