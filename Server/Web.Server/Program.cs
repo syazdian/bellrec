@@ -53,11 +53,11 @@ public class Program
 
         app.UseHttpsRedirection();
 
-        //app.UseBlazorFrameworkFiles();
-        app.UseBlazorFrameworkFiles("/BellServices/Reconciliation");
+        app.UseBlazorFrameworkFiles();
+        //app.UseBlazorFrameworkFiles("/BellServices/Reconciliation");
 
-        // app.UseStaticFiles();
-        app.UseStaticFiles("/BellServices/Reconciliation");
+        app.UseStaticFiles();
+        //app.UseStaticFiles("/BellServices/Reconciliation");
 
         app.UseRouting();
 

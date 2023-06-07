@@ -24,15 +24,7 @@ public class FilterService : IFilterService
     {
         try
         {
-            //var dir = Path.GetDirectoryName(typeof(FilterService).Assembly.Location)!;
-            //var response = File.ReadAllText(Path.Combine(dir, "Data", "filteritems.txt"));
-
-            //var response = await new HttpClient().GetStringAsync("https://localhost:7131/api/FilterValue/GetFilterItems");
-            //var baseaddress = _httpClient.BaseAddress;
-            //  var client = _ClientFactory.CreateClient();
             var response = await _httpClient.GetFromJsonAsync<FilterItems>($"{baseAddress}/api/FilterValue/GetFilterItems");
-            // var response = await _httpClient.GetFromJsonAsync<FilterItems>($"/api/FilterValue/GetFilterItems");
-            //var response = await _httpClient.GetFromJsonAsync<FilterItems>($"https://dev.tools.staples.ca/BellServices/Reconciliation/api/FilterValue/GetFilterItems");
             return response;
         }
         catch (Exception ex)
@@ -45,11 +37,8 @@ public class FilterService : IFilterService
     {
         try
         {
-            //var client = _ClientFactory.CreateClient();
-            var url = $"/api/FilterValue/GetFilterItems";
-            //var response = await new HttpClient().GetStringAsync("https://localhost:7131/api/FilterValue/GetFilterItems");
+            var url = $"{baseAddress}/api/FilterValue/GetFilterItems";
             var response = await _httpClient.GetFromJsonAsync<FilterItems>(url);
-            //var response = await _httpClient.GetFromJsonAsync<string>($"https://dev.tools.staples.ca/BellServices/Reconciliation/api/FilterValue/GetFilterItems");
             return JsonSerializer.Serialize(response);
         }
         catch (Exception ex)
