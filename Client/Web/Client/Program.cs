@@ -12,8 +12,8 @@ public class Program
         builder.RootComponents.Add<HeadOutlet>("head::after");
 
         builder.Services.AddScoped<DialogService>();
-        var baseAddress = builder.HostEnvironment.BaseAddress;// + "/BellServices/Reconciliation/";
-        //var baseAddress = "https://dev.tools.staples.ca/BellServices/Reconciliation/";
+        //var baseAddress = builder.HostEnvironment.BaseAddress;// + "/BellServices/Reconciliation/";
+        var baseAddress = "https://dev.tools.staples.ca/BellServices/Reconciliation/";
 
         builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(baseAddress) });
         builder.Services.AddSqliteWasmDbContextFactory<StapleSourceContext>(opts => opts.UseSqlite("Data Source=StapleSource.sqlite3"));
