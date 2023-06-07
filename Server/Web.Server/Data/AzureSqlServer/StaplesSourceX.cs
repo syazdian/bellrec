@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Bell.Reconciliation.Web.Server.Data.sqlite;
+namespace Bell.Reconciliation.Web.Server.Data.Sqlserver;
 
-public partial class StaplesSource
+public partial class StaplesSourceX
 {
-    public long Id { get; set; }
+    public int Id { get; set; }
 
     public long? Phone { get; set; }
 
-    public long? Amount { get; set; }
+    public int? Amount { get; set; }
 
     public string? Comment { get; set; }
 
@@ -21,7 +21,7 @@ public partial class StaplesSource
 
     public string? Rec { get; set; }
 
-    public string? Imei { get; set; }
+    public long? Imei { get; set; }
 
     public DateTime? TransactionDate { get; set; }
 
@@ -31,7 +31,7 @@ public partial class StaplesSource
 
     public long? TaxCode { get; set; }
 
-    public long? Msf { get; set; }
+    public int? Msf { get; set; }
 
     public string? DeviceCo { get; set; }
 
@@ -49,5 +49,9 @@ public partial class StaplesSource
 
     public DateTime? ReconciledDate { get; set; }
 
-    public long? MatchStatus { get; set; }
+    public int? MatchStatus { get; set; }
+
+    public DateTime? CreateDate { get; set; }
+
+    public DateTime? UpdateDate { get; set; }
 }
