@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
-namespace Bell.Reconciliation.Web.Server.Data.Sqlserver;
+namespace Bell.Reconciliation.Web.Server.Data.StapleSqlServer;
 
 public partial class StapleContext : DbContext
 {

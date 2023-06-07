@@ -23,6 +23,7 @@
   <ItemGroup>
     <Compile Remove="BellRecRepository.cs" />
     <Compile Remove="DatabaseGenerator.cs" />
+    <Compile Remove="Services\DatabaseGenerator.cs" />
   </ItemGroup>
 
   <ItemGroup>

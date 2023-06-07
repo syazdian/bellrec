@@ -10,12 +10,12 @@ namespace Bell.Reconciliation.Web.Server.Controllers;
 public class SyncDataController : Controller
 {
     private readonly ServerDbRepository _dbRepo;
-    private readonly DatabaseGenerator _dbGenerator;
+    // private readonly DatabaseGenerator _dbGenerator;
 
-    public SyncDataController(ServerDbRepository dbRepo, DatabaseGenerator dbGenerator)
+    public SyncDataController(ServerDbRepository dbRepo)//, DatabaseGenerator dbGenerator)
     {
         _dbRepo = dbRepo;
-        _dbGenerator = dbGenerator;
+        // _dbGenerator = dbGenerator;
     }
 
     [HttpGet("ReturnHello")]
@@ -52,10 +52,10 @@ public class SyncDataController : Controller
         return Ok(items);
     }
 
-    [HttpGet("GenerateServerDb/{recordNom}/{deleteOldRecords}/{differenceRate}")]
-    public async Task<IActionResult> GenerateServerDb([FromRoute] int recordNom, string deleteOldRecords, int differenceRate)
-    {
-        var res = _dbGenerator.DBGenerator(recordNom, deleteOldRecords, differenceRate);
-        return Ok(res);
-    }
+    //[HttpGet("GenerateServerDb/{recordNom}/{deleteOldRecords}/{differenceRate}")]
+    //public async Task<IActionResult> GenerateServerDb([FromRoute] int recordNom, string deleteOldRecords, int differenceRate)
+    //{
+    //    var res = _dbGenerator.DBGenerator(recordNom, deleteOldRecords, differenceRate);
+    //    return Ok(res);
+    //}
 }

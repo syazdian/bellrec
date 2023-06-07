@@ -1,4 +1,5 @@
 ﻿@page "/"
+
 @using Bell.Reconciliation.Frontend.Shared.Pages.Shared
 @using Bell.Reconciliation.Frontend.Shared.ServiceInterfaces;
 @inject ILocalDbRepository _localdb
@@ -71,13 +72,17 @@ else
         {
             await LoadDatabaseInUi(filterItemDto);
         }
-      
+        //else
+        //{
+        //    await FetchData();
+        //}
         StateHasChanged();
     }
+    public async void ApplyFilters(FilterItemDto _filterItemDto)
     {
         filterItemDto = _filterItemDto;
         WirelessSubLob = filterItemDto.SubLob;
-        await LoadDatabaseInUi(filterItemDto);
+        LoadDatabaseInUi(filterItemDto);
     }
 
     public async Task<bool> CheckDbExist()
