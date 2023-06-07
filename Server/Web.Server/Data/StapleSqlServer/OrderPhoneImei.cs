@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Bell.Reconciliation.Web.Server.Data.StapleSqlServer;
+namespace Bell.Reconciliation.Web.Server.Data.Sqlserver;
 
 public partial class OrderPhoneImei
 {

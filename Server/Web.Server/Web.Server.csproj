@@ -10,12 +10,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Data\AzureSqlServer\**" />
     <Compile Remove="Domain\**" />
     <Compile Remove="Repository\**" />
+    <Content Remove="Data\AzureSqlServer\**" />
     <Content Remove="Domain\**" />
     <Content Remove="Repository\**" />
+    <EmbeddedResource Remove="Data\AzureSqlServer\**" />
     <EmbeddedResource Remove="Domain\**" />
     <EmbeddedResource Remove="Repository\**" />
+    <None Remove="Data\AzureSqlServer\**" />
     <None Remove="Domain\**" />
     <None Remove="Repository\**" />
   </ItemGroup>

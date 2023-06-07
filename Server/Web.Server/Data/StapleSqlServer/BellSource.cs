@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Bell.Reconciliation.Web.Server.Data.StapleSqlServer;
+namespace Bell.Reconciliation.Web.Server.Data.Sqlserver;
 
 public partial class BellSource
 {
@@ -17,7 +17,7 @@ public partial class BellSource
 
     public long? Imei { get; set; }
 
-    // public string? TransactionDate { get; set; }
+    public DateTime? TransactionDate { get; set; }
 
     public string? CustomerName { get; set; }
 
@@ -31,11 +31,13 @@ public partial class BellSource
 
     public string? ReconciledBy { get; set; }
 
-    public string? ReconciledDate { get; set; }
+    public DateTime? ReconciledDate { get; set; }
 
     public string? MatchStatus { get; set; }
 
     public DateTime? CreateDate { get; set; }
 
     public DateTime? UpdateDate { get; set; }
+
+    public DateTime? TransDate { get; set; }
 }

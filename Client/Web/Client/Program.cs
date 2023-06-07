@@ -22,7 +22,7 @@ public class Program
         builder.Services.AddTransient<ILocalDbRepository, LocalDbRepository>();
 
         // builder.Services.AddTransient<IInjectBellSource, FetchBellFromDb>();
-        builder.Services.AddTransient<ISyncData, SyncData>();
+        builder.Services.AddTransient<IFetchData, FetchData>();
         // builder.Services.AddTransient<IInjectBellSource, InjectBellSource>();
 
         await builder.Build().RunAsync();

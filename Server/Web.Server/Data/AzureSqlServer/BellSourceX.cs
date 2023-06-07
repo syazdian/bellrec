@@ -1,27 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Bell.Reconciliation.Web.Server.Data.sqlite;
+namespace Bell.Reconciliation.Web.Server.Data.Sqlserver;
 
-public partial class BellSource
+public partial class BellSourceX
 {
-    public long Id { get; set; }
+    public int Id { get; set; }
 
     public long? Phone { get; set; }
 
-    public long? Amount { get; set; }
+    public int? Amount { get; set; }
 
     public string? Comment { get; set; }
 
     public long? OrderNumber { get; set; }
 
-    public string? Imei { get; set; }
+    public long? Imei { get; set; }
 
     public DateTime? TransactionDate { get; set; }
 
     public string? CustomerName { get; set; }
-
-    //public string? CommissionDetails { get; set; }
 
     public string? Lob { get; set; }
 
@@ -36,4 +34,8 @@ public partial class BellSource
     public DateTime? ReconciledDate { get; set; }
 
     public string? MatchStatus { get; set; }
+
+    public DateTime? CreateDate { get; set; }
+
+    public DateTime? UpdateDate { get; set; }
 }
