@@ -7,6 +7,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest>
     <WasmBuildNative>true</WasmBuildNative>
+    <StaticWebAssetBasePath>/BellServices/Reconciliation</StaticWebAssetBasePath>
   </PropertyGroup>
 
   <ItemGroup>
