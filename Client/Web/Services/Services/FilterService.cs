@@ -46,7 +46,7 @@ public class FilterService : IFilterService
         try
         {
             //var client = _ClientFactory.CreateClient();
-            var url = $"{baseAddress}/api/FilterValue/GetFilterItems";
+            var url = $"/api/FilterValue/GetFilterItems";
             //var response = await new HttpClient().GetStringAsync("https://localhost:7131/api/FilterValue/GetFilterItems");
             var response = await _httpClient.GetFromJsonAsync<FilterItems>(url);
             //var response = await _httpClient.GetFromJsonAsync<string>($"https://dev.tools.staples.ca/BellServices/Reconciliation/api/FilterValue/GetFilterItems");
