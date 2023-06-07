@@ -47,7 +47,7 @@ public class FetchData : IFetchData
                 lastBellCount = lastBellCount + packageSize;
                 if (lastBellCount > dbcount.BellCount)
                     lastBellCount = dbcount.BellCount;
-            } while (startBellCount <= maximumDownload);// dbcount.BellCount);
+            } while (startBellCount <= dbcount.BellCount);
 
             int startStapleCount = 1;
             int lastStapleCount = packageSize;
@@ -61,7 +61,7 @@ public class FetchData : IFetchData
                 lastStapleCount = lastStapleCount + packageSize;
                 if (lastStapleCount > dbcount.StaplesCount)
                     lastStapleCount = dbcount.StaplesCount;
-            } while (startStapleCount <= maximumDownload);// dbcount.StaplesCount);
+            } while (startStapleCount <= dbcount.StaplesCount);
         }
         catch (Exception ex)
         {
