@@ -9,7 +9,7 @@ public class SyncData : ISyncData
     private const int packageSize = 1000;
 
     //TODO: THIS IS FOR DEV IT SHOULD BE BELL AND STAPLES COUNT
-    private const int maximumDownload = 10000;
+    private const int maximumDownload = 2000;
 
     public SyncData(HttpClient httpClient, ILocalDbRepository localDb)
     {
@@ -23,16 +23,6 @@ public class SyncData : ISyncData
         {
             await _localDb.PurgeTables();
 
-            //List<StaplesSourceDto> stpSourceDtos = new List<StaplesSourceDto>();
-            //stpSourceDtos = new StaplesSeeder().StapleToSeed;
-            //if (stpSourceDtos is not null)
-            //    await _localDb.InsertStaplesToLocalDbAsync(stpSourceDtos);
-
-            //List<BellSourceDto> bellSourceDtos = new List<BellSourceDto>();
-            //bellSourceDtos = new BellSeeder().BellSourceToSeed;
-            //if (bellSourceDtos is not null)
-            //    await _localDb.InsertBellSourceToLocalDbAsync(bellSourceDtos);
-
             var dbcount = await _httpClient.GetFromJsonAsync<BellStapleCountDto>($"/api/SyncData/FetchCountServerDatabase");
             if (dbcount is null || dbcount.StaplesCount == 0 || dbcount.BellCount == 0) throw new ArgumentNullException(nameof(dbcount));
             int startBellCount = 1;
@@ -45,9 +35,9 @@ public class SyncData : ISyncData
                 else throw new ArgumentNullException(nameof(bellList));
                 startBellCount = lastBellCount + 1;
                 lastBellCount = lastBellCount + packageSize;
-                if(lastBellCount > dbcount.BellCount)
+                if (lastBellCount > dbcount.BellCount)
                     lastBellCount = dbcount.BellCount;
-            } while (startBellCount <= dbcount.BellCount);
+            } while (startBellCount <= maximumDownload);// dbcount.BellCount);
 
             int startStapleCount = 1;
             int lastStapleCount = packageSize;
@@ -61,7 +51,7 @@ public class SyncData : ISyncData
                 lastStapleCount = lastStapleCount + packageSize;
                 if (lastStapleCount > dbcount.StaplesCount)
                     lastStapleCount = dbcount.StaplesCount;
-            } while (startStapleCount <= dbcount.StaplesCount);
+            } while (startStapleCount <= maximumDownload);// dbcount.StaplesCount);
         }
         catch (Exception ex)
         {

@@ -28,9 +28,9 @@
        
            
         <RadzenLabel Text="Transaction Date" />
-        <RadzenDatePicker @bind-Value=@StartDate ShowTime="true" ShowSeconds="true" HoursStep="1.5" MinutesStep="5" SecondsStep="10" DateFormat="MM/dd/yyyy HH:mm" />
+        <RadzenDatePicker @bind-Value=@StartDate  DateFormat="MM/dd/yyyy" />
         to
-        <RadzenDatePicker @bind-Value=@EndDate ShowTime="true" ShowSeconds="true" HoursStep="1.5" MinutesStep="5" SecondsStep="10" DateFormat="MM/dd/yyyy HH:mm" />
+        <RadzenDatePicker @bind-Value=@EndDate  DateFormat="MM/dd/yyyy" />
     </RadzenStack>
   
     <div class="rz-text-align-right">
@@ -99,6 +99,8 @@
     protected void ResetFilter()
     {
         lobValue = subLobValue = brandValue = rebateValue = locationValue = string.Empty;
+        StartDate = new();
+        EndDate = Convert.ToDateTime("2050/01/01");
 
     }
 

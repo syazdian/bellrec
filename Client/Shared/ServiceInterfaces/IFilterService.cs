@@ -3,4 +3,6 @@
 public interface IFilterService
 {
     public Task<FilterItems> GetFilterItems();
+
+    public Task<string> GetHello();
 }
