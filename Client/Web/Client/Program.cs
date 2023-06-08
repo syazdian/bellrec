@@ -1,3 +1,4 @@
+using Bell.Reconciliation.Frontend.Web.Services.Services;
 using Radzen;
 using SqliteWasmHelper;
 
@@ -24,6 +25,7 @@ public class Program
 
         // builder.Services.AddTransient<IInjectBellSource, FetchBellFromDb>();
         builder.Services.AddTransient<IFetchData, FetchData>();
+        builder.Services.AddTransient<ISyncData, SyncData>();
         // builder.Services.AddTransient<IInjectBellSource, InjectBellSource>();
 
         await builder.Build().RunAsync();

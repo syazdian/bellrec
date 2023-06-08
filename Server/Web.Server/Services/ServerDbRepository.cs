@@ -75,5 +75,43 @@ namespace Bell.Reconciliation.Web.Server.Services
                 throw;
             }
         }
+
+        public async Task SyncBellSourceChanges(List<BellSourceDto> bellSourceDtos)
+        {
+            try
+            {
+                foreach(var bell in bellSourceDtos)
+                {
+                    var bellsourceInServer = _bellDbContext.BellSources.Where(c => c.OrderNumber == bell.OrderNumber).FirstOrDefault();
+                    bellsourceInServer.Comment = bell.Comment;
+                    bellsourceInServer.UpdateDate = DateTime.Now;
+                }
+                _bellDbContext.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+        }
+
+        public async Task SyncStapleSourceChanges(List<StaplesSourceDto> stapleSourceDtos)
+        {
+            try
+            {
+                foreach (var staple in stapleSourceDtos)
+                {
+                    var staplesourceInServer = _bellDbContext.StaplesSources.Where(c => c.Id == staple.Id).FirstOrDefault();
+                    staplesourceInServer.Comment = staple.Comment;
+                    staplesourceInServer.UpdateDate = DateTime.Now;
+                }
+                _bellDbContext.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+        }
     }
 }

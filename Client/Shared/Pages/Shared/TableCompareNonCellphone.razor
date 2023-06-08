@@ -267,18 +267,25 @@
     async Task SaveRow(CompareBellStapleNonCellPhone record)
     {
         Console.WriteLine(record.MatchStatus);
+
+        var resultStaple = await Localdb.UpdateStapleSource(record.SId, record.SComment);
+        var resultBell = await Localdb.UpdateBellSource(record.BId, record.BComment);
         await Grid.UpdateRow(record);
     }
 
     async Task SaveBellRow(BellSourceDto record)
     {
         Console.WriteLine(record.MatchStatus);
+
+        var result = await Localdb.UpdateBellSource(record);
         await BellGrid.UpdateRow(record);
     }
 
     async Task SaveStapleRow(StaplesSourceDto record)
     {
         Console.WriteLine(record.MatchStatus);
+
+        var result = await Localdb.UpdateStapleSource(record);
         await StapleGrid.UpdateRow(record);
     }
 

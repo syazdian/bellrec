@@ -2,7 +2,7 @@
 
 public interface ISyncData
 {
-    public Task UpsertChangesToServerDb();
+    public Task UpdateChangesToServerDb();
 
     public Task UpdateLocalDbWithNewChanges();
 }

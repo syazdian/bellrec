@@ -38,8 +38,8 @@ public class StaplesSourceDto
     public string? Lob { get; set; }
 
     public string? SubLob { get; set; }
-    public bool Reconciled { get; }
+    public bool Reconciled { get; set; }
     public string? ReconciledBy { get; set; }
-    public DateTime? ReconciledDate { get; }
+    public DateTime? ReconciledDate { get; set; }
     public MatchStatus MatchStatus { get; set; }
 }

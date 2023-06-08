@@ -2,6 +2,7 @@
 using Bell.Reconciliation.Common.Models.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.JSInterop;
 using System;
 using System.Linq;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
@@ -15,6 +16,79 @@ public class LocalDbRepository : ILocalDbRepository
     public LocalDbRepository(ISqliteWasmDbContextFactory<StapleSourceContext> dbContextFactory)
     {
         _dbContextFactory = dbContextFactory;
+    }
+
+    public async Task<int> StartSyncLog()
+    {
+        try
+        {
+            using var ctx = await _dbContextFactory.CreateDbContextAsync();
+
+            SyncLogsDto dto = new SyncLogsDto();
+            dto.StartSync = DateTime.Now;
+
+            ctx.SyncLogs.Add(dto);
+            await ctx.SaveChangesAsync();
+
+            return dto.Id;
+        }
+        catch (Exception ex)
+        {
+            throw;
+        }
+    }
+
+    public async Task FinishedSyncLog(int id, bool success)
+    {
+        try
+        {
+            using var ctx = await _dbContextFactory.CreateDbContextAsync();
+
+            var syncLog = ctx.SyncLogs.Single(c=> c.Id == id);
+            syncLog.Success = success;
+            syncLog.EndSync = DateTime.Now;
+
+            await ctx.SaveChangesAsync();
+
+        }
+        catch (Exception ex)
+        {
+            throw;
+        }
+    }
+
+    public async Task<List<BellSourceDto>> GetNotSyncedUpdatedBellSource()
+    {
+        try
+        {
+            using var ctx = await _dbContextFactory.CreateDbContextAsync();
+
+            var recentSyncDate = ctx.SyncLogs.Max(c => c.EndSync);
+            var query = ctx.BellSources.Where(c=>c.ReconciledDate.HasValue && c.ReconciledDate > recentSyncDate).AsQueryable();
+            List<BellSourceDto> bellSourceDtos = query.ToList();
+            return bellSourceDtos;
+        }
+        catch (Exception ex)
+        {
+            throw;
+        }
+    }
+
+    public async Task<List<StaplesSourceDto>> GetNotSyncedUpdatedStapleSource()
+    {
+        try
+        {
+            using var ctx = await _dbContextFactory.CreateDbContextAsync();
+
+            var recentSyncDate = ctx.SyncLogs.Max(c => c.EndSync);
+            var query = ctx.StaplesSources.Where(c => c.ReconciledDate.HasValue && c.ReconciledDate > recentSyncDate).AsQueryable();
+            List<StaplesSourceDto> staplesSourceDtos = query.ToList();
+            return staplesSourceDtos;
+        }
+        catch (Exception ex)
+        {
+            throw;
+        }
     }
 
     public async Task InsertBellSourceToLocalDbAsync(List<BellSourceDto> bellSourceDtos)
@@ -153,6 +227,7 @@ public class LocalDbRepository : ILocalDbRepository
                        BCustomerName = b.CustomerName.ToString(),
                        BRebateType = b.RebateType.ToString(),
                        BReconciled = b.Reconciled,
+                       BId = b.Id,
 
                        SPhone = s.Phone.ToString(),
                        SLob = s.Lob,
@@ -165,6 +240,8 @@ public class LocalDbRepository : ILocalDbRepository
                        SCustomerName = s.CustomerName.ToString(),
                        SRebateType = b.RebateType.ToString(),
                        SReconciled = b.Reconciled,
+                       SId = s.Id,
+
                        MatchStatus = (s.Reconciled == true && b.Reconciled == true) ? MatchStatus.Reconciled :
                        ((s.Amount == b.Amount && s.OrderNumber == b.OrderNumber &&
                        s.TransactionDate == b.TransactionDate && s.CustomerName == b.CustomerName && s.Imei == b.Imei && s.Phone == s.Phone) ? MatchStatus.Match : MatchStatus.Missmatch)
@@ -200,6 +277,7 @@ public class LocalDbRepository : ILocalDbRepository
                             BCustomerName = b.CustomerName.ToString(),
                             BRebateType = b.RebateType.ToString(),
                             BReconciled = b.Reconciled,
+                            BId = b.Id,
 
                             SPhone = s.Phone.ToString(),
                             SLob = s.Lob,
@@ -214,6 +292,7 @@ public class LocalDbRepository : ILocalDbRepository
                             SReconciled = b.Reconciled,
                             SBrand = s.Brand,
                             SLocation = s.Location,
+                            SId = s.Id,
 
                             MatchStatus = (s.Reconciled == true && b.Reconciled == true) ? MatchStatus.Reconciled :
                             ((s.Amount == b.Amount && s.OrderNumber == b.OrderNumber &&
@@ -311,6 +390,7 @@ public class LocalDbRepository : ILocalDbRepository
                             BReconciled = b.Reconciled,
                             BLob = b.Lob,
                             BSublob = b.SubLob,
+                            BId = b.Id,
 
                             SOrderNumber = s.OrderNumber.ToString(),
                             SAmount = s.Amount,
@@ -323,6 +403,7 @@ public class LocalDbRepository : ILocalDbRepository
                             SSublob = s.SubLob,
                             SBrand = s.Brand,
                             SLocation = s.Location,
+                            SId = s.Id,
 
                             MatchStatus = (s.Reconciled == true && b.Reconciled == true) ? MatchStatus.Reconciled :
                             ((s.Amount == b.Amount && s.OrderNumber == b.OrderNumber &&
@@ -344,6 +425,10 @@ public class LocalDbRepository : ILocalDbRepository
         {
             using var ctx = await _dbContextFactory.CreateDbContextAsync();
 
+            bellSourceDto.Reconciled = true;
+            bellSourceDto.ReconciledBy = "USER";
+            bellSourceDto.ReconciledDate = DateTime.Now;
+
             ctx.Update(bellSourceDto);
             ctx.SaveChanges();
 
@@ -363,6 +448,9 @@ public class LocalDbRepository : ILocalDbRepository
 
             var bell = ctx.BellSources.Single(c => c.Id == Id);
             bell.Comment = Comment;
+            bell.Reconciled = true;
+            bell.ReconciledBy = "USER";
+            bell.ReconciledDate = DateTime.Now;
             ctx.Update(bell);
             ctx.SaveChanges();
 
@@ -379,6 +467,10 @@ public class LocalDbRepository : ILocalDbRepository
         try
         {
             using var ctx = await _dbContextFactory.CreateDbContextAsync();
+
+            staplesSourceDto.Reconciled = true;
+            staplesSourceDto.ReconciledBy = "USER";
+            staplesSourceDto.ReconciledDate = DateTime.Now;
 
             ctx.Update(staplesSourceDto);
             ctx.SaveChanges();
@@ -399,6 +491,9 @@ public class LocalDbRepository : ILocalDbRepository
 
             var staple = ctx.StaplesSources.Single(c => c.Id == Id);
             staple.Comment = Comment;
+            staple.Reconciled = true;
+            staple.ReconciledBy = "USER";
+            staple.ReconciledDate = DateTime.Now;
             ctx.Update(staple);
             ctx.SaveChanges();
 

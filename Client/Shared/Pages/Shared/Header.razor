@@ -1,4 +1,6 @@
-﻿<header>
+﻿@using Bell.Reconciliation.Frontend.Shared.ServiceInterfaces;
+@inject ISyncData SyncData
+<header>
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-light ">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">
@@ -16,6 +18,7 @@
                     <img alt="Offline" title="Application running offline." src="./Assets/internet-off.png" />
                 </ShowOffline>
             </ConnectivityIndicator>
+            <RadzenButton Text="Sync Changes" Icon="sync" ButtonStyle="ButtonStyle.Success" Click="@OnClickSync"></RadzenButton>
            
     <hr />
         </div>
@@ -23,5 +26,9 @@
 </header>
 
 @code {
+    private void OnClickSync()
+    {
+        SyncData.UpdateChangesToServerDb();
+    }
 
 }
