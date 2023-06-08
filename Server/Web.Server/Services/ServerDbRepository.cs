@@ -84,6 +84,10 @@ namespace Bell.Reconciliation.Web.Server.Services
                 {
                     var bellsourceInServer = _bellDbContext.BellSources.Where(c => c.OrderNumber == bell.OrderNumber).FirstOrDefault();
                     bellsourceInServer.Comment = bell.Comment;
+                    bellsourceInServer.MatchStatus = bell.MatchStatus.ToString();
+                    bellsourceInServer.Reconciled = bell.Reconciled.ToString();
+                    bellsourceInServer.ReconciledBy = bell.ReconciledBy;
+                    bellsourceInServer.ReconciledDate = bell.ReconciledDate;
                     bellsourceInServer.UpdateDate = DateTime.Now;
                 }
                 _bellDbContext.SaveChanges();
@@ -101,9 +105,12 @@ namespace Bell.Reconciliation.Web.Server.Services
             {
                 foreach (var staple in stapleSourceDtos)
                 {
-                    var staplesourceInServer = _bellDbContext.StaplesSources.Where(c => c.Id == staple.Id).FirstOrDefault();
+                    var staplesourceInServer = _bellDbContext.StaplesSources.Where(c => c.OrderNumber == staple.OrderNumber).FirstOrDefault();
                     staplesourceInServer.Comment = staple.Comment;
-                    staplesourceInServer.UpdateDate = DateTime.Now;
+                    staplesourceInServer.MatchStatus =(int)staple.MatchStatus;
+                    staplesourceInServer.Reconciled = staple.Reconciled.ToString();
+                    staplesourceInServer.ReconciledBy = staple.ReconciledBy;
+                    staplesourceInServer.ReconciledDate = staple.ReconciledDate; staplesourceInServer.UpdateDate = DateTime.Now;
                 }
                 _bellDbContext.SaveChanges();
             }

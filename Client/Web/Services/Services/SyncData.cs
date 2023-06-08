@@ -33,12 +33,12 @@ public class SyncData : ISyncData
             {
                 var id = _localDb.StartSyncLog().Result;
 
-                if (notSyncedBellSources.Count > 0)
+                if (notSyncedStapleSources.Count > 0)
                 {
                     var response = await _httpClient.PostAsJsonAsync($"{baseAddress}/api/SyncData/SyncChangesStaple", notSyncedStapleSources);
                 }
 
-                if (notSyncedStapleSources.Count > 0)
+                if (notSyncedBellSources.Count > 0)
                 {
                     var response = await _httpClient.PostAsJsonAsync($"{baseAddress}/api/SyncData/SyncChangesBell", notSyncedBellSources);
                 }
