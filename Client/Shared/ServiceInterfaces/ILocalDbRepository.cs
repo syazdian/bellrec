@@ -16,6 +16,8 @@ public interface ILocalDbRepository
 
     Task<List<CompareBellStapleNonCellPhone>> GetBellStapleCompareNonCellPhoneFromLocalDb(FilterItemDto filterItemDto);
 
+    Task InsertSyncLog(SyncLogsDto syncLogsDto);
+
     Task<int> StartSyncLog();
 
     Task FinishedSyncLog(int id, bool success);

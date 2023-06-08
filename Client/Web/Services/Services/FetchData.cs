@@ -31,12 +31,28 @@ public class FetchData : IFetchData
         try
         {
             await _localDb.PurgeTables();
-
-            //var _httpClient = _ClientFactory.CreateClient();
             var dbcount = await _httpClient.GetFromJsonAsync<BellStapleCountDto>($"{baseAddress}/api/SyncData/FetchCountServerDatabase");
             if (dbcount is null || dbcount.StaplesCount == 0 || dbcount.BellCount == 0) throw new ArgumentNullException(nameof(dbcount));
             int startBellCount = 1;
             int lastBellCount = packageSize;
+
+            int startStapleCount = 1;
+            int lastStapleCount = packageSize;
+            do
+            {
+                var staplesList = await _httpClient.GetFromJsonAsync<List<StaplesSourceDto>>($"{baseAddress}/api/SyncData/GetStaplesSourceItems/{startStapleCount}/{lastStapleCount}");
+                var res = staplesList.Where(x => x.OrderNumber == 83851628726).FirstOrDefault();
+
+                if (staplesList is not null)
+                    await _localDb.InsertStaplesToLocalDbAsync(staplesList);
+                else throw new ArgumentNullException(nameof(staplesList));
+                startStapleCount = lastStapleCount + 1;
+                lastStapleCount = lastStapleCount + packageSize;
+                if (lastStapleCount > dbcount.StaplesCount)
+                    lastStapleCount = dbcount.StaplesCount;
+            } while (startStapleCount <= maximumDownload);// dbcount.StaplesCount);
+
+            //var _httpClient = _ClientFactory.CreateClient();
             do
             {
                 var bellList = await _httpClient.GetFromJsonAsync<List<BellSourceDto>>($"{baseAddress}/api/SyncData/GetBellSourceitems/{startBellCount}/{lastBellCount}");
@@ -47,21 +63,15 @@ public class FetchData : IFetchData
                 lastBellCount = lastBellCount + packageSize;
                 if (lastBellCount > dbcount.BellCount)
                     lastBellCount = dbcount.BellCount;
-            } while (startBellCount <= dbcount.BellCount);
+            } while (startBellCount <= maximumDownload);// dbcount.BellCount);
 
-            int startStapleCount = 1;
-            int lastStapleCount = packageSize;
-            do
+            SyncLogsDto syncLogsDto = new SyncLogsDto()
             {
-                var staplesList = await _httpClient.GetFromJsonAsync<List<StaplesSourceDto>>($"{baseAddress}/api/SyncData/GetStaplesSourceItems/{startStapleCount}/{lastStapleCount}");
-                if (staplesList is not null)
-                    await _localDb.InsertStaplesToLocalDbAsync(staplesList);
-                else throw new ArgumentNullException(nameof(staplesList));
-                startStapleCount = lastStapleCount + 1;
-                lastStapleCount = lastStapleCount + packageSize;
-                if (lastStapleCount > dbcount.StaplesCount)
-                    lastStapleCount = dbcount.StaplesCount;
-            } while (startStapleCount <= dbcount.StaplesCount);
+                Success = true,
+                EndSync = DateTime.Now,
+                StartSync = DateTime.Now,
+            };
+            await _localDb.InsertSyncLog(syncLogsDto);
         }
         catch (Exception ex)
         {

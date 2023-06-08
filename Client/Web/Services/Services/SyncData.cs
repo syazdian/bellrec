@@ -24,15 +24,15 @@ public class SyncData : ISyncData
 
     public async Task UpdateChangesToServerDb()
     {
-        try
+        var notSyncedBellSources = _localDb.GetNotSyncedUpdatedBellSource().Result;
+        var notSyncedStapleSources = _localDb.GetNotSyncedUpdatedStapleSource().Result;
+
+        if (notSyncedBellSources.Count + notSyncedStapleSources.Count > 0)
         {
-            var notSyncedBellSources = _localDb.GetNotSyncedUpdatedBellSource().Result;
-            var notSyncedStapleSources = _localDb.GetNotSyncedUpdatedStapleSource().Result;
-
-            if (notSyncedBellSources.Count + notSyncedStapleSources.Count > 0)
+            SyncLogsDto syncLogsDto = new SyncLogsDto();
+            syncLogsDto.StartSync = DateTime.Now;
+            try
             {
-                var id = _localDb.StartSyncLog().Result;
-
                 if (notSyncedStapleSources.Count > 0)
                 {
                     var response = await _httpClient.PostAsJsonAsync($"{baseAddress}/api/SyncData/SyncChangesStaple", notSyncedStapleSources);
@@ -42,14 +42,18 @@ public class SyncData : ISyncData
                 {
                     var response = await _httpClient.PostAsJsonAsync($"{baseAddress}/api/SyncData/SyncChangesBell", notSyncedBellSources);
                 }
-
-                await _localDb.FinishedSyncLog(id, true);
+                syncLogsDto.Success = true;
             }
-
-        }
-        catch (Exception ex)
-        {
-            throw;
+            catch (Exception ex)
+            {
+                syncLogsDto.Success = false;
+                throw;
+            }
+            finally
+            {
+                syncLogsDto.EndSync = DateTime.Now;
+                await _localDb.InsertSyncLog(syncLogsDto);
+            }
         }
     }
 }

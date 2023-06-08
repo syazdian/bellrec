@@ -67,7 +67,10 @@ namespace Bell.Reconciliation.Web.Server.Services
             try
             {
                 var items = await _bellDbContext.StaplesSources.OrderBy(e => e.Id).Skip(startCount - 1).Take(endCount - startCount + 1).ToListAsync();
+                var res2 = items.Where(x => x.OrderNumber == 83851628726).FirstOrDefault();
+
                 var adapted = items.Adapt<List<StaplesSourceDto>>();
+                var res = adapted.Where(x => x.OrderNumber == 83851628726).FirstOrDefault();
                 return adapted;
             }
             catch (Exception ex)
@@ -80,7 +83,7 @@ namespace Bell.Reconciliation.Web.Server.Services
         {
             try
             {
-                foreach(var bell in bellSourceDtos)
+                foreach (var bell in bellSourceDtos)
                 {
                     var bellsourceInServer = _bellDbContext.BellSources.Where(c => c.OrderNumber == bell.OrderNumber).FirstOrDefault();
                     bellsourceInServer.Comment = bell.Comment;
@@ -96,7 +99,6 @@ namespace Bell.Reconciliation.Web.Server.Services
             {
                 throw;
             }
-
         }
 
         public async Task SyncStapleSourceChanges(List<StaplesSourceDto> stapleSourceDtos)
@@ -107,7 +109,7 @@ namespace Bell.Reconciliation.Web.Server.Services
                 {
                     var staplesourceInServer = _bellDbContext.StaplesSources.Where(c => c.OrderNumber == staple.OrderNumber).FirstOrDefault();
                     staplesourceInServer.Comment = staple.Comment;
-                    staplesourceInServer.MatchStatus =(int)staple.MatchStatus;
+                    staplesourceInServer.MatchStatus = (int)staple.MatchStatus;
                     staplesourceInServer.Reconciled = staple.Reconciled.ToString();
                     staplesourceInServer.ReconciledBy = staple.ReconciledBy;
                     staplesourceInServer.ReconciledDate = staple.ReconciledDate; staplesourceInServer.UpdateDate = DateTime.Now;
@@ -118,7 +120,6 @@ namespace Bell.Reconciliation.Web.Server.Services
             {
                 throw;
             }
-
         }
     }
 }
