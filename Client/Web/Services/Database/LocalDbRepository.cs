@@ -44,12 +44,11 @@ public class LocalDbRepository : ILocalDbRepository
         {
             using var ctx = await _dbContextFactory.CreateDbContextAsync();
 
-            var syncLog = ctx.SyncLogs.Single(c=> c.Id == id);
+            var syncLog = ctx.SyncLogs.Single(c => c.Id == id);
             syncLog.Success = success;
             syncLog.EndSync = DateTime.Now;
 
             await ctx.SaveChangesAsync();
-
         }
         catch (Exception ex)
         {
@@ -77,8 +76,8 @@ public class LocalDbRepository : ILocalDbRepository
         {
             using var ctx = await _dbContextFactory.CreateDbContextAsync();
 
-            var recentSyncDate = ctx.SyncLogs.Max(c => c.EndSync);
-            var query = ctx.BellSources.Where(c=>c.ReconciledDate.HasValue && c.ReconciledDate > recentSyncDate).AsQueryable();
+            var recentSyncDate = ctx.SyncLogs.Where(x => x.Success == true).Max(c => c.EndSync);
+            var query = ctx.BellSources.Where(c => c.ReconciledDate.HasValue && c.ReconciledDate > recentSyncDate).AsQueryable();
             List<BellSourceDto> bellSourceDtos = query.ToList();
             return bellSourceDtos;
         }
@@ -94,7 +93,7 @@ public class LocalDbRepository : ILocalDbRepository
         {
             using var ctx = await _dbContextFactory.CreateDbContextAsync();
 
-            var recentSyncDate = ctx.SyncLogs.Where(x=>x.Success==true).Max(c => c.EndSync);
+            var recentSyncDate = ctx.SyncLogs.Where(x => x.Success == true).Max(c => c.EndSync);
             var query = ctx.StaplesSources.Where(c => c.ReconciledDate.HasValue && c.ReconciledDate > recentSyncDate).AsQueryable();
             List<StaplesSourceDto> staplesSourceDtos = query.ToList();
             return staplesSourceDtos;
@@ -569,6 +568,4 @@ public class LocalDbRepository : ILocalDbRepository
             throw;
         }
     }
-
-   
 }
