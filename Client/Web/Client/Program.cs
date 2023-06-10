@@ -15,10 +15,10 @@ public class Program
         builder.Services.AddScoped<DialogService>();
         var subFolder = builder.Configuration["baseaddress"];
 
-        var baseAddress = $"{builder.HostEnvironment.BaseAddress}/{subFolder}";
-        builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(baseAddress) });
+        //var baseAddress = $"{builder.HostEnvironment.BaseAddress}/{subFolder}";
+        //builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(baseAddress) });
 
-        //builder.Services.AddHttpClient();
+        builder.Services.AddHttpClient();
 
         builder.Services.AddSqliteWasmDbContextFactory<StapleSourceContext>(opts => opts.UseSqlite("Data Source=StapleSource.sqlite3"));
 

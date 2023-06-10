@@ -34,12 +34,12 @@ public class SyncData : ISyncData
             {
                 if (notSyncedStapleSources.Count > 0)
                 {
-                    await _httpClient.PostAsJsonAsync($"/api/SyncData/SyncChangesStaple", notSyncedStapleSources);
+                    await _httpClient.PostAsJsonAsync($"{baseAddress}/api/SyncData/SyncChangesStaple", notSyncedStapleSources);
                 }
 
                 if (notSyncedBellSources.Count > 0)
                 {
-                    await _httpClient.PostAsJsonAsync($"/api/SyncData/SyncChangesBell", notSyncedBellSources);
+                    await _httpClient.PostAsJsonAsync($"{baseAddress}/api/SyncData/SyncChangesBell", notSyncedBellSources);
                 }
                 syncLogsDto.Success = true;
             }
