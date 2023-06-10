@@ -24,7 +24,8 @@ public class FilterService : IFilterService
     {
         try
         {
-            var response = await _httpClient.GetFromJsonAsync<FilterItems>($"{baseAddress}/api/FilterValue/GetFilterItems");
+            // var response = await _httpClient.GetFromJsonAsync<FilterItems>($"{baseAddress}/api/FilterValue/GetFilterItems");
+            var response = await _httpClient.GetFromJsonAsync<FilterItems>($"/api/FilterValue/GetFilterItems");
             return response;
         }
         catch (Exception ex)
@@ -37,7 +38,8 @@ public class FilterService : IFilterService
     {
         try
         {
-            var url = $"{baseAddress}/api/FilterValue/GetFilterItems";
+            var url = $"/api/FilterValue/GetFilterItems";
+            // var url = $"{baseAddress}/api/FilterValue/GetFilterItems";
             var response = await _httpClient.GetFromJsonAsync<FilterItems>(url);
             return JsonSerializer.Serialize(response);
         }

@@ -13,7 +13,9 @@ public class Program
         builder.RootComponents.Add<HeadOutlet>("head::after");
 
         builder.Services.AddScoped<DialogService>();
-        var baseAddress = builder.HostEnvironment.BaseAddress;// + "/BellServices/Reconciliation/";
+        var subFolder = builder.Configuration["baseaddress"];
+
+        var baseAddress = $"{builder.HostEnvironment.BaseAddress}/{subFolder}";
         builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(baseAddress) });
 
         //builder.Services.AddHttpClient();
@@ -22,11 +24,8 @@ public class Program
 
         builder.Services.AddTransient<IFilterService, FilterService>();
         builder.Services.AddTransient<ILocalDbRepository, LocalDbRepository>();
-
-        // builder.Services.AddTransient<IInjectBellSource, FetchBellFromDb>();
         builder.Services.AddTransient<IFetchData, FetchData>();
         builder.Services.AddTransient<ISyncData, SyncData>();
-        // builder.Services.AddTransient<IInjectBellSource, InjectBellSource>();
 
         await builder.Build().RunAsync();
     }
