@@ -18,10 +18,6 @@ public interface ILocalDbRepository
 
     Task InsertSyncLog(SyncLogsDto syncLogsDto);
 
-    Task<int> StartSyncLog();
-
-    Task FinishedSyncLog(int id, bool success);
-
     Task<List<BellSourceDto>> GetNotSyncedUpdatedBellSource();
 
     Task<List<StaplesSourceDto>> GetNotSyncedUpdatedStapleSource();

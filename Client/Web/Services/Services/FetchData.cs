@@ -5,13 +5,8 @@ namespace Bell.Reconciliation.Frontend.Web.Services;
 public class FetchData : IFetchData
 {
     private readonly HttpClient _httpClient;
-    //private readonly IHttpClientFactory _ClientFactory;
-
     private readonly ILocalDbRepository _localDb;
-
-    //private readonly IConfiguration _configuration;
     private const int packageSize = 1000;
-
     private readonly string baseAddress;
 
     //TODO: THIS IS FOR DEV IT SHOULD BE BELL AND STAPLES COUNT
@@ -20,9 +15,7 @@ public class FetchData : IFetchData
     public FetchData(HttpClient httpClient, ILocalDbRepository localDb, IConfiguration configuration)
     {
         _httpClient = httpClient;
-        //_ClientFactory = ClientFactory;
         _localDb = localDb;
-        //_configuration = configuration;
         baseAddress = configuration["baseaddress"];
     }
 
@@ -41,7 +34,6 @@ public class FetchData : IFetchData
             do
             {
                 var staplesList = await _httpClient.GetFromJsonAsync<List<StaplesSourceDto>>($"{baseAddress}/api/SyncData/GetStaplesSourceItems/{startStapleCount}/{lastStapleCount}");
-                var res = staplesList.Where(x => x.OrderNumber == 83851628726).FirstOrDefault();
 
                 if (staplesList is not null)
                     await _localDb.InsertStaplesToLocalDbAsync(staplesList);
@@ -52,7 +44,6 @@ public class FetchData : IFetchData
                     lastStapleCount = dbcount.StaplesCount;
             } while (startStapleCount <= maximumDownload);// dbcount.StaplesCount);
 
-            //var _httpClient = _ClientFactory.CreateClient();
             do
             {
                 var bellList = await _httpClient.GetFromJsonAsync<List<BellSourceDto>>($"{baseAddress}/api/SyncData/GetBellSourceitems/{startBellCount}/{lastBellCount}");
@@ -68,8 +59,8 @@ public class FetchData : IFetchData
             SyncLogsDto syncLogsDto = new SyncLogsDto()
             {
                 Success = true,
-                EndSync = DateTime.Now,
-                StartSync = DateTime.Now,
+                EndSync = DateTime.UtcNow,
+                StartSync = DateTime.UtcNow,
             };
             await _localDb.InsertSyncLog(syncLogsDto);
         }
@@ -83,7 +74,6 @@ public class FetchData : IFetchData
     {
         try
         {
-            //var _httpClient = _ClientFactory.CreateClient();
             var res = await _httpClient.GetStringAsync($"{baseAddress}/api/syncData/GenerateServerDb/1000/y/10");
 
             if (res is "Done") { }

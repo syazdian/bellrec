@@ -67,10 +67,8 @@ namespace Bell.Reconciliation.Web.Server.Services
             try
             {
                 var items = await _bellDbContext.StaplesSources.OrderBy(e => e.Id).Skip(startCount - 1).Take(endCount - startCount + 1).ToListAsync();
-                var res2 = items.Where(x => x.OrderNumber == 83851628726).FirstOrDefault();
 
                 var adapted = items.Adapt<List<StaplesSourceDto>>();
-                var res = adapted.Where(x => x.OrderNumber == 83851628726).FirstOrDefault();
                 return adapted;
             }
             catch (Exception ex)
@@ -91,7 +89,7 @@ namespace Bell.Reconciliation.Web.Server.Services
                     bellsourceInServer.Reconciled = bell.Reconciled.ToString();
                     bellsourceInServer.ReconciledBy = bell.ReconciledBy;
                     bellsourceInServer.ReconciledDate = bell.ReconciledDate;
-                    bellsourceInServer.UpdateDate = DateTime.Now;
+                    bellsourceInServer.UpdateDate = DateTime.UtcNow;
                 }
                 _bellDbContext.SaveChanges();
             }
@@ -112,7 +110,7 @@ namespace Bell.Reconciliation.Web.Server.Services
                     staplesourceInServer.MatchStatus = (int)staple.MatchStatus;
                     staplesourceInServer.Reconciled = staple.Reconciled.ToString();
                     staplesourceInServer.ReconciledBy = staple.ReconciledBy;
-                    staplesourceInServer.ReconciledDate = staple.ReconciledDate; staplesourceInServer.UpdateDate = DateTime.Now;
+                    staplesourceInServer.ReconciledDate = staple.ReconciledDate; staplesourceInServer.UpdateDate = DateTime.UtcNow;
                 }
                 _bellDbContext.SaveChanges();
             }

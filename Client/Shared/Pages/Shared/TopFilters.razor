@@ -42,8 +42,8 @@
 
 @code {
     Variant variantStyle = Variant.Flat;
-    DateTime? StartDate ;//= DateTime.Now.AddMonths(-1);
-    DateTime? EndDate ;//= DateTime.Now;
+    DateTime? StartDate ;//= DateTime.UtcNow.AddMonths(-1);
+    DateTime? EndDate;//= DateTime.UtcNow;
 
     FilterItemDto filterItemDto = new();
     string lobValue  ;

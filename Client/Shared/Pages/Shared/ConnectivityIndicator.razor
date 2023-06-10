@@ -3,19 +3,20 @@
 
 @if (IsOnline)
 {
-    @ShowOnline
+    <img alt="Online" title="Application running online." src="./Assets/internet-on.png" />
 }
 else
 {
-    @ShowOffline
+    <img alt="Offline" title="Application running offline." src="./Assets/internet-off.png" />
+
 }
 
 @code {
-    [Parameter]
-    public RenderFragment ShowOnline { get; set; }
+    //[Parameter]
+    //public RenderFragment ShowOnline { get; set; }
 
-    [Parameter]
-    public RenderFragment ShowOffline { get; set; }
+    //[Parameter]
+    //public RenderFragment ShowOffline { get; set; }
 
     public bool IsOnline { get; set; }
 

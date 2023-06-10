@@ -10,8 +10,6 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        // Add services to the container.
-
         builder.Services.AddControllersWithViews();
         builder.Services.AddRazorPages();
 
@@ -26,14 +24,9 @@ public class Program
                    .AddJsonFile($"appsettings.json")
                    .Build();
 
-        //var constring = builder.Configuration.GetConnectionString("Sqlite");
-        //builder.Services.AddDbContext<Web.Server.Data.sqlite.BellRecContext>(options =>
-        //        options.UseSqlite(constring));
-
         var constring = builder.Configuration.GetConnectionString("SqlServer");
-        builder.Services.AddDbContext<Web.Server.Data.Sqlserver.BellRecContext>(options =>
-            // builder.Services.AddDbContext<Data.Sqlserver.StapleContext>(options =>
-            options.UseSqlServer(constring));
+        builder.Services.AddDbContext<Data.Sqlserver.BellRecContext>(options =>
+             options.UseSqlServer(constring));
 
         builder.Configuration.AddConfiguration(config);
         // builder.Services.AddTransient<DatabaseGenerator>();
@@ -47,7 +40,6 @@ public class Program
         else
         {
             app.UseExceptionHandler("/Error");
-            // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
             app.UseHsts();
         }
 

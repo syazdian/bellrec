@@ -24,23 +24,22 @@ public class SyncData : ISyncData
 
     public async Task UpdateChangesToServerDb()
     {
-        var notSyncedBellSources = _localDb.GetNotSyncedUpdatedBellSource().Result;
-        var notSyncedStapleSources = _localDb.GetNotSyncedUpdatedStapleSource().Result;
+        var notSyncedBellSources = await _localDb.GetNotSyncedUpdatedBellSource();
+        var notSyncedStapleSources = await _localDb.GetNotSyncedUpdatedStapleSource();
 
         if (notSyncedBellSources.Count + notSyncedStapleSources.Count > 0)
         {
-            SyncLogsDto syncLogsDto = new SyncLogsDto();
-            syncLogsDto.StartSync = DateTime.Now;
+            SyncLogsDto syncLogsDto = new SyncLogsDto { StartSync = DateTime.UtcNow };
             try
             {
                 if (notSyncedStapleSources.Count > 0)
                 {
-                    var response = await _httpClient.PostAsJsonAsync($"{baseAddress}/api/SyncData/SyncChangesStaple", notSyncedStapleSources);
+                    await _httpClient.PostAsJsonAsync($"{baseAddress}/api/SyncData/SyncChangesStaple", notSyncedStapleSources);
                 }
 
                 if (notSyncedBellSources.Count > 0)
                 {
-                    var response = await _httpClient.PostAsJsonAsync($"{baseAddress}/api/SyncData/SyncChangesBell", notSyncedBellSources);
+                    await _httpClient.PostAsJsonAsync($"{baseAddress}/api/SyncData/SyncChangesBell", notSyncedBellSources);
                 }
                 syncLogsDto.Success = true;
             }
@@ -51,7 +50,7 @@ public class SyncData : ISyncData
             }
             finally
             {
-                syncLogsDto.EndSync = DateTime.Now;
+                syncLogsDto.EndSync = DateTime.UtcNow;
                 await _localDb.InsertSyncLog(syncLogsDto);
             }
         }
