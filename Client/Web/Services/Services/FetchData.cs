@@ -26,8 +26,6 @@ public class FetchData : IFetchData
             await _localDb.PurgeTables();
             var dbcount = await _httpClient.GetFromJsonAsync<BellStapleCountDto>($"{baseAddress}/api/SyncData/FetchCountServerDatabase");
             if (dbcount is null || dbcount.StaplesCount == 0 || dbcount.BellCount == 0) throw new ArgumentNullException(nameof(dbcount));
-            int startBellCount = 1;
-            int lastBellCount = packageSize;
 
             int startStapleCount = 1;
             int lastStapleCount = packageSize;
@@ -44,9 +42,11 @@ public class FetchData : IFetchData
                     lastStapleCount = dbcount.StaplesCount;
             } while (startStapleCount <= dbcount.StaplesCount);
 
+            int startBellCount = 1;
+            int lastBellCount = packageSize;
             do
             {
-                var bellList = await _httpClient.GetFromJsonAsync<List<BellSourceDto>>($"{baseAddress}/api/SyncData/GetBellSourceitems/");
+                var bellList = await _httpClient.GetFromJsonAsync<List<BellSourceDto>>($"{baseAddress}/api/SyncData/GetBellSourceitems/{startBellCount}/{lastBellCount}");
                 if (bellList is not null)
                     await _localDb.InsertBellSourceToLocalDbAsync(bellList);
                 else throw new ArgumentNullException(nameof(bellList));
