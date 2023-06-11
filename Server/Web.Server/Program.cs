@@ -13,9 +13,6 @@ public class Program
         builder.Services.AddControllersWithViews();
         builder.Services.AddRazorPages();
 
-        //var filterItems = GetFilterItems(builder);
-        //builder.Services.AddSingleton(filterItems);
-
         builder.Services.AddTransient<ServerDbRepository>();
 
         var executingAssembly = Assembly.GetExecutingAssembly();
