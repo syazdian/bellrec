@@ -2,7 +2,7 @@
 
 public interface IFilterService
 {
-    public Task<FilterItems> GetFilterItems();
+    public FilterItemsDisplay GetFilterItems();
 
     public Task<string> GetHello();
 }

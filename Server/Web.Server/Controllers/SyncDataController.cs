@@ -52,6 +52,20 @@ public class SyncDataController : Controller
         return Ok(items);
     }
 
+    [HttpPost("SyncChangesStaple")]
+    public async Task<IActionResult> SyncChangesStaple(List<StaplesSourceDto> stapleSourceChanges)
+    {
+        await _dbRepo.SyncStapleSourceChanges(stapleSourceChanges);
+        return Ok();
+    }
+
+    [HttpPost("SyncChangesBell")]
+    public async Task<IActionResult> SyncChangesBell(List<BellSourceDto> bellSourceChanges)
+    {
+        await _dbRepo.SyncBellSourceChanges(bellSourceChanges);
+        return Ok();
+    }
+
     //[HttpGet("GenerateServerDb/{recordNom}/{deleteOldRecords}/{differenceRate}")]
     //public async Task<IActionResult> GenerateServerDb([FromRoute] int recordNom, string deleteOldRecords, int differenceRate)
     //{

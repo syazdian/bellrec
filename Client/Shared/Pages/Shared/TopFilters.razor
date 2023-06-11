@@ -42,8 +42,8 @@
 
 @code {
     Variant variantStyle = Variant.Flat;
-    DateTime? StartDate ;//= DateTime.Now.AddMonths(-1);
-    DateTime? EndDate ;//= DateTime.Now;
+    DateTime? StartDate ;//= DateTime.UtcNow.AddMonths(-1);
+    DateTime? EndDate;//= DateTime.UtcNow;
 
     FilterItemDto filterItemDto = new();
     string lobValue  ;
@@ -57,7 +57,7 @@
     string locationValue = string.Empty;
     List<string> locations = new();
 
-    FilterItems filterItems = new();
+    FilterItemsDisplay filterItems = new();
 
     [Parameter]
     public EventCallback<FilterItemDto> FilterChanged { get; set; }
@@ -65,7 +65,8 @@
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        filterItems =  await filterService.GetFilterItems();
+
+        filterItems = filterService.GetFilterItems();
         loBs = filterItems.LoBs.Select(x => x.Name).ToList();
         brands = filterItems.Brands;
         rebateType = filterItems.RebateTypes;
@@ -101,7 +102,6 @@
         lobValue = subLobValue = brandValue = rebateValue = locationValue = string.Empty;
         StartDate = new();
         EndDate = Convert.ToDateTime("2050/01/01");
-
     }
 
 }

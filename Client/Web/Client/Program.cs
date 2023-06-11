@@ -1,3 +1,5 @@
+using Bell.Reconciliation.Common.Models.Domain;
+using Bell.Reconciliation.Frontend.Web.Services.Services;
 using Radzen;
 using SqliteWasmHelper;
 
@@ -12,19 +14,47 @@ public class Program
         builder.RootComponents.Add<HeadOutlet>("head::after");
 
         builder.Services.AddScoped<DialogService>();
-        var baseAddress = builder.HostEnvironment.BaseAddress + "/BellServices/Reconciliation/";
-        //var baseAddress = "https://dev.tools.staples.ca/BellServices/Reconciliation/";
+        var subFolder = builder.Configuration["baseaddress"];
 
-        builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(baseAddress) });
+        var filterItems = GetFilterItems(builder);
+        builder.Services.AddSingleton(filterItems);
+
+        //var baseAddress = $"{builder.HostEnvironment.BaseAddress}/{subFolder}";
+        //builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(baseAddress) });
+
+        builder.Services.AddHttpClient();
+
         builder.Services.AddSqliteWasmDbContextFactory<StapleSourceContext>(opts => opts.UseSqlite("Data Source=StapleSource.sqlite3"));
 
         builder.Services.AddTransient<IFilterService, FilterService>();
         builder.Services.AddTransient<ILocalDbRepository, LocalDbRepository>();
-
-        // builder.Services.AddTransient<IInjectBellSource, FetchBellFromDb>();
         builder.Services.AddTransient<IFetchData, FetchData>();
-        // builder.Services.AddTransient<IInjectBellSource, InjectBellSource>();
+        builder.Services.AddTransient<ISyncData, SyncData>();
 
         await builder.Build().RunAsync();
+    }
+
+    private static FilterItemsDisplay GetFilterItems(WebAssemblyHostBuilder builder)
+    {
+        FilterItemsDisplay filterItems = new FilterItemsDisplay();
+
+        LoB loBWireless = new LoB()
+        {
+            Name = "Wireless",
+            SubLoBs = builder.Configuration.GetSection("FilterItems:LoB:Wireless").Get<List<string>>()
+        };
+
+        filterItems.LoBs.Add(loBWireless);
+        LoB loBWireline = new LoB()
+        {
+            Name = "Wireline",
+            SubLoBs = builder.Configuration.GetSection("FilterItems:LoB:Wireline").Get<List<string>>()
+        };
+        filterItems.LoBs.Add(loBWireline);
+        filterItems.Brands = builder.Configuration.GetSection("FilterItems:Brand").Get<List<string>>();
+        filterItems.RebateTypes = builder.Configuration.GetSection("FilterItems:RebateType").Get<List<string>>();
+        filterItems.Locations = builder.Configuration.GetSection("FilterItems:Location").Get<List<string>>();
+
+        return filterItems;
     }
 }

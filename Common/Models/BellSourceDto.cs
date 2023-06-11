@@ -14,8 +14,8 @@ public class BellSourceDto
 
     public string? SubLob { get; set; }
     public string? RebateType { get; set; }
-    public bool Reconciled { get; }
+    public bool Reconciled { get; set; }
     public string? ReconciledBy { get; set; } = string.Empty;
-    public DateTime ReconciledDate { get; set; } = DateTime.Now;
+    public DateTime? ReconciledDate { get; set; }
     public MatchStatus MatchStatus { get; set; }
 }

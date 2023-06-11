@@ -1,10 +1,5 @@
-﻿using Bell.Reconciliation.Common.Models;
-using Bell.Reconciliation.Common.Models.Enums;
-using Microsoft.EntityFrameworkCore;
+﻿using Bell.Reconciliation.Common.Models.Enums;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using System;
-using System.Linq;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Bell.Reconciliation.Frontend.Web.Services.Database;
 
@@ -15,6 +10,54 @@ public class LocalDbRepository : ILocalDbRepository
     public LocalDbRepository(ISqliteWasmDbContextFactory<StapleSourceContext> dbContextFactory)
     {
         _dbContextFactory = dbContextFactory;
+    }
+
+    public async Task InsertSyncLog(SyncLogsDto syncLogsDto)
+    {
+        try
+        {
+            using var ctx = await _dbContextFactory.CreateDbContextAsync();
+            ctx.SyncLogs.Add(syncLogsDto);
+            await ctx.SaveChangesAsync();
+        }
+        catch (Exception ex)
+        {
+            throw;
+        }
+    }
+
+    public async Task<List<BellSourceDto>> GetNotSyncedUpdatedBellSource()
+    {
+        try
+        {
+            using var ctx = await _dbContextFactory.CreateDbContextAsync();
+
+            var recentSyncDate = ctx.SyncLogs.Where(x => x.Success == true).Max(c => c.EndSync);
+            var query = ctx.BellSources.Where(c => c.ReconciledDate.HasValue && c.ReconciledDate > recentSyncDate).AsQueryable();
+            List<BellSourceDto> bellSourceDtos = query.ToList();
+            return bellSourceDtos;
+        }
+        catch (Exception ex)
+        {
+            throw;
+        }
+    }
+
+    public async Task<List<StaplesSourceDto>> GetNotSyncedUpdatedStapleSource()
+    {
+        try
+        {
+            using var ctx = await _dbContextFactory.CreateDbContextAsync();
+
+            var recentSyncDate = ctx.SyncLogs.Where(x => x.Success == true).Max(c => c.EndSync);
+            var res = ctx.StaplesSources.Where(c => c.ReconciledDate.HasValue && c.ReconciledDate > recentSyncDate).ToList();
+            List<StaplesSourceDto> staplesSourceDtos = res;
+            return staplesSourceDtos;
+        }
+        catch (Exception ex)
+        {
+            throw;
+        }
     }
 
     public async Task InsertBellSourceToLocalDbAsync(List<BellSourceDto> bellSourceDtos)
@@ -116,6 +159,7 @@ public class LocalDbRepository : ILocalDbRepository
         return stpSourceDtos;
     }
 
+    //TODO: This should be optimized like other ones with IQueryable
     public async Task<List<CompareBellStapleCellPhone>> GetBellStapleCompareCellPhoneFromLocalDb(FilterItemDto filterItemDto)
     {
         try
@@ -153,6 +197,7 @@ public class LocalDbRepository : ILocalDbRepository
                        BCustomerName = b.CustomerName.ToString(),
                        BRebateType = b.RebateType.ToString(),
                        BReconciled = b.Reconciled,
+                       BId = b.Id,
 
                        SPhone = s.Phone.ToString(),
                        SLob = s.Lob,
@@ -165,6 +210,8 @@ public class LocalDbRepository : ILocalDbRepository
                        SCustomerName = s.CustomerName.ToString(),
                        SRebateType = b.RebateType.ToString(),
                        SReconciled = b.Reconciled,
+                       SId = s.Id,
+
                        MatchStatus = (s.Reconciled == true && b.Reconciled == true) ? MatchStatus.Reconciled :
                        ((s.Amount == b.Amount && s.OrderNumber == b.OrderNumber &&
                        s.TransactionDate == b.TransactionDate && s.CustomerName == b.CustomerName && s.Imei == b.Imei && s.Phone == s.Phone) ? MatchStatus.Match : MatchStatus.Missmatch)
@@ -200,6 +247,7 @@ public class LocalDbRepository : ILocalDbRepository
                             BCustomerName = b.CustomerName.ToString(),
                             BRebateType = b.RebateType.ToString(),
                             BReconciled = b.Reconciled,
+                            BId = b.Id,
 
                             SPhone = s.Phone.ToString(),
                             SLob = s.Lob,
@@ -214,6 +262,7 @@ public class LocalDbRepository : ILocalDbRepository
                             SReconciled = b.Reconciled,
                             SBrand = s.Brand,
                             SLocation = s.Location,
+                            SId = s.Id,
 
                             MatchStatus = (s.Reconciled == true && b.Reconciled == true) ? MatchStatus.Reconciled :
                             ((s.Amount == b.Amount && s.OrderNumber == b.OrderNumber &&
@@ -221,10 +270,6 @@ public class LocalDbRepository : ILocalDbRepository
                         })
                                   .OrderBy(x => x.SId)
                                   .ToList();
-
-            //  var listJoinByImei = queryJoinByImei.ToList();
-
-            // var bellStaplesCompres = listJoinByPhone.Concat(listJoinByImei).ToList();
 
             return bellStaplesCompares;
         }
@@ -278,6 +323,7 @@ public class LocalDbRepository : ILocalDbRepository
         return stpSourceDtos;
     }
 
+    //TODO: This should be optimized like other ones with IQueryable
     public async Task<List<CompareBellStapleNonCellPhone>> GetBellStapleCompareNonCellPhoneFromLocalDb(FilterItemDto filterItemDto)
     {
         try
@@ -311,6 +357,7 @@ public class LocalDbRepository : ILocalDbRepository
                             BReconciled = b.Reconciled,
                             BLob = b.Lob,
                             BSublob = b.SubLob,
+                            BId = b.Id,
 
                             SOrderNumber = s.OrderNumber.ToString(),
                             SAmount = s.Amount,
@@ -323,6 +370,7 @@ public class LocalDbRepository : ILocalDbRepository
                             SSublob = s.SubLob,
                             SBrand = s.Brand,
                             SLocation = s.Location,
+                            SId = s.Id,
 
                             MatchStatus = (s.Reconciled == true && b.Reconciled == true) ? MatchStatus.Reconciled :
                             ((s.Amount == b.Amount && s.OrderNumber == b.OrderNumber &&
@@ -344,6 +392,10 @@ public class LocalDbRepository : ILocalDbRepository
         {
             using var ctx = await _dbContextFactory.CreateDbContextAsync();
 
+            bellSourceDto.Reconciled = true;
+            bellSourceDto.ReconciledBy = "USER"; //TODO: it should be replaced with REAL USER
+            bellSourceDto.ReconciledDate = DateTime.UtcNow;
+
             ctx.Update(bellSourceDto);
             ctx.SaveChanges();
 
@@ -363,6 +415,9 @@ public class LocalDbRepository : ILocalDbRepository
 
             var bell = ctx.BellSources.Single(c => c.Id == Id);
             bell.Comment = Comment;
+            bell.Reconciled = true;
+            bell.ReconciledBy = "USER";
+            bell.ReconciledDate = DateTime.UtcNow;
             ctx.Update(bell);
             ctx.SaveChanges();
 
@@ -379,6 +434,10 @@ public class LocalDbRepository : ILocalDbRepository
         try
         {
             using var ctx = await _dbContextFactory.CreateDbContextAsync();
+
+            staplesSourceDto.Reconciled = true;
+            staplesSourceDto.ReconciledBy = "USER";
+            staplesSourceDto.ReconciledDate = DateTime.UtcNow;
 
             ctx.Update(staplesSourceDto);
             ctx.SaveChanges();
@@ -399,6 +458,9 @@ public class LocalDbRepository : ILocalDbRepository
 
             var staple = ctx.StaplesSources.Single(c => c.Id == Id);
             staple.Comment = Comment;
+            staple.Reconciled = true;
+            staple.ReconciledBy = "USER";
+            staple.ReconciledDate = DateTime.UtcNow;
             ctx.Update(staple);
             ctx.SaveChanges();
 
@@ -452,6 +514,7 @@ public class LocalDbRepository : ILocalDbRepository
             using var ctx = await _dbContextFactory.CreateDbContextAsync();
             await ctx.BellSources.ExecuteDeleteAsync();
             await ctx.StaplesSources.ExecuteDeleteAsync();
+            await ctx.SyncLogs.ExecuteDeleteAsync();
             await ctx.SaveChangesAsync();
             return true;
         }

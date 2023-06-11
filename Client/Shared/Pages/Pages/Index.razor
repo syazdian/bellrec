@@ -3,9 +3,15 @@
 @using Bell.Reconciliation.Frontend.Shared.Pages.Shared
 @using Bell.Reconciliation.Frontend.Shared.ServiceInterfaces;
 @inject ILocalDbRepository _localdb
-@inject IFetchData SyncData
+@inject IFetchData FetchData
+@inject ISyncData SyncData
+
+<CascadingValue Value="@uiDbExist">
+    <Header></Header>
+</CascadingValue>
 
 <RadzenDialog></RadzenDialog>
+
 
 
 <PageTitle>Bell Compare Page</PageTitle>
@@ -18,19 +24,13 @@
     }
     else
     {
-        <RadzenButton ButtonStyle="ButtonStyle.Dark" Size="ButtonSize.Large" Text="Fetch Data from Server" Click="FetchData"></RadzenButton>
+        <RadzenButton ButtonStyle="ButtonStyle.Dark" Size="ButtonSize.Large" Text="Fetch Data from Server" Click="FetchDataFromServer"></RadzenButton>
     }
 
 }
-@*if ()
-{
-    if (showloader)
-    {
-        <LocalDbLoader message="Loading Data from localDb to Ui"></LocalDbLoader>
-    }
-}*@
 else
 {
+    
 
     <div class="container marketing">
         <TopFilters FilterChanged="(e)=>ApplyFilters(e)"></TopFilters>
@@ -72,10 +72,7 @@ else
         {
             await LoadDatabaseInUi(filterItemDto);
         }
-        //else
-        //{
-        //    await FetchData();
-        //}
+       
         StateHasChanged();
     }
     public async void ApplyFilters(FilterItemDto _filterItemDto)
@@ -102,12 +99,12 @@ else
         uiDbExist = false;
         return false;
     }
-    private async Task FetchData()
+    private async Task FetchDataFromServer()
     {
         fetchButtonClicked = true;
         showloader = true;
         localDbExist = false;
-        await SyncData.FetchDataFromServerDb();
+        await FetchData.FetchDataFromServerDb();
         localDbExist = true;
         await LoadDatabaseInUi(filterItemDto);
 

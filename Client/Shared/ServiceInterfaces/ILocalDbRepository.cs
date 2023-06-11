@@ -16,6 +16,12 @@ public interface ILocalDbRepository
 
     Task<List<CompareBellStapleNonCellPhone>> GetBellStapleCompareNonCellPhoneFromLocalDb(FilterItemDto filterItemDto);
 
+    Task InsertSyncLog(SyncLogsDto syncLogsDto);
+
+    Task<List<BellSourceDto>> GetNotSyncedUpdatedBellSource();
+
+    Task<List<StaplesSourceDto>> GetNotSyncedUpdatedStapleSource();
+
     Task<int> InsertDataToLocalDbAsync(BellStaplesSourceDto bellStaplesSources);
 
     Task InsertBellSourceToLocalDbAsync(List<BellSourceDto> bellSourceDtos);

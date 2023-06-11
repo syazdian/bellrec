@@ -67,8 +67,52 @@ namespace Bell.Reconciliation.Web.Server.Services
             try
             {
                 var items = await _bellDbContext.StaplesSources.OrderBy(e => e.Id).Skip(startCount - 1).Take(endCount - startCount + 1).ToListAsync();
+
                 var adapted = items.Adapt<List<StaplesSourceDto>>();
                 return adapted;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        public async Task SyncBellSourceChanges(List<BellSourceDto> bellSourceDtos)
+        {
+            try
+            {
+                foreach (var bell in bellSourceDtos)
+                {
+                    var bellsourceInServer = _bellDbContext.BellSources.Where(c => c.OrderNumber == bell.OrderNumber).FirstOrDefault();
+                    bellsourceInServer.Comment = bell.Comment;
+                    bellsourceInServer.MatchStatus = bell.MatchStatus.ToString();
+                    bellsourceInServer.Reconciled = bell.Reconciled.ToString();
+                    bellsourceInServer.ReconciledBy = bell.ReconciledBy;
+                    bellsourceInServer.ReconciledDate = bell.ReconciledDate;
+                    bellsourceInServer.UpdateDate = DateTime.UtcNow;
+                }
+                _bellDbContext.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        public async Task SyncStapleSourceChanges(List<StaplesSourceDto> stapleSourceDtos)
+        {
+            try
+            {
+                foreach (var staple in stapleSourceDtos)
+                {
+                    var staplesourceInServer = _bellDbContext.StaplesSources.Where(c => c.OrderNumber == staple.OrderNumber).FirstOrDefault();
+                    staplesourceInServer.Comment = staple.Comment;
+                    staplesourceInServer.MatchStatus = (int)staple.MatchStatus;
+                    staplesourceInServer.Reconciled = staple.Reconciled.ToString();
+                    staplesourceInServer.ReconciledBy = staple.ReconciledBy;
+                    staplesourceInServer.ReconciledDate = staple.ReconciledDate; staplesourceInServer.UpdateDate = DateTime.UtcNow;
+                }
+                _bellDbContext.SaveChanges();
             }
             catch (Exception ex)
             {

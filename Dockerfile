@@ -42,11 +42,9 @@ ENV CORECLR_ENABLE_PROFILING=1 \
   CORECLR_NEWRELIC_HOME=$NewRelicHome \
   CORECLR_PROFILER_PATH=$NewRelicHome/libNewRelicProfiler.so \
   NEW_RELIC_DISTRIBUTED_TRACING_ENABLED=true
-RUN mkdir -p ${NewRelicHome} && cd /usr/local && wget https://download.newrelic.com/dot_net_agent/previous_releases/8.30.0/newrelic-netcore20-agent_8.30.0.0_amd64.tar.gz && tar xvzf newrelic-netcore20-agent_8.30.0.0_amd64.tar.gz
 
 FROM base AS apm-vendor-datadog
 
-RUN apk --no-cache add curl
 # Download and install the Tracer
 RUN mkdir -p /opt/datadog \
   && mkdir -p /var/log/datadog \

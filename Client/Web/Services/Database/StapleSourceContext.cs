@@ -11,5 +11,6 @@ namespace Bell.Reconciliation.Frontend.Web.Database
 
         public DbSet<BellSourceDto> BellSources { get; set; } = null!;
         public DbSet<StaplesSourceDto> StaplesSources { get; set; } = null!;
+        public DbSet<SyncLogsDto> SyncLogs { get; set; } = null!;
     }
 }
