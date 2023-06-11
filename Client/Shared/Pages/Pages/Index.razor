@@ -6,7 +6,9 @@
 @inject IFetchData FetchData
 @inject ISyncData SyncData
 
-<Header ShowSyncChanges=(uiDbExist) ></Header>
+<CascadingValue Value="@uiDbExist">
+    <Header></Header>
+</CascadingValue>
 
 <RadzenDialog></RadzenDialog>
 
@@ -26,13 +28,6 @@
     }
 
 }
-@*if ()
-{
-    if (showloader)
-    {
-        <LocalDbLoader message="Loading Data from localDb to Ui"></LocalDbLoader>
-    }
-}*@
 else
 {
     
@@ -77,10 +72,7 @@ else
         {
             await LoadDatabaseInUi(filterItemDto);
         }
-        //else
-        //{
-        //    await FetchData();
-        //}
+       
         StateHasChanged();
     }
     public async void ApplyFilters(FilterItemDto _filterItemDto)

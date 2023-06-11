@@ -1,8 +1,8 @@
 ﻿namespace Bell.Reconciliation.Common.Models.Domain;
 
-public class FilterItems
+public class FilterItemsDisplay
 {
-    public FilterItems()
+    public FilterItemsDisplay()
     {
         LoBs = new List<LoB>();
         Locations = new List<string>();

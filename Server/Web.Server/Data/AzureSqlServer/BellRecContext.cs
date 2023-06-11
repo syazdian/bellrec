@@ -17,13 +17,9 @@ public partial class BellRecContext : DbContext
 
     public virtual DbSet<BellSource> BellSources { get; set; }
 
-    public virtual DbSet<BellSourceX> BellSourceXes { get; set; }
-
     public virtual DbSet<SampleName> SampleNames { get; set; }
 
     public virtual DbSet<StaplesSource> StaplesSources { get; set; }
-
-    public virtual DbSet<StaplesSourceX> StaplesSourceXes { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -40,30 +36,6 @@ public partial class BellRecContext : DbContext
             entity.HasKey(e => e.Id).HasName("PK__BellSour__3214EC077F769EFE");
 
             entity.ToTable("BellSource");
-
-            entity.Property(e => e.Id).ValueGeneratedNever();
-            entity.Property(e => e.Comment).HasMaxLength(250);
-            entity.Property(e => e.CreateDate).HasColumnType("smalldatetime");
-            entity.Property(e => e.CustomerName).HasMaxLength(250);
-            entity.Property(e => e.Imei).HasColumnName("IMEI");
-            entity.Property(e => e.Lob)
-                .HasMaxLength(250)
-                .HasColumnName("LOB");
-            entity.Property(e => e.MatchStatus).HasMaxLength(250);
-            entity.Property(e => e.RebateType).HasMaxLength(250);
-            entity.Property(e => e.Reconciled).HasMaxLength(250);
-            entity.Property(e => e.ReconciledBy).HasMaxLength(250);
-            entity.Property(e => e.ReconciledDate).HasColumnType("smalldatetime");
-            entity.Property(e => e.SubLob).HasMaxLength(250);
-            entity.Property(e => e.TransactionDate).HasColumnType("smalldatetime");
-            entity.Property(e => e.UpdateDate).HasColumnType("smalldatetime");
-        });
-
-        modelBuilder.Entity<BellSourceX>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK_BellSource");
-
-            entity.ToTable("BellSourceX");
 
             entity.Property(e => e.Id).ValueGeneratedNever();
             entity.Property(e => e.Comment).HasMaxLength(250);
@@ -167,36 +139,6 @@ public partial class BellRecContext : DbContext
             entity.Property(e => e.UpdateDate)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("smalldatetime");
-        });
-
-        modelBuilder.Entity<StaplesSourceX>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK_StaplesSource");
-
-            entity.ToTable("StaplesSourceX");
-
-            entity.Property(e => e.Id).ValueGeneratedNever();
-            entity.Property(e => e.Brand).HasMaxLength(250);
-            entity.Property(e => e.Comment).HasMaxLength(250);
-            entity.Property(e => e.CreateDate).HasColumnType("smalldatetime");
-            entity.Property(e => e.CustomerName).HasMaxLength(250);
-            entity.Property(e => e.DeviceCo).HasMaxLength(250);
-            entity.Property(e => e.Imei).HasColumnName("IMEI");
-            entity.Property(e => e.Lob)
-                .HasMaxLength(250)
-                .HasColumnName("LOB");
-            entity.Property(e => e.Location).HasMaxLength(250);
-            entity.Property(e => e.Msf).HasColumnName("MSF");
-            entity.Property(e => e.Product).HasMaxLength(250);
-            entity.Property(e => e.RebateType).HasMaxLength(250);
-            entity.Property(e => e.Rec).HasMaxLength(250);
-            entity.Property(e => e.Reconciled).HasMaxLength(250);
-            entity.Property(e => e.ReconciledBy).HasMaxLength(250);
-            entity.Property(e => e.ReconciledDate).HasColumnType("smalldatetime");
-            entity.Property(e => e.SalesPerson).HasMaxLength(250);
-            entity.Property(e => e.SubLob).HasMaxLength(250);
-            entity.Property(e => e.TransactionDate).HasColumnType("smalldatetime");
-            entity.Property(e => e.UpdateDate).HasColumnType("smalldatetime");
         });
 
         //OnModelCreatingPartial(modelBuilder);

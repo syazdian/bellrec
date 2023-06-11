@@ -4,9 +4,9 @@
 [Route("api/[controller]")]
 public class FilterValueController : Controller
 {
-    private readonly FilterItems _filterItems;
+    private readonly FilterItemsDisplay _filterItems;
 
-    public FilterValueController(FilterItems filterItems)
+    public FilterValueController(FilterItemsDisplay filterItems)
     {
         _filterItems = filterItems;
     }

@@ -13,8 +13,8 @@ public class Program
         builder.Services.AddControllersWithViews();
         builder.Services.AddRazorPages();
 
-        var filterItems = GetFilterItems(builder);
-        builder.Services.AddSingleton(filterItems);
+        //var filterItems = GetFilterItems(builder);
+        //builder.Services.AddSingleton(filterItems);
 
         builder.Services.AddTransient<ServerDbRepository>();
 
@@ -58,29 +58,5 @@ public class Program
         app.MapFallbackToFile("index.html");
 
         app.Run();
-    }
-
-    private static FilterItems GetFilterItems(WebApplicationBuilder builder)
-    {
-        FilterItems filterItems = new FilterItems();
-
-        LoB loBWireless = new LoB()
-        {
-            Name = "Wireless",
-            SubLoBs = builder.Configuration.GetSection("FilterItems:LoB:Wireless").Get<List<string>>()
-        };
-
-        filterItems.LoBs.Add(loBWireless);
-        LoB loBWireline = new LoB()
-        {
-            Name = "Wireline",
-            SubLoBs = builder.Configuration.GetSection("FilterItems:LoB:Wireline").Get<List<string>>()
-        };
-        filterItems.LoBs.Add(loBWireline);
-        filterItems.Brands = builder.Configuration.GetSection("FilterItems:Brand").Get<List<string>>();
-        filterItems.RebateTypes = builder.Configuration.GetSection("FilterItems:RebateType").Get<List<string>>();
-        filterItems.Locations = builder.Configuration.GetSection("FilterItems:Location").Get<List<string>>();
-
-        return filterItems;
     }
 }

@@ -1,6 +1,4 @@
-﻿@using Bell.Reconciliation.Frontend.Shared.ServiceInterfaces;
-@inject ISyncData SyncData
-@inject DialogService dialogService
+﻿
 <header>
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-light ">
         <div class="container-fluid">
@@ -11,11 +9,8 @@
             <div class="navbar-brand text-center text-black display-2">
                 Staples-Bell Reconcilliation App
             </div>
-            <ConnectivityIndicator />
-            @if (ShowSyncChanges)
-            {
-                <RadzenButton Text="Sync Changes" Icon="sync" ButtonStyle="ButtonStyle.Success" Click="@OnClickSync"></RadzenButton>
-            }
+            <ConnectivityIndicatorAndSync />
+           
            
     <hr />
         </div>
@@ -23,23 +18,6 @@
 </header>
 
 @code {
-    [Parameter]
-    public bool ShowSyncChanges { get; set; } = true;
-
-
-    private async Task OnClickSync()
-    {
-        ShowSyncChanges = false;
-      await SyncData.UpdateChangesToServerDb();
-       await ShowDialogWithCustomCssClasses();
-        ShowSyncChanges = true;
-    }
-    async Task ShowDialogWithCustomCssClasses()
-    {
-        await dialogService.OpenAsync("Sync Data", ds =>
-        @<div>
-           Sync with Server is done!.
-        </div>);
-    }
+   
 
 }

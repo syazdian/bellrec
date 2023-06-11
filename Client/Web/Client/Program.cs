@@ -1,3 +1,4 @@
+using Bell.Reconciliation.Common.Models.Domain;
 using Bell.Reconciliation.Frontend.Web.Services.Services;
 using Radzen;
 using SqliteWasmHelper;
@@ -15,6 +16,9 @@ public class Program
         builder.Services.AddScoped<DialogService>();
         var subFolder = builder.Configuration["baseaddress"];
 
+        var filterItems = GetFilterItems(builder);
+        builder.Services.AddSingleton(filterItems);
+
         //var baseAddress = $"{builder.HostEnvironment.BaseAddress}/{subFolder}";
         //builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(baseAddress) });
 
@@ -28,5 +32,29 @@ public class Program
         builder.Services.AddTransient<ISyncData, SyncData>();
 
         await builder.Build().RunAsync();
+    }
+
+    private static FilterItemsDisplay GetFilterItems(WebAssemblyHostBuilder builder)
+    {
+        FilterItemsDisplay filterItems = new FilterItemsDisplay();
+
+        LoB loBWireless = new LoB()
+        {
+            Name = "Wireless",
+            SubLoBs = builder.Configuration.GetSection("FilterItems:LoB:Wireless").Get<List<string>>()
+        };
+
+        filterItems.LoBs.Add(loBWireless);
+        LoB loBWireline = new LoB()
+        {
+            Name = "Wireline",
+            SubLoBs = builder.Configuration.GetSection("FilterItems:LoB:Wireline").Get<List<string>>()
+        };
+        filterItems.LoBs.Add(loBWireline);
+        filterItems.Brands = builder.Configuration.GetSection("FilterItems:Brand").Get<List<string>>();
+        filterItems.RebateTypes = builder.Configuration.GetSection("FilterItems:RebateType").Get<List<string>>();
+        filterItems.Locations = builder.Configuration.GetSection("FilterItems:Location").Get<List<string>>();
+
+        return filterItems;
     }
 }

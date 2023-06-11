@@ -8,20 +8,21 @@ public class FilterService : IFilterService
 {
     private readonly HttpClient _httpClient;
     private readonly string baseAddress;
+    private readonly FilterItemsDisplay _filterItem;
 
-    public FilterService(HttpClient httpClient, IConfiguration configuration)
+    public FilterService(HttpClient httpClient, IConfiguration configuration, FilterItemsDisplay filterItem)
     {
         _httpClient = httpClient;
+        _filterItem = filterItem;
 
         baseAddress = configuration["baseaddress"];
     }
 
-    public async Task<FilterItems> GetFilterItems()
+    public FilterItemsDisplay GetFilterItems()
     {
         try
         {
-            var response = await _httpClient.GetFromJsonAsync<FilterItems>($"{baseAddress}/api/FilterValue/GetFilterItems");
-            return response;
+            return _filterItem;
         }
         catch (Exception ex)
         {
@@ -34,7 +35,7 @@ public class FilterService : IFilterService
         try
         {
             var url = $"{baseAddress}/api/FilterValue/GetFilterItems";
-            var response = await _httpClient.GetFromJsonAsync<FilterItems>(url);
+            var response = await _httpClient.GetFromJsonAsync<FilterItemsDisplay>(url);
             return JsonSerializer.Serialize(response);
         }
         catch (Exception ex)
