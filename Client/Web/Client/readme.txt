@@ -7,3 +7,11 @@ URL.createObjectURL(await (await (await caches.open("SqliteWasmHelper")).match("
 	
 	Scaffold-DbContext "Data Source=efi-stg-database-smi.77e4410e91a5.database.windows.net;Initial Catalog=BELL_INTEGRATION_DEV;Persist Security Info=True;User ID=log_util_bell;Password=test;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models
 
+
+===============================================
+
+DATABASE SWITCHING STEPS:
+1. Index.html
+2. wwroot/appsetting
+3. appseting in server
+4. data folder - db context

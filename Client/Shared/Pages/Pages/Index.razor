@@ -2,9 +2,11 @@
 
 @using Bell.Reconciliation.Frontend.Shared.Pages.Shared
 @using Bell.Reconciliation.Frontend.Shared.ServiceInterfaces;
+@using Microsoft.AspNetCore.Authorization;
 @inject ILocalDbRepository _localdb
 @inject IFetchData FetchData
 @inject ISyncData SyncData
+@attribute [Authorize]
 
 <CascadingValue Value="@uiDbExist">
     <Header></Header>

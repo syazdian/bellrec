@@ -10,16 +10,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Data\AzureSqlServer\**" />
+    <Compile Remove="Data\StapleSqlServer\**" />
     <Compile Remove="Domain\**" />
     <Compile Remove="Repository\**" />
-    <Content Remove="Data\AzureSqlServer\**" />
+    <Content Remove="Data\StapleSqlServer\**" />
     <Content Remove="Domain\**" />
     <Content Remove="Repository\**" />
-    <EmbeddedResource Remove="Data\AzureSqlServer\**" />
+    <EmbeddedResource Remove="Data\StapleSqlServer\**" />
     <EmbeddedResource Remove="Domain\**" />
     <EmbeddedResource Remove="Repository\**" />
-    <None Remove="Data\AzureSqlServer\**" />
+    <None Remove="Data\StapleSqlServer\**" />
     <None Remove="Domain\**" />
     <None Remove="Repository\**" />
   </ItemGroup>
@@ -31,7 +31,25 @@
   </ItemGroup>
 
   <ItemGroup>
+    <_WebToolingArtifacts Remove="Properties\serviceDependencies.json" />
+    <_WebToolingArtifacts Remove="Properties\serviceDependencies.local.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Properties\serviceDependencies.json" />
+    <Content Include="Properties\serviceDependencies.local.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Properties\serviceDependencies.local.json.user" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Mapster" Version="7.3.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.5" />
+     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="7.0.5" NoWarn="NU1605" />
+    <PackageReference Include="Microsoft.Identity.Web" Version="1.24.1" />
+    <PackageReference Include="Microsoft.Identity.Web.UI" Version="1.16.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="7.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.5" />

@@ -1,13 +1,18 @@
 ﻿@using Bell.Reconciliation.Frontend.Shared.ServiceInterfaces;
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+
 @inject IFilterService filterService
 @page "/second"
+@attribute [Authorize]
 
-
+<h1>YES YOU ARE LOGGED IN!</h1>
 <button onclick=@CallApi>CLICK ME</button>
-<h1>@FromServer</h1>
+<h4>@FromServer</h4>
 @code {
     public string FromServer { get; set; }
 
+    
     public async Task CallApi()
     {
         FromServer =await filterService.GetHello();
