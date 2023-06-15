@@ -80,11 +80,11 @@ namespace Bell.Reconciliation.Web.Server.Services
 
         #region Sync Data From LocalDB to Server
 
-        public async Task<List<BellSourceDto>> GetBellSourceByLatestReconciledDate(DateTime dateTime)
+        public async Task<List<BellSourceDto>> GetBellSourceByLatestReconciledDate(DateTime dateTime, string user)
         {
             try
             {
-                var items = await _bellDbContext.BellSources.Where(x => x.ReconciledDate >= dateTime).ToListAsync();
+                var items = await _bellDbContext.BellSources.Where(x => x.ReconciledDate >= dateTime && x.ReconciledBy != user).ToListAsync();
                 var adapted = items.Adapt<List<BellSourceDto>>();
                 return adapted;
             }
@@ -94,11 +94,11 @@ namespace Bell.Reconciliation.Web.Server.Services
             }
         }
 
-        public async Task<List<StaplesSourceDto>> GetStaplesSourceLatestReconciledDate(DateTime dateTime)
+        public async Task<List<StaplesSourceDto>> GetStaplesSourceLatestReconciledDate(DateTime dateTime, string user)
         {
             try
             {
-                var items = await _bellDbContext.StaplesSources.Where(x => x.ReconciledDate >= dateTime).ToListAsync(); ;
+                var items = await _bellDbContext.StaplesSources.Where(x => x.ReconciledDate >= dateTime && x.ReconciledBy != user).ToListAsync(); ;
 
                 var adapted = items.Adapt<List<StaplesSourceDto>>();
                 return adapted;

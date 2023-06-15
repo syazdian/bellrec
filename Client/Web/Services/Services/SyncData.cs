@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Bell.Reconciliation.Frontend.Web.Models;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Net.Http;
 
@@ -11,11 +12,13 @@ public class SyncData : ISyncData
     private readonly string baseAddress;
 
     private DateTime latesSyncDate;
+    private IStateContainer _stateContainer;
 
-    public SyncData(HttpClient httpClient, ILocalDbRepository localDb, IConfiguration configuration)
+    public SyncData(HttpClient httpClient, ILocalDbRepository localDb, IConfiguration configuration, IStateContainer stateContainer)
     {
         _httpClient = httpClient;
         _localDb = localDb;
+        _stateContainer = stateContainer;
         baseAddress = configuration["baseaddress"];
     }
 
@@ -31,10 +34,11 @@ public class SyncData : ISyncData
         try
         {
             var formattedDateToSent = latesSyncDate.ToString("yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+            var currentUser = _stateContainer.User;
             var staplesList = await _httpClient.GetFromJsonAsync<List<StaplesSourceDto>>
-                ($"{baseAddress}/api/SyncData/GetLatestChangedStaplesSourceItemsByDate/{formattedDateToSent}");
+                ($"{baseAddress}/api/SyncData/GetLatestChangedStaplesSourceItemsByDate/{formattedDateToSent}/{currentUser}");
             var bellList = await _httpClient.GetFromJsonAsync<List<BellSourceDto>>
-                ($"{baseAddress}/api/SyncData/GetLatestChangedBellSourceItemsByDate/{formattedDateToSent}");
+                ($"{baseAddress}/api/SyncData/GetLatestChangedBellSourceItemsByDate/{formattedDateToSent}/{currentUser}");
             await _localDb.UpdateLatestDownloadedBellAndStaplesToLocalDb(staplesList, bellList);
         }
         catch (Exception ex)

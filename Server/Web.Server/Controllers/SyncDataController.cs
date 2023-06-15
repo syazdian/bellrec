@@ -27,17 +27,17 @@ public class SyncDataController : Controller
         return Ok();
     }
 
-    [HttpGet("GetLatestChangedStaplesSourceItemsByDate/{dateTime}")]
-    public async Task<IActionResult> GetLatestChangedStaplesSourceItemsByDate([FromRoute] DateTime dateTime)
+    [HttpGet("GetLatestChangedStaplesSourceItemsByDate/{dateTime}/{user}")]
+    public async Task<IActionResult> GetLatestChangedStaplesSourceItemsByDate([FromRoute] DateTime dateTime, string user)
     {
-        var res = await _dbRepo.GetStaplesSourceLatestReconciledDate(dateTime);
+        var res = await _dbRepo.GetStaplesSourceLatestReconciledDate(dateTime, user);
         return Ok(res);
     }
 
-    [HttpGet("GetLatestChangedBellSourceItemsByDate/{dateTime}")]
-    public async Task<IActionResult> GetLatestChangedBellSourceItemsByDate([FromRoute] DateTime dateTime)
+    [HttpGet("GetLatestChangedBellSourceItemsByDate/{dateTime}/{user}")]
+    public async Task<IActionResult> GetLatestChangedBellSourceItemsByDate([FromRoute] DateTime dateTime, string user)
     {
-        var res = await _dbRepo.GetBellSourceByLatestReconciledDate(dateTime);
+        var res = await _dbRepo.GetBellSourceByLatestReconciledDate(dateTime, user);
         return Ok(res);
     }
 
