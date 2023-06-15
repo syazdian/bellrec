@@ -1,18 +1,15 @@
 ﻿@page "/"
-
 @using Bell.Reconciliation.Frontend.Shared.Pages.Shared
-@using Bell.Reconciliation.Frontend.Shared.ServiceInterfaces;
-@using Microsoft.AspNetCore.Authorization;
+@using Bell.Reconciliation.Frontend.Shared.Pages.Shared.Header
+
 @inject ILocalDbRepository _localdb
-@inject IFetchData FetchData
-@inject ISyncData SyncData
+@inject IStateContainer StateContainer
 @attribute [Authorize]
 
-<CascadingValue Value="@uiDbExist">
-    <Header></Header>
-</CascadingValue>
-
 <RadzenDialog></RadzenDialog>
+
+<Header ShowSyncChanges="@localDbExist" RunLoadDatabaseInUi="(e)=>LoadDatabaseInUi(new FilterItemDto())" FetchButtonClicked="(e)=>FetchButtonClickedChange(e)"></Header>
+
 
 
 
@@ -24,12 +21,7 @@
     {
         <LocalDbLoader message="Loading Data ...."></LocalDbLoader>
     }
-    else
-    {
-        <RadzenButton ButtonStyle="ButtonStyle.Dark" Size="ButtonSize.Large" Text="Fetch Data from Server" Click="FetchDataFromServer"></RadzenButton>
-    }
-
-}
+ }
 else
 {
     
@@ -39,11 +31,11 @@ else
 
         @if (WirelessSubLob == "Wireless")
         {
-            <TableCompareCellphone BellSources="bellSourcesCellPhone" StaplesSources="staplesSourcesCellPhone" CompareBellStaple="compareBellStapleCellPhone"></TableCompareCellphone>
+            <TableCompareCellphone BellSources="StateContainer.bellSourcesCellPhone" StaplesSources="StateContainer.staplesSourcesCellPhone" CompareBellStaple="StateContainer.compareBellStapleCellPhone"></TableCompareCellphone>
         }
         else
         {
-            <TableCompareNonCellphone TitleSubLob=@WirelessSubLob BellSources="bellSourcesNonCellPhone" StaplesSources="staplesSourcesNonCellPhone" CompareBellStaple="compreBellStapleNonCellPhone"></TableCompareNonCellphone>
+            <TableCompareNonCellphone TitleSubLob=@WirelessSubLob BellSources="StateContainer.bellSourcesNonCellPhone" StaplesSources="StateContainer.staplesSourcesNonCellPhone" CompareBellStaple="StateContainer.compreBellStapleNonCellPhone"></TableCompareNonCellphone>
 
         }
 
@@ -53,35 +45,27 @@ else
 
 
 @code {
-    List<BellSourceDto> bellSourcesCellPhone = new();
-    List<StaplesSourceDto> staplesSourcesCellPhone = new();
-    List<CompareBellStapleCellPhone> compareBellStapleCellPhone = new();
 
-    List<BellSourceDto> bellSourcesNonCellPhone = new();
-    List<StaplesSourceDto> staplesSourcesNonCellPhone = new();
-    List<CompareBellStapleNonCellPhone> compreBellStapleNonCellPhone = new();
-
-    FilterItemDto filterItemDto = new();
     string WirelessSubLob;
     bool localDbExist = true;
     bool uiDbExist = false;
     bool fetchButtonClicked = false;
-    bool showloader = false;
+    //bool showloader = false;
     protected override async Task OnInitializedAsync()
     {
 
         if (await CheckDbExist())
         {
-            await LoadDatabaseInUi(filterItemDto);
+            await LoadDatabaseInUi(StateContainer.filterItemDto);
         }
-       
+
         StateHasChanged();
     }
     public async void ApplyFilters(FilterItemDto _filterItemDto)
     {
-        filterItemDto = _filterItemDto;
-        WirelessSubLob = filterItemDto.SubLob;
-        LoadDatabaseInUi(filterItemDto);
+        StateContainer.filterItemDto = _filterItemDto;
+        WirelessSubLob = StateContainer.filterItemDto.SubLob;
+        LoadDatabaseInUi(StateContainer.filterItemDto);
     }
 
     public async Task<bool> CheckDbExist()
@@ -91,9 +75,15 @@ else
         return localDbExist;
     }
 
+    public void FetchButtonClickedChange(bool fetchButton)
+    {
+        fetchButtonClicked = fetchButton;
+        StateHasChanged();
+    }
+
     public async Task<bool> UiDbExist()
     {
-        if (bellSourcesCellPhone.Count > 1)
+        if (StateContainer.bellSourcesCellPhone.Count > 1)
         {
             uiDbExist = true;
             return true;
@@ -101,31 +91,20 @@ else
         uiDbExist = false;
         return false;
     }
-    private async Task FetchDataFromServer()
+
+    public async Task LoadDatabaseInUi(FilterItemDto filterItemDto)
     {
-        fetchButtonClicked = true;
-        showloader = true;
-        localDbExist = false;
-        await FetchData.FetchDataFromServerDb();
         localDbExist = true;
-        await LoadDatabaseInUi(filterItemDto);
-
-        StateHasChanged();
-    }
-    private async Task LoadDatabaseInUi(FilterItemDto filterItemDto)
-    {
-        showloader = true;
         uiDbExist = false;
-        bellSourcesCellPhone = await _localdb.GetBellSourceCellPhoneFromLocalDb(filterItemDto);
-        staplesSourcesCellPhone = await _localdb.GetStapleSourceCellPhoneFromLocalDb(filterItemDto);
-        compareBellStapleCellPhone = await _localdb.GetBellStapleCompareCellPhoneFromLocalDb(filterItemDto);
+        StateContainer.bellSourcesCellPhone = await _localdb.GetBellSourceCellPhoneFromLocalDb(filterItemDto);
+        StateContainer.staplesSourcesCellPhone = await _localdb.GetStapleSourceCellPhoneFromLocalDb(filterItemDto);
+        StateContainer.compareBellStapleCellPhone = await _localdb.GetBellStapleCompareCellPhoneFromLocalDb(filterItemDto);
 
-        bellSourcesNonCellPhone = await _localdb.GetBellSourceNonCellPhoneFromLocalDb(filterItemDto);
-        staplesSourcesNonCellPhone = await _localdb.GetStapleSourceNonCellPhoneFromLocalDb(filterItemDto);
-        compreBellStapleNonCellPhone = await _localdb.GetBellStapleCompareNonCellPhoneFromLocalDb(filterItemDto);
+        StateContainer.bellSourcesNonCellPhone = await _localdb.GetBellSourceNonCellPhoneFromLocalDb(filterItemDto);
+        StateContainer.staplesSourcesNonCellPhone = await _localdb.GetStapleSourceNonCellPhoneFromLocalDb(filterItemDto);
+        StateContainer.compreBellStapleNonCellPhone = await _localdb.GetBellStapleCompareNonCellPhoneFromLocalDb(filterItemDto);
 
         uiDbExist = true;
-        showloader = false;
         StateHasChanged();
 
     }

@@ -2,7 +2,9 @@
 
 public interface ISyncData
 {
+    public Task StartSyncData();
+
     public Task UpdateChangesToServerDb();
 
-    public Task UpdateLocalDbWithNewChanges();
+    public Task UpdateLocalDbWithNewChangesFromServer();
 }

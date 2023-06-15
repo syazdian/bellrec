@@ -1,9 +1,4 @@
-﻿using Bell.Reconciliation.Web.Server.Data;
-using Bell.Reconciliation.Web.Server.Services;
-using Mapster;
-using Microsoft.AspNetCore.Authentication;
-
-namespace Bell.Reconciliation.Web.Server.Controllers;
+﻿namespace Bell.Reconciliation.Web.Server.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -18,40 +13,6 @@ public class SyncDataController : Controller
         // _dbGenerator = dbGenerator;
     }
 
-    [HttpGet("ReturnHello")]
-    public async Task<IActionResult> ReturnHello()
-    {
-        return Ok("HELLO");
-    }
-
-    [HttpGet("FetchCountServerDatabase")]
-    public async Task<IActionResult> FetchCountServerDatabase()
-    {
-        var bellStapleCountDto = await _dbRepo.CountBellStapleRows();
-        return Ok(bellStapleCountDto);
-    }
-
-    [HttpGet("FetchFromServerDatabase")]
-    public async Task<IActionResult> FetchFromServerDatabase()
-    {
-        var items = await _dbRepo.FetchFromDatabaseBellStaplesSource();
-        return Ok(items);
-    }
-
-    [HttpGet("GetBellSourceItems/{startCount}/{endCount}")]
-    public async Task<IActionResult> GetBellSourceItems([FromRoute] int startCount = 1, int endCount = 1)
-    {
-        var items = await _dbRepo.GetBellSource(startCount, endCount);
-        return Ok(items);
-    }
-
-    [HttpGet("GetStaplesSourceItems/{startCount}/{endCount}")]
-    public async Task<IActionResult> GetStaplesSourceItems([FromRoute] int startCount = 1, int endCount = 1)
-    {
-        var items = await _dbRepo.GetStaplesSource(startCount, endCount);
-        return Ok(items);
-    }
-
     [HttpPost("SyncChangesStaple")]
     public async Task<IActionResult> SyncChangesStaple(List<StaplesSourceDto> stapleSourceChanges)
     {
@@ -64,6 +25,20 @@ public class SyncDataController : Controller
     {
         await _dbRepo.SyncBellSourceChanges(bellSourceChanges);
         return Ok();
+    }
+
+    [HttpGet("GetLatestChangedStaplesSourceItemsByDate/{dateTime}")]
+    public async Task<IActionResult> GetLatestChangedStaplesSourceItemsByDate([FromRoute] DateTime dateTime)
+    {
+        var res = await _dbRepo.GetStaplesSourceLatestReconciledDate(dateTime);
+        return Ok(res);
+    }
+
+    [HttpGet("GetLatestChangedBellSourceItemsByDate/{dateTime}")]
+    public async Task<IActionResult> GetLatestChangedBellSourceItemsByDate([FromRoute] DateTime dateTime)
+    {
+        var res = await _dbRepo.GetBellSourceByLatestReconciledDate(dateTime);
+        return Ok(res);
     }
 
     //[HttpGet("GenerateServerDb/{recordNom}/{deleteOldRecords}/{differenceRate}")]

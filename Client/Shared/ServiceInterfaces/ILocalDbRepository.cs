@@ -22,6 +22,8 @@ public interface ILocalDbRepository
 
     Task<List<StaplesSourceDto>> GetNotSyncedUpdatedStapleSource();
 
+    Task UpdateLatestDownloadedBellAndStaplesToLocalDb(List<StaplesSourceDto> staples, List<BellSourceDto> bellSources);
+
     Task<int> InsertDataToLocalDbAsync(BellStaplesSourceDto bellStaplesSources);
 
     Task InsertBellSourceToLocalDbAsync(List<BellSourceDto> bellSourceDtos);
@@ -43,4 +45,6 @@ public interface ILocalDbRepository
     Task<bool> LocalDbExist();
 
     Task<bool> PurgeTables();
+
+    Task<DateTime> GetLatestSyncDate();
 }

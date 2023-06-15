@@ -1,9 +1,8 @@
 using Bell.Reconciliation.Common.Models.Domain;
 using Bell.Reconciliation.Frontend.Web.Services.Services;
 using Radzen;
-using SqliteWasmHelper;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
-using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Bell.Reconciliation.Frontend.Web.Models;
 
 namespace Bell.Reconciliation.Client;
 
@@ -26,6 +25,7 @@ public class Program
             options.ProviderOptions.DefaultAccessTokenScopes.Add(builder.Configuration.GetSection("ServerApi")["Scopes"]);
         });
 
+        builder.Services.AddScoped<IStateContainer, StateContainer>();
         builder.Services.AddScoped<DialogService>();
         //var subFolder = builder.Configuration["baseaddress"];
 

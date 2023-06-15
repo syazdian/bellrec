@@ -10,6 +10,8 @@ public class SyncData : ISyncData
     private readonly ILocalDbRepository _localDb;
     private readonly string baseAddress;
 
+    private DateTime latesSyncDate;
+
     public SyncData(HttpClient httpClient, ILocalDbRepository localDb, IConfiguration configuration)
     {
         _httpClient = httpClient;
@@ -17,9 +19,33 @@ public class SyncData : ISyncData
         baseAddress = configuration["baseaddress"];
     }
 
-    public async Task UpdateLocalDbWithNewChanges()
+    public async Task StartSyncData()
     {
-        throw new NotImplementedException();
+        await GetLatestSyncDate();
+        await UpdateLocalDbWithNewChangesFromServer();
+        await UpdateChangesToServerDb();
+    }
+
+    public async Task UpdateLocalDbWithNewChangesFromServer()
+    {
+        try
+        {
+            var formattedDateToSent = latesSyncDate.ToString("yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+            var staplesList = await _httpClient.GetFromJsonAsync<List<StaplesSourceDto>>
+                ($"{baseAddress}/api/SyncData/GetLatestChangedStaplesSourceItemsByDate/{formattedDateToSent}");
+            var bellList = await _httpClient.GetFromJsonAsync<List<BellSourceDto>>
+                ($"{baseAddress}/api/SyncData/GetLatestChangedBellSourceItemsByDate/{formattedDateToSent}");
+            await _localDb.UpdateLatestDownloadedBellAndStaplesToLocalDb(staplesList, bellList);
+        }
+        catch (Exception ex)
+        {
+            throw;
+        }
+    }
+
+    public async Task GetLatestSyncDate()
+    {
+        latesSyncDate = await _localDb.GetLatestSyncDate();
     }
 
     public async Task UpdateChangesToServerDb()

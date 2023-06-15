@@ -42,4 +42,5 @@ public class StaplesSourceDto
     public string? ReconciledBy { get; set; }
     public DateTime? ReconciledDate { get; set; }
     public MatchStatus MatchStatus { get; set; }
+    public DateTime? UpdateDate { get; set; }
 }

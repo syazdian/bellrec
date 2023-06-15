@@ -1,0 +1,118 @@
+﻿@implements IAsyncDisposable
+@inject ISyncData SyncData
+@inject DialogService dialogService
+@inject IFetchData FetchData
+@inject IStateContainer StateContainer
+@inject IJSRuntime _jsRuntime;
+
+<header>
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-light ">
+        <div class="container-fluid">
+            <RadzenColumn class="rz-p-1"></RadzenColumn>
+            <RadzenColumn class="rz-p-2">
+                <a class="navbar-brand" href="#">
+                    <img src="./Assets/Staples_Canada_logo_2018.png" height="34" class="d-inline-block align-text-top" />
+
+                </a>
+            </RadzenColumn>
+            <RadzenColumn class="rz-p-5">
+                <div class="navbar-brand text-center text-black display-2">
+                    Staples-Bell Reconcilliation App
+                </div>
+            </RadzenColumn>
+            <RadzenColumn class="rz-p-1">
+                @if (IsOnline)
+                {
+
+                    @if (ShowSyncChanges)
+                    {
+                        <RadzenButton Disabled = "@DisableButton" Text="Sync Changes" Icon="sync" ButtonStyle="ButtonStyle.Success" Click="@SyncChanges"></RadzenButton>
+                    }
+                    else
+                    {
+                        <span hidden="@HideFetchButton">
+                        <RadzenButton ButtonStyle="ButtonStyle.Secondary" Text="Fetch Data from Server" Click="FetchDataFromServer" Icon="get_app"></RadzenButton>
+                        </span>
+                    }
+                }
+                else
+                {
+                    <span>You are offline!</span>
+                }
+            </RadzenColumn>
+            <RadzenColumn class="rz-p-1">
+                <LoginDisplay />
+            </RadzenColumn>
+
+            <hr />
+        </div>
+    </nav>
+</header>
+
+@code {
+    [Parameter]
+    public bool ShowSyncChanges { get; set; } = true;
+
+    [Parameter]
+    public EventCallback<bool> RunLoadDatabaseInUi { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> FetchButtonClicked { get; set; }
+
+    public bool IsOnline { get; set; }
+    public bool DisableButton { get; set; }
+    public bool HideFetchButton { get; set; } = false;
+
+    [JSInvokable("ConnectivityChanged")]
+    public void OnConnectivityChanged(bool isOnline)
+    {
+        if (IsOnline != isOnline)
+        {
+            IsOnline = isOnline;
+        }
+
+        StateHasChanged();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        await _jsRuntime.InvokeVoidAsync("connectivity.initialize", DotNetObjectReference.Create(this));
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        await _jsRuntime.InvokeVoidAsync("connectivity.`dispose`");
+    }
+
+
+
+
+    private async Task SyncChanges()
+    {
+        DisableButton = true;
+        await SyncData.StartSyncData();
+        await ShowDialogWithCustomCssClasses();
+        DisableButton = false;
+        ShowSyncChanges = true;
+    }
+    async Task ShowDialogWithCustomCssClasses()
+    {
+        await dialogService.OpenAsync("Sync Data", ds =>
+    @<div>
+        Sync with Server is done!.
+        </div>
+    );
+    }
+
+    private async Task FetchDataFromServer()
+    {
+        HideFetchButton = true;
+        await FetchButtonClicked.InvokeAsync(true);
+        await FetchData.FetchDataFromServerDb();
+        await RunLoadDatabaseInUi.InvokeAsync(true);
+
+        StateHasChanged();
+    }
+}

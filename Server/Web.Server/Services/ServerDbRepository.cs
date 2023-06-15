@@ -15,6 +15,8 @@ namespace Bell.Reconciliation.Web.Server.Services
             _bellDbContext = bellContext;
         }
 
+        #region Fetch Data From Server for LocalDB
+
         public async Task<BellStaplesSourceDto> FetchFromDatabaseBellStaplesSource()
         {
             var bellSourcesDb = _bellDbContext.BellSources.ToList();
@@ -74,13 +76,46 @@ namespace Bell.Reconciliation.Web.Server.Services
             }
         }
 
+        #endregion Fetch Data From Server for LocalDB
+
+        #region Sync Data From LocalDB to Server
+
+        public async Task<List<BellSourceDto>> GetBellSourceByLatestReconciledDate(DateTime dateTime)
+        {
+            try
+            {
+                var items = await _bellDbContext.BellSources.Where(x => x.ReconciledDate >= dateTime).ToListAsync();
+                var adapted = items.Adapt<List<BellSourceDto>>();
+                return adapted;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        public async Task<List<StaplesSourceDto>> GetStaplesSourceLatestReconciledDate(DateTime dateTime)
+        {
+            try
+            {
+                var items = await _bellDbContext.StaplesSources.Where(x => x.ReconciledDate >= dateTime).ToListAsync(); ;
+
+                var adapted = items.Adapt<List<StaplesSourceDto>>();
+                return adapted;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
         public async Task SyncBellSourceChanges(List<BellSourceDto> bellSourceDtos)
         {
             try
             {
                 foreach (var bell in bellSourceDtos)
                 {
-                    var bellsourceInServer = _bellDbContext.BellSources.Where(c => c.OrderNumber == bell.OrderNumber).FirstOrDefault();
+                    var bellsourceInServer = _bellDbContext.BellSources.Where(c => c.OrderNumber == bell.OrderNumber && c.RebateType == bell.RebateType).FirstOrDefault();
                     bellsourceInServer.Comment = bell.Comment;
                     bellsourceInServer.MatchStatus = bell.MatchStatus.ToString();
                     bellsourceInServer.Reconciled = bell.Reconciled.ToString();
@@ -102,12 +137,13 @@ namespace Bell.Reconciliation.Web.Server.Services
             {
                 foreach (var staple in stapleSourceDtos)
                 {
-                    var staplesourceInServer = _bellDbContext.StaplesSources.Where(c => c.OrderNumber == staple.OrderNumber).FirstOrDefault();
+                    var staplesourceInServer = _bellDbContext.StaplesSources.Where(c => c.OrderNumber == staple.OrderNumber && c.RebateType == staple.RebateType).FirstOrDefault();
                     staplesourceInServer.Comment = staple.Comment;
                     staplesourceInServer.MatchStatus = (int)staple.MatchStatus;
                     staplesourceInServer.Reconciled = staple.Reconciled.ToString();
                     staplesourceInServer.ReconciledBy = staple.ReconciledBy;
-                    staplesourceInServer.ReconciledDate = staple.ReconciledDate; staplesourceInServer.UpdateDate = DateTime.UtcNow;
+                    staplesourceInServer.ReconciledDate = staple.ReconciledDate;
+                    staplesourceInServer.UpdateDate = DateTime.UtcNow;
                 }
                 _bellDbContext.SaveChanges();
             }
@@ -116,5 +152,7 @@ namespace Bell.Reconciliation.Web.Server.Services
                 throw;
             }
         }
+
+        #endregion Sync Data From LocalDB to Server
     }
 }

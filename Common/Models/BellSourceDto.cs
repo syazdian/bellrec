@@ -18,4 +18,5 @@ public class BellSourceDto
     public string? ReconciledBy { get; set; } = string.Empty;
     public DateTime? ReconciledDate { get; set; }
     public MatchStatus MatchStatus { get; set; }
+    public DateTime? UpdateDate { get; set; }
 }

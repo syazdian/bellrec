@@ -1,11 +1,14 @@
 ﻿@using Microsoft.AspNetCore.Components.Authorization
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
-
+@inject IStateContainer StateContainer
 @inject NavigationManager Navigation
 
 <AuthorizeView>
     <Authorized>
-         @context.User.Identity?.Name
+        @{
+            Username = @context.User.Identity?.Name;
+        }
+        @Username
         <button class="nav-link btn btn-link" @onclick="BeginLogOut">Log out</button>
     </Authorized>
     <NotAuthorized>
@@ -13,7 +16,24 @@
     </NotAuthorized>
 </AuthorizeView>
 
-@code{
+@code {
+    public string Username { get; set; } = "User from Client";
+
+    protected override async Task OnInitializedAsync()
+    {
+
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            StateContainer.User = Username;
+            StateHasChanged();
+        }
+    }
+
+
     public void BeginLogOut()
     {
         Navigation.NavigateToLogout("authentication/logout");

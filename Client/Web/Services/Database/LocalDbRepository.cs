@@ -1,5 +1,8 @@
 ﻿using Bell.Reconciliation.Common.Models.Enums;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using System.Data;
+using Bell.Reconciliation.Frontend.Web.Models;
+using Bell.Reconciliation.Common.Models;
 
 namespace Bell.Reconciliation.Frontend.Web.Services.Database;
 
@@ -7,10 +10,15 @@ public class LocalDbRepository : ILocalDbRepository
 {
     private readonly ISqliteWasmDbContextFactory<StapleSourceContext> _dbContextFactory;
 
-    public LocalDbRepository(ISqliteWasmDbContextFactory<StapleSourceContext> dbContextFactory)
+    private IStateContainer _stateContainer;
+
+    public LocalDbRepository(ISqliteWasmDbContextFactory<StapleSourceContext> dbContextFactory, IStateContainer stateContainer)
     {
         _dbContextFactory = dbContextFactory;
+        _stateContainer = stateContainer;
     }
+
+    #region SYNC UPDATE DOWNLOAD TATEST CHANGES
 
     public async Task InsertSyncLog(SyncLogsDto syncLogsDto)
     {
@@ -21,6 +29,65 @@ public class LocalDbRepository : ILocalDbRepository
             await ctx.SaveChangesAsync();
         }
         catch (Exception ex)
+        {
+            throw;
+        }
+    }
+
+    public async Task<DateTime> GetLatestSyncDate()
+    {
+        using var ctx = await _dbContextFactory.CreateDbContextAsync();
+
+        var recentSyncDate = ctx.SyncLogs.Where(x => x.Success == true).Max(c => c.EndSync);
+        return (DateTime)recentSyncDate;
+    }
+
+    public async Task UpdateLatestDownloadedBellAndStaplesToLocalDb(List<StaplesSourceDto> staples, List<BellSourceDto> bellSources)
+    {
+        try
+        {
+            using var ctx = await _dbContextFactory.CreateDbContextAsync();
+
+            foreach (var bell in bellSources)
+            {
+                BellSourceDto? bellsourceInLocal = ctx.BellSources.Where(c => c.OrderNumber == bell.OrderNumber && c.RebateType == bell.RebateType).FirstOrDefault();
+                if (bellsourceInLocal == null)
+                {
+                    ctx.BellSources.Add(bellsourceInLocal);
+                    continue;
+                }
+                bellsourceInLocal.Comment = bell.Comment;
+                bellsourceInLocal.MatchStatus = bell.MatchStatus;
+                bellsourceInLocal.Reconciled = bell.Reconciled;
+                bellsourceInLocal.ReconciledBy = bell.ReconciledBy;
+                bellsourceInLocal.ReconciledDate = bell.ReconciledDate;
+                bellsourceInLocal.UpdateDate = bell.UpdateDate;
+                bellsourceInLocal.Imei = bell.Imei;
+                bellsourceInLocal.Phone = bell.Phone;
+                ctx.BellSources.Update(bellsourceInLocal);
+            }
+
+            foreach (var staple in staples)
+            {
+                StaplesSourceDto? staplesourceInLocal = ctx.StaplesSources.Where(c => c.OrderNumber == staple.OrderNumber && c.RebateType == staple.RebateType).FirstOrDefault();
+                if (staplesourceInLocal == null)
+                {
+                    ctx.StaplesSources.Add(staplesourceInLocal);
+                    continue;
+                }
+                staplesourceInLocal.Comment = staple.Comment;
+                staplesourceInLocal.MatchStatus = staple.MatchStatus;
+                staplesourceInLocal.Reconciled = staple.Reconciled;
+                staplesourceInLocal.ReconciledBy = staple.ReconciledBy;
+                staplesourceInLocal.ReconciledDate = staple.ReconciledDate;
+                staplesourceInLocal.UpdateDate = staple.UpdateDate;
+                staplesourceInLocal.Imei = staple.Imei;
+                staplesourceInLocal.Phone = staple.Phone;
+                ctx.StaplesSources.Update(staplesourceInLocal);
+            }
+            ctx.SaveChanges();
+        }
+        catch (Exception)
         {
             throw;
         }
@@ -59,6 +126,10 @@ public class LocalDbRepository : ILocalDbRepository
             throw;
         }
     }
+
+    #endregion SYNC UPDATE DOWNLOAD TATEST CHANGES
+
+    #region Insert Fetch Data to LocalDB
 
     public async Task InsertBellSourceToLocalDbAsync(List<BellSourceDto> bellSourceDtos)
     {
@@ -106,6 +177,10 @@ public class LocalDbRepository : ILocalDbRepository
             throw;
         }
     }
+
+    #endregion Insert Fetch Data to LocalDB
+
+    #region QUERY FOR UI DATAGRIDS
 
     public async Task<List<BellSourceDto>> GetBellSourceCellPhoneFromLocalDb(FilterItemDto filterItemDto)
     {
@@ -386,6 +461,10 @@ public class LocalDbRepository : ILocalDbRepository
         }
     }
 
+    #endregion QUERY FOR UI DATAGRIDS
+
+    #region Update LocalDB while Reconciling
+
     public async Task<bool> UpdateBellSource(BellSourceDto bellSourceDto)
     {
         try
@@ -393,7 +472,7 @@ public class LocalDbRepository : ILocalDbRepository
             using var ctx = await _dbContextFactory.CreateDbContextAsync();
 
             bellSourceDto.Reconciled = true;
-            bellSourceDto.ReconciledBy = "USER"; //TODO: it should be replaced with REAL USER
+            bellSourceDto.ReconciledBy = _stateContainer.User ?? "USER"; //TODO: it should be replaced with REAL USER
             bellSourceDto.ReconciledDate = DateTime.UtcNow;
 
             ctx.Update(bellSourceDto);
@@ -416,7 +495,7 @@ public class LocalDbRepository : ILocalDbRepository
             var bell = ctx.BellSources.Single(c => c.Id == Id);
             bell.Comment = Comment;
             bell.Reconciled = true;
-            bell.ReconciledBy = "USER";
+            bell.ReconciledBy = _stateContainer.User ?? "USER";
             bell.ReconciledDate = DateTime.UtcNow;
             ctx.Update(bell);
             ctx.SaveChanges();
@@ -436,7 +515,7 @@ public class LocalDbRepository : ILocalDbRepository
             using var ctx = await _dbContextFactory.CreateDbContextAsync();
 
             staplesSourceDto.Reconciled = true;
-            staplesSourceDto.ReconciledBy = "USER";
+            staplesSourceDto.ReconciledBy = _stateContainer.User ?? "USER";
             staplesSourceDto.ReconciledDate = DateTime.UtcNow;
 
             ctx.Update(staplesSourceDto);
@@ -459,7 +538,7 @@ public class LocalDbRepository : ILocalDbRepository
             var staple = ctx.StaplesSources.Single(c => c.Id == Id);
             staple.Comment = Comment;
             staple.Reconciled = true;
-            staple.ReconciledBy = "USER";
+            staple.ReconciledBy = _stateContainer.User ?? "USER";
             staple.ReconciledDate = DateTime.UtcNow;
             ctx.Update(staple);
             ctx.SaveChanges();
@@ -471,6 +550,10 @@ public class LocalDbRepository : ILocalDbRepository
             return false;
         }
     }
+
+    #endregion Update LocalDB while Reconciling
+
+    #region Load LocalDB to UI DataGrid
 
     public async Task<EntityEntry<BellSourceDto>> GetBellSourceEntry(BellSourceDto record)
     {
@@ -523,4 +606,6 @@ public class LocalDbRepository : ILocalDbRepository
             throw;
         }
     }
+
+    #endregion Load LocalDB to UI DataGrid
 }
