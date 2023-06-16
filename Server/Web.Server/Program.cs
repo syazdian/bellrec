@@ -19,6 +19,7 @@ public class Program
         builder.Services.AddRazorPages();
 
         builder.Services.AddTransient<ServerDbRepository>();
+        builder.Services.AddTransient<CallApi>();
 
         // var executingAssembly = Assembly.GetExecutingAssembly();
         //var config = new ConfigurationBuilder()

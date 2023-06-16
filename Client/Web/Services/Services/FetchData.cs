@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using System.Text;
 
 namespace Bell.Reconciliation.Frontend.Web.Services;
 
@@ -82,5 +83,23 @@ public class FetchData : IFetchData
         {
             throw;
         }
+    }
+
+    public async Task<string> GetDetailByPhone(string phone)
+    {
+        var res = await _httpClient.GetFromJsonAsync<string>($"{baseAddress}/api/FetchData/GetDetailByPhone/{phone}");
+        return res;
+    }
+
+    public async Task<string> GetDetailBySerialNumber(string sn)
+    {
+        var res = await _httpClient.GetFromJsonAsync<string>($"{baseAddress}/api/FetchData/GetDetailBySerialNumber/{sn}");
+        return res;
+    }
+
+    public async Task<string> GetDetailByOrderNumber(string on)
+    {
+        var res = await _httpClient.GetFromJsonAsync<string>($"{baseAddress}/api/FetchData/GetDetailByOrderNumber/{on}");
+        return res;
     }
 }

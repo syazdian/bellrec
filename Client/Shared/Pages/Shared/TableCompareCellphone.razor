@@ -132,7 +132,6 @@
                     <RadzenDataGridColumn TItem="BellSourceDto" Property="OrderNumber" Title="OrderNumber" />
                     <RadzenDataGridColumn TItem="BellSourceDto" Property="Phone" Title="Phone" />
                     <RadzenDataGridColumn TItem="BellSourceDto" Property="Imei" Title="IMEI" />
-                    <RadzenDataGridColumn TItem="BellSourceDto" Property="Product" Title="Product" />
                     <RadzenDataGridColumn Width="100px" TItem="BellSourceDto" Property="Amount" Title="Amount" TextAlign="TextAlign.Right" />
                     <RadzenDataGridColumn TItem="BellSourceDto" Property="Comment" Title="Comment">
                         <EditTemplate Context="record">
@@ -160,7 +159,7 @@
     [Parameter]
     public List<StaplesSourceDto> StaplesSources { get; set; }
     [Parameter]
-    public List<CompareBellStapleCellPhone> CompareBellStaple { get; set; }
+    public List<CompareBellStapleCellPhone> CompareBellStaple { get; set; } 
 
     RadzenDataGrid<CompareBellStapleCellPhone> CompareGrid = new RadzenDataGrid<CompareBellStapleCellPhone>();
     RadzenDataGrid<BellSourceDto> BellGrid = new RadzenDataGrid<BellSourceDto>();
@@ -200,9 +199,13 @@
 
     void OnCellDoubleClick(DataGridCellMouseEventArgs<CompareBellStapleCellPhone> args)
     {
+        Dictionary<string, object> paramss = new Dictionary<string, object>();
+        paramss.Add("ordernumber", args.Column.Title);
+
+
         if (args.Column.Title == "S.Order" || args.Column.Title == "B.Order")
         {
-            dialogService.Open<DialogComparePage>(args.Column.Title + "was clicked");
+            dialogService.Open<DetailDialog>(args.Column.Title + "was clicked", paramss);
         }
     }
 

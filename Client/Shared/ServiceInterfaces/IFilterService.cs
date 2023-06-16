@@ -4,5 +4,7 @@ public interface IFilterService
 {
     public FilterItemsDisplay GetFilterItems();
 
+    public string GetFilterJson();
+
     public Task<string> GetHello();
 }

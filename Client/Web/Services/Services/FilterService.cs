@@ -8,6 +8,7 @@ public class FilterService : IFilterService
 {
     private readonly HttpClient _httpClient;
     private readonly string baseAddress;
+    private readonly string filterJson;
     private readonly FilterItemsDisplay _filterItem;
 
     public FilterService(HttpClient httpClient, IConfiguration configuration, FilterItemsDisplay filterItem)
@@ -16,6 +17,7 @@ public class FilterService : IFilterService
         _filterItem = filterItem;
 
         baseAddress = configuration["baseaddress"];
+        filterJson = configuration.["FilterItems:Brand"];
     }
 
     public FilterItemsDisplay GetFilterItems()
@@ -28,6 +30,11 @@ public class FilterService : IFilterService
         {
             throw;
         }
+    }
+
+    public string GetFilterJson()
+    {
+        return filterJson;
     }
 
     public async Task<string> GetHello()

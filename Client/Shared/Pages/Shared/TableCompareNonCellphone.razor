@@ -123,7 +123,6 @@
                     </RadzenDataGridColumn>
                     <RadzenDataGridColumn TItem="BellSourceDto" Property="OrderNumber" Title="OrderNumber#" />
                     <RadzenDataGridColumn Width="100px" TItem="BellSourceDto" Property="Amount" Title="Amount" TextAlign="TextAlign.Right" />
-                    <RadzenDataGridColumn Width="100px" TItem="BellSourceDto" Property="Amount" Title="Amount" TextAlign="TextAlign.Right" />
                     <RadzenDataGridColumn TItem="BellSourceDto" Property="Comment" Title="Comment">
                         <EditTemplate Context="record">
                             <div class=" rz-text-align-left">
@@ -201,7 +200,7 @@
     {
         if (args.Column.Title == "S.Order" || args.Column.Title == "B.Order")
         {
-            dialogService.Open<DialogComparePage>(args.Column.Title + " CLicked");
+            dialogService.Open<DetailDialog>(args.Column.Title + " CLicked");
         }
     }
 

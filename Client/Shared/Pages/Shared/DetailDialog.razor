@@ -1,0 +1,35 @@
+﻿
+@using System.Text.Json.Nodes;
+@using Texnomic.Blazor.JsonViewer
+@inject IFilterService filterservice
+@page "/third"
+<JsonViewer @ref="JsonViewerInstance"></JsonViewer>
+
+
+@code {
+
+    public string jsonString { get; set; }
+    protected JsonViewer JsonViewerInstance { get; set; }
+
+    //protected override async Task OnAfterRenderAsync(bool firstRender)
+    //{
+
+    //    await JsonViewerInstance.Render(jsonString);
+    //    StateHasChanged();
+    //}
+
+    protected override async Task OnInitializedAsync()
+    {
+        jsonString = filterservice.GetFilterJson();
+        await JsonView();
+        StateHasChanged();
+
+    }
+
+
+    protected async ValueTask JsonView()
+    {
+        await JsonViewerInstance.Render(jsonString);
+    }
+
+}
